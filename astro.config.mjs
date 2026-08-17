@@ -2,6 +2,7 @@
 import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 import icon from "astro-icon";
+import react from "@astrojs/react";
 
 // The canonical production origin. All absolute URLs (canonical, OG image,
 // sitemap) derive from this. Firebase Hosting serves the static `dist/` output.
@@ -22,5 +23,7 @@ export default defineConfig({
         ph: ["*"],
       },
     }),
+    // React is used ONLY by the /admin island — public pages ship zero JS.
+    react({ include: ["**/admin/**"] }),
   ],
 });

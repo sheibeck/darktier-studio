@@ -1,17 +1,32 @@
 rules_version = '2';
 
-// INTERIM rules (Phase 2). Public read of non-hidden catalog docs; ALL writes
-// denied. Phase 5 (Auth & Admin CMS) replaces the write rule with an
-// owner-UID exception and adds emulator-verified rules-unit tests.
+// Darktier Studios catalog rules.
 //
-// Build-time reads and the seed script use the Admin SDK, which bypasses these
-// rules — so seeding and SSG work regardless of what is allowed here.
+// - Public may READ any catalog doc that is not hidden (drafts stay private).
+// - Only the OWNER (a single hardcoded Google UID) may WRITE, and may read
+//   hidden docs.
+//
+// Replace OWNER_UID_PLACEHOLDER with the owner's real Google UID before deploy
+// (Firebase Console → Authentication → Users). The rules-unit tests
+// (scripts/rules.test.ts) swap in a test UID, so they pass regardless.
+//
+// Build-time SSG reads and the seed script use the Admin SDK, which bypasses
+// these rules.
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /games/{slug}   { allow read: if resource.data.hidden != true; allow write: if false; }
-    match /tools/{slug}   { allow read: if resource.data.hidden != true; allow write: if false; }
-    match /news/{slug}    { allow read: if resource.data.hidden != true; allow write: if false; }
-    // Everything else: closed.
-    match /{document=**}  { allow read, write: if false; }
+
+    function isOwner() {
+      return request.auth != null && request.auth.uid == 'OWNER_UID_PLACEHOLDER';
+    }
+    function isPublic() {
+      return resource.data.hidden != true;
+    }
+
+    match /games/{slug} { allow read: if isPublic() || isOwner(); allow write: if isOwner(); }
+    match /tools/{slug} { allow read: if isPublic() || isOwner(); allow write: if isOwner(); }
+    match /news/{slug}  { allow read: if isPublic() || isOwner(); allow write: if isOwner(); }
+
+    // Everything else is closed.
+    match /{document=**} { allow read, write: if false; }
   }
 }

@@ -15,19 +15,26 @@
     "check": "astro check",
     "seed": "node --experimental-strip-types scripts/seed-firestore.ts",
     "emulators": "firebase emulators:start",
-    "test:rules": "node --experimental-strip-types --test scripts/rules.test.ts"
+    "test:rules": "firebase emulators:exec --only firestore --project demo-darktier-rules --config firebase.test.json \"node --experimental-strip-types --test scripts/rules.test.ts\""
   },
   "dependencies": {
+    "@astrojs/react": "^6.0.2",
     "@astrojs/sitemap": "^3.7.3",
     "@iconify-json/ph": "^1.2.2",
     "astro": "^7.2.2",
     "astro-icon": "^1.1.5",
     "firebase": "^12.17.1",
     "firebase-admin": "^14.2.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
     "sharp": "^0.35.3"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
+    "@firebase/rules-unit-testing": "^5.0.1",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "firebase-tools": "^15.27.0",
     "typescript": "^5.6.0"
   }
 }

@@ -3,10 +3,10 @@ gsd_state_version: '1.0'
 status: executing
 progress:
   total_phases: 7
-  completed_phases: 4
-  total_plans: 4
-  completed_plans: 4
-  percent: 57
+  completed_phases: 5
+  total_plans: 5
+  completed_plans: 5
+  percent: 71
 ---
 
 # Project State
@@ -16,16 +16,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-08-17)
 
 **Core value:** A fast, great-looking, search- and share-optimized public site that becomes the studio's canonical home — so links shared anywhere drive traffic here and every game is discoverable with its cover, blurb, and download/buy link.
-**Current focus:** Phase 5 — Auth & Admin CMS
+**Current focus:** Phase 6 — Publish Pipeline & Deploy
 
 ## Current Position
 
-Phase: 5 of 7 (Auth & Admin CMS)
-Plan: Phases 1–4 complete
-Status: Phase 4 (SEO & Social) ✓ — meta/OG/Twitter, canonical, sitemap, robots (disallow /admin), favicons + 1200x630 OG image, Organization/WebSite/ItemList JSON-LD. Build green. Executing autonomously (verification deferred to end)
-Last activity: 2026-08-17 — Phase 4 SEO & Social built and committed
+Phase: 6 of 7 (Publish Pipeline & Deploy)
+Plan: Phases 1–5 complete
+Status: Phase 5 (Auth & Admin CMS) ✓ — React admin at /admin (Google sign-in, owner-UID gate, CRUD for games/tools/news), hardened Firestore rules. Rules unit tests 8/8 PASS on emulator; seed→Admin-SDK read verified. Live Google sign-in deferred (needs owner Firebase project). Executing autonomously.
+Last activity: 2026-08-17 — Phase 5 Auth & Admin built, rules emulator-tested, committed
 
-Progress: [██████░░░░] 57%
+Progress: [███████░░░] 71%
 
 ## Performance Metrics
 

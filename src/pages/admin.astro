@@ -1,0 +1,26 @@
+---
+import Layout from "../layouts/Layout.astro";
+import AdminApp from "../components/admin/AdminApp.tsx";
+---
+<Layout title="Admin" description="Darktier Studios catalog manager." noindex hideChrome>
+  <nav class="nav site-nav" aria-label="Admin">
+    <a class="nav-brand" href="/" style="display:flex;align-items:center;text-decoration:none">
+      <img src="/assets/logo.png" alt="Darktier Studios" width="120" height="24" style="height:24px;width:auto;display:block;filter:invert(0.91)" />
+    </a>
+    <a href="/games">The Vault</a>
+    <a href="/tools">The Armory</a>
+    <span class="tag tag-outline">Admin</span>
+  </nav>
+  <div class="container" style="padding-bottom:80px">
+    <section style="padding:40px 0 8px">
+      <p class="kicker">Darktier Studios · admin</p>
+      <h1 style="font-size:clamp(32px,3.6vw,48px);line-height:1.11;letter-spacing:-0.015em;margin:0 0 0 -0.06em">Catalog manager</h1>
+    </section>
+
+    <AdminApp client:only="react" />
+
+    <footer class="site-footer" style="margin-top:56px">
+      <span>Admin — changes save to Firestore and reach the public site on the next Publish.</span>
+    </footer>
+  </div>
+</Layout>
