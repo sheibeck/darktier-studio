@@ -16,7 +16,7 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     function isOwner() {
-      return request.auth != null && request.auth.uid == 'OWNER_UID_PLACEHOLDER';
+      return request.auth != null && request.auth.uid == '0z17c5sCiBZLdTKa3s08MDe7KFb2';
     }
     function isPublic() {
       return resource.data.hidden != true;

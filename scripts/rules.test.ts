@@ -14,13 +14,13 @@ import {
 } from "@firebase/rules-unit-testing";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 
-const OWNER = "owner-uid-123";
-const OTHER = "other-uid-456";
-
-// Load the real rules and substitute a known owner UID for the placeholder.
-// replaceAll (not replace) — the placeholder also appears in a comment, and we
-// must substitute the occurrence in the actual rule, not just the first match.
-const rules = readFileSync("firestore.rules", "utf8").replaceAll("OWNER_UID_PLACEHOLDER", OWNER);
+// Load the real rules and read the owner UID straight from them, so the test
+// works whether the file holds OWNER_UID_PLACEHOLDER or the real deployed UID.
+const rules = readFileSync("firestore.rules", "utf8");
+const ownerMatch = rules.match(/request\.auth\.uid == '([^']+)'/);
+if (!ownerMatch) throw new Error("Could not find the owner UID in firestore.rules");
+const OWNER = ownerMatch[1];
+const OTHER = OWNER === "other-uid-456" ? "someone-else-789" : "other-uid-456";
 
 let env: RulesTestEnvironment;
 

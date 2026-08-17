@@ -1,14 +1,19 @@
 import { type CSSProperties, useEffect, useState } from "react";
 import { onAuthStateChanged, signInWithPopup, signOut, type User } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 import {
   ADMIN_UID,
   auth,
   connectEmulatorsOnce,
+  db,
   firebaseConfigured,
   googleProvider,
 } from "../../lib/firebase.client";
 import { Manager, type ColumnDef, type FieldDef } from "./Manager";
 import type { Game, NewsPost, Tool } from "../../lib/types";
+import { games as seedGames } from "../../data/catalog/games";
+import { tools as seedTools } from "../../data/catalog/tools";
+import { news as seedNews } from "../../data/catalog/news";
 
 connectEmulatorsOnce();
 
@@ -125,6 +130,7 @@ export default function AdminApp() {
   const [ready, setReady] = useState(false);
   const [authErr, setAuthErr] = useState<string | null>(null);
   const [builtAt, setBuiltAt] = useState<string | null>(null);
+  const [seedMsg, setSeedMsg] = useState("");
 
   useEffect(() => {
     if (!firebaseConfigured) return;
@@ -181,6 +187,20 @@ export default function AdminApp() {
   }
 
   const isOwner = Boolean(ADMIN_UID) && user.uid === ADMIN_UID;
+
+  const seedAll = async () => {
+    if (!window.confirm("Load the default catalog into Firestore? Items with the same slug will be overwritten.")) return;
+    setSeedMsg("Loading…");
+    try {
+      const strip = (o: object) => Object.fromEntries(Object.entries(o).filter(([, v]) => v !== undefined));
+      for (const g of seedGames) await setDoc(doc(db, "games", g.slug), strip(g));
+      for (const t of seedTools) await setDoc(doc(db, "tools", t.slug), strip(t));
+      for (const n of seedNews) await setDoc(doc(db, "news", n.slug), strip(n));
+      setSeedMsg(`Loaded ${seedGames.length} games, ${seedTools.length} tools, ${seedNews.length} posts. Remember to Publish.`);
+    } catch (e) {
+      setSeedMsg(`Error: ${(e as Error).message}`);
+    }
+  };
   if (!isOwner) {
     return (
       <div className="card elev-md" style={{ maxWidth: "560px", marginTop: "24px" }}>
@@ -217,6 +237,12 @@ export default function AdminApp() {
         Edits save to Firestore immediately. They reach the public site on the next <strong>Publish</strong> — trigger a rebuild from
         the repo's GitHub Actions ("Deploy" → "Run workflow"), or run <code>npm run deploy</code> locally.
       </p>
+      <div style={{ display: "flex", gap: "var(--space-3)", alignItems: "center", flexWrap: "wrap", marginTop: "4px" }}>
+        <button type="button" className="btn btn-secondary" onClick={seedAll}>Load starter catalog</button>
+        {seedMsg && (
+          <span style={{ fontSize: "13px", color: "color-mix(in srgb, var(--color-text) 60%, transparent)" }}>{seedMsg}</span>
+        )}
+      </div>
 
       <Manager<Game>
         name="games"
