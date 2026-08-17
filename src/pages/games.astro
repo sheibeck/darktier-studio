@@ -58,7 +58,7 @@ const gamesLd = {
         rows.map((g) => (
           <article id={g.slug} class="vault-row">
             <a class="vault-cover-link" href={g.primaryHref} target="_blank" rel="noopener" aria-label={`Open ${g.name}`}>
-              <div class="vault-cover lighten">
+              <div class="vault-cover">
                 {g.img ? (
                   <img src={g.img} alt={`${g.name} cover art`} loading="lazy" decoding="async" />
                 ) : (

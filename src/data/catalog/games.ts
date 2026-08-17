@@ -12,14 +12,14 @@ import type { Game } from "../../lib/types";
 export const games: Game[] = [
   {
     slug: "charlie-mike", name: "Charlie Mike", type: "TTRPG", pub: "dev",
-    app: "https://charlie-mike-428f0.web.app/", isNew: true, showcase: true, img: "/assets/covers/charlie-mike.png",
+    app: "https://charlie-mike-428f0.web.app/", isNew: true, showcase: true, img: "/assets/covers/charlie-mike.jpg",
     synopsis:
       "Continue mission. A military TTRPG in development — run your unit through ops with the Charlie Mike TOC companion app. Rulebook coming as a PDF.",
     order: 0,
   },
   {
     slug: "exfil", name: "EXFIL", type: "Board game", pub: "tgc", released: "2020-06",
-    img: "/assets/covers/exfil.png", showcase: false,
+    img: "/assets/covers/exfil.jpg", showcase: false,
     synopsis:
       "Get in, get out, get paid. A tactical extraction game with sitrep-driven missions and a spoiler-laden campaign guide — published at The Game Crafter with a print-and-play edition.",
     order: 1,

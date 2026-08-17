@@ -57,7 +57,7 @@ const dispatches = await getLatestNews(5);
         {
           featured.map((g) => (
             <a href={`/games#${g.slug}`} class="feat-card">
-              <div class="lighten feat-cover">
+              <div class="feat-cover">
                 {g.img ? (
                   <img src={g.img} alt={`${g.name} cover art`} loading="lazy" decoding="async" />
                 ) : (
