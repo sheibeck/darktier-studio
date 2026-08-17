@@ -1,4 +1,4 @@
-import { type ReactNode, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { useCollection, type Row } from "./useCollection";
 
 export type FieldType = "text" | "textarea" | "url" | "select" | "month" | "date" | "checkbox";
@@ -83,6 +83,21 @@ export function Manager<T extends Row>(props: ManagerProps<T>) {
     setEditing(null);
     setDraft(null);
   };
+
+  // While the edit modal is open: close on Escape and lock background scroll.
+  useEffect(() => {
+    if (!editing) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") cancel();
+    };
+    document.addEventListener("keydown", onKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [editing]);
 
   const doSave = async () => {
     if (!draft) return;
@@ -231,19 +246,26 @@ export function Manager<T extends Row>(props: ManagerProps<T>) {
       )}
 
       {editing && draft && (
-        <section className="card elev-md" style={{ marginTop: "28px", maxWidth: "720px" }}>
-          <p className="card-kicker" style={{ color: "var(--color-accent)" }}>
-            {editing === "__new" ? `New ${props.singular}` : `Editing — ${String((draft as Record<string, unknown>)[props.requiredKey] ?? "")}`}
-          </p>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--space-4)" }}>
-            {props.fields.map((f) => (
-              <div key={f.key} className="field" style={f.full ? { gridColumn: "1 / -1" } : undefined}>
-                {f.type !== "checkbox" && <label>{f.label}</label>}
-                {renderField(f)}
-              </div>
-            ))}
-          </div>
-          <div className="dialog-actions" style={{ display: "flex", gap: "var(--space-3)", marginTop: "var(--space-4)" }}>
+        <div
+          className="dialog-backdrop"
+          role="dialog"
+          aria-modal="true"
+          aria-label={editing === "__new" ? `New ${props.singular}` : `Edit ${props.singular}`}
+          onClick={cancel}
+        >
+          <div className="card elev-lg admin-modal" onClick={(e) => e.stopPropagation()}>
+            <p className="card-kicker" style={{ color: "var(--color-accent)" }}>
+              {editing === "__new" ? `New ${props.singular}` : `Editing — ${String((draft as Record<string, unknown>)[props.requiredKey] ?? "")}`}
+            </p>
+            <div className="admin-modal-grid">
+              {props.fields.map((f) => (
+                <div key={f.key} className="field" style={f.full ? { gridColumn: "1 / -1" } : undefined}>
+                  {f.type !== "checkbox" && <label>{f.label}</label>}
+                  {renderField(f)}
+                </div>
+              ))}
+            </div>
+            <div className="dialog-actions" style={{ display: "flex", gap: "var(--space-3)", marginTop: "var(--space-4)" }}>
             <button type="button" className="btn btn-primary" onClick={doSave}>
               Save
             </button>
@@ -260,8 +282,9 @@ export function Manager<T extends Row>(props: ManagerProps<T>) {
                 Delete {props.singular}
               </button>
             )}
+            </div>
           </div>
-        </section>
+        </div>
       )}
     </section>
   );

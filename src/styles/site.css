@@ -61,6 +61,14 @@ a:hover { color: var(--color-accent); }
 .site-footer a { color: color-mix(in srgb, var(--color-text) 72%, transparent); text-decoration: none; }
 .site-footer a:hover { color: var(--color-accent); }
 
+/* Admin edit modal (uses nocturne .dialog-backdrop as the overlay) */
+.dialog-backdrop { z-index: 100; }
+.admin-modal { width: min(720px, 100%); max-height: 90vh; overflow-y: auto; }
+.admin-modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+@media (max-width: 560px) {
+  .admin-modal-grid { grid-template-columns: 1fr; }
+}
+
 /* Respect reduced-motion for any future transitions */
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }

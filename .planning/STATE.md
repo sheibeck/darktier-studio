@@ -28,6 +28,12 @@ Remaining (owner steps, LAUNCH.md): enable Google sign-in provider · sign in + 
 
 Progress: [██████████] 100% built · deployed to staging
 
+## Quick Tasks Completed
+
+| Date | Task | Slug |
+|------|------|------|
+| 2026-08-17 | Admin edit forms → centered modals (click-outside/Escape/scroll-lock) | admin-edit-modals |
+
 ## Performance Metrics
 
 **Velocity:**
