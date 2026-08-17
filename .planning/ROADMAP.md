@@ -98,10 +98,12 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Success Criteria** (what must be TRUE):
   1. Running the deploy pipeline builds the Astro site and deploys it live to Firebase Hosting at the project's `*.web.app` URL
   2. Publishing an admin edit (via an automated rebuild trigger or an explicit "Publish" action) causes the public site to reflect the change within a bounded, predictable time, and the admin shows a visible "last published" timestamp
-  3. Visiting and navigating the public site records a page view with referrer in the privacy-friendly analytics dashboard, with no cookie-consent banner required
+  3. Visiting and navigating the public site records a page view with referrer in the free Cloudflare Web Analytics dashboard, with no cookie-consent banner required
 **Plans**: TBD
 
-**Risk flag**: The rebuild-on-publish wiring (Firestore `onWrite` → GitHub `repository_dispatch`, or the simpler scheduled-cron/manual-Publish fallback) is a synthesized pattern without a single authoritative tutorial per research — flag for deeper research during planning. A manual "Publish" button with a visible last-published indicator is an acceptable, lower-risk v1 fallback if minimizing new infrastructure outweighs sub-3-minute freshness.
+**Cost constraint (hard)**: This project stays on the Firebase **free Spark plan — $0/month, no Blaze, no Cloud Functions**. The rebuild-on-publish MUST use a free mechanism: **GitHub Actions** (rebuild+deploy triggered from the admin, or on push) or an explicit **manual "Publish"/deploy action** — NOT a Firestore `onWrite` Cloud Function (that requires paid Blaze). Analytics is **Cloudflare Web Analytics** (free, cookie-free), not Plausible. The SUMMARY.md/STACK.md research suggestions of a Cloud Function and Plausible are explicitly overridden here.
+
+**Risk flag**: The GitHub Actions rebuild-on-publish wiring is a synthesized pattern without a single authoritative tutorial per research — flag for deeper research during planning. A manual "Publish" button with a visible last-published indicator is an acceptable, lower-risk v1 fallback.
 
 ### Phase 7: Launch & Cutover
 **Goal**: darktierstudios.com is the live, canonical home of the studio, and existing inbound links from the old site keep working

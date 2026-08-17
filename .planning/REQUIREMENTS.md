@@ -66,13 +66,13 @@ Initial release. Owner chose "everything before launch" — public site, admin C
 ### Publishing & Deploy
 
 - [ ] **PUB-01**: The site builds and deploys to Firebase Hosting
-- [ ] **PUB-02**: An admin edit propagates to the public site via a rebuild-on-publish trigger (or an explicit "Publish" action), with a visible last-published indicator
+- [ ] **PUB-02**: An admin edit propagates to the public site via a free rebuild-on-publish mechanism — GitHub Actions or an explicit "Publish" action, **no Cloud Functions** — with a visible last-published indicator
 - [ ] **PUB-03**: The site is live on the custom domain `darktierstudios.com` over HTTPS (Firebase Hosting Advanced Setup)
 - [ ] **PUB-04**: Known old-site URLs 301-redirect to their new equivalents so existing inbound links do not 404
 
 ### Analytics
 
-- [ ] **ANALYTICS-01**: Privacy-friendly, cookie-free analytics is installed and records visits and referrers (to measure the Facebook→site migration)
+- [ ] **ANALYTICS-01**: Free, privacy-friendly, cookie-free analytics (Cloudflare Web Analytics) is installed and records visits and referrers (to measure the Facebook→site migration)
 
 ## v2 Requirements
 
@@ -107,6 +107,8 @@ Explicitly excluded to prevent scope creep.
 | Shipping the design prototype's DC React runtime / localStorage admin | Replaced by Astro SSG + Firestore + Firebase Auth |
 | Client-side runtime Firestore reads on public pages | Breaks SEO/social previews — public data is fetched at build time |
 | Firebase Storage for assets | Fixed public asset set; Hosting `public/` is simpler and sufficient |
+| Firebase Blaze plan / Cloud Functions | Personal site must stay $0 on the free Spark plan; publish uses GitHub Actions or a manual action instead |
+| Paid analytics (Plausible ~$9/mo) | Free Cloudflare Web Analytics covers the need at $0 |
 
 ## Traceability
 

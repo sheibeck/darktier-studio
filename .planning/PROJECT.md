@@ -59,7 +59,8 @@ A fast, great-looking, search- and share-optimized public site that becomes the 
 
 ## Constraints
 
-- **Hosting**: Firebase Hosting (owner's existing platform) — Why: consistency with the Charlie Mike app; owner familiarity; free/cheap for a static+SPA site.
+- **Cost**: **Free tier only — $0/month.** Firebase **Spark** plan; NO Blaze/billing, NO Cloud Functions (they require Blaze). Any paid third-party service is excluded unless it has a free tier — Why: this is a personal site at low volume; the owner explicitly wants zero recurring cost.
+- **Hosting**: Firebase Hosting on the free Spark plan (owner's existing platform) — Why: consistency with the Charlie Mike app; owner familiarity; static output + build-time Firestore reads stay comfortably within Spark's free limits.
 - **Domain**: Custom domain `darktierstudios.com` (already owned) — Why: branding and the canonical destination for all traffic; requires DNS setup + OG/canonical URLs baked to this origin.
 - **Auth**: Firebase Authentication, Google sign-in, single admin (owner's Google account) — Why: no passwords to manage; admin writes locked to the owner's UID via security rules.
 - **Datastore**: Firestore for catalog data (games/tools/news); PDFs + covers served as static assets (Firebase Hosting or Storage) — Why: live editing from the admin without redeploys; simple, low-volume.
@@ -76,7 +77,9 @@ A fast, great-looking, search- and share-optimized public site that becomes the 
 | Firebase Auth, Google sign-in, single admin (owner UID) | Simplest secure admin; no password management | — Pending |
 | Convert design prototypes off the DC/localStorage runtime to a real SEO-friendly stack | Prototype format isn't production/SEO-suitable | — Pending |
 | Reuse Nocturne `styles.css` verbatim; match approved designs | Design already approved and coherent | — Pending |
-| Privacy-friendly analytics (cookie-free) | Measure Facebook→site migration without heavy tracking | — Pending |
+| Free tier only — Firebase Spark, no Blaze/Cloud Functions | Personal low-volume site; owner wants $0/month | — Pending |
+| Rebuild-on-publish via GitHub Actions or a manual Publish button (NOT a Cloud Function) | Cloud Functions require the paid Blaze plan; GitHub Actions/manual keep it free | — Pending |
+| Cloudflare Web Analytics (free, cookie-free) — not Plausible | Same privacy-friendly visits/referrers at $0 (Plausible is ~$9/mo) | — Pending |
 | No on-site commerce; link out to The Game Crafter | Sales already handled there; keeps v1 lean | — Pending |
 | No email capture / no Facebook link in v1 | Owner deferred email; goal is to leave Facebook | — Pending |
 
