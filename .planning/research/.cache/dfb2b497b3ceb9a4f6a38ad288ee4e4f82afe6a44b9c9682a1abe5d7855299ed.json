@@ -1,1 +1,0 @@
-{"content":"firebase.json supports a hosting.headers array matching glob source patterns (e.g. **/*.pdf) to Cache-Control header values; Firebase Hosting default is Cache-Control max-age=3600 unless overridden.","source":"web","provider":"websearch","confidence":"LOW","fetched_at":"2026-08-17T19:18:30.173Z","ttl":86400000,"kind":"web"}

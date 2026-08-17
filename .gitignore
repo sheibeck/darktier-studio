@@ -1,0 +1,17 @@
+# GSD research scratch cache
+.planning/research/.cache/
+
+# Node / build
+node_modules/
+dist/
+.astro/
+
+# Firebase
+.firebase/
+firebase-debug.log
+
+# Env / secrets
+.env
+.env.*
+*-service-account*.json
+serviceAccountKey.json
