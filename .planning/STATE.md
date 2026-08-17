@@ -1,6 +1,6 @@
 ---
 gsd_state_version: '1.0'
-status: built
+status: shipped-staging
 progress:
   total_phases: 7
   completed_phases: 7
@@ -16,15 +16,17 @@ progress:
 See: .planning/PROJECT.md (updated 2026-08-17)
 
 **Core value:** A fast, great-looking, search- and share-optimized public site that becomes the studio's canonical home — so links shared anywhere drive traffic here and every game is discoverable with its cover, blurb, and download/buy link.
-**Current focus:** Launch (user action) — see LAUNCH.md
+**Current focus:** Live on staging URL — final launch steps (domain/analytics) pending, see LAUNCH.md
 
 ## Current Position
 
-Phase: 7 of 7 built — milestone code-complete
-Status: All 7 phases built & locally verified (build green; rules 8/8; seed→read verified). Go-live steps (Firebase project, deploy, custom domain DNS, analytics token, live Google sign-in) need the owner — see LAUNCH.md. PUB-04 (old-site redirects) dropped: no live old site exists.
-Last activity: 2026-08-17 — Phase 7 domain config + LAUNCH.md; games covers/titles made clickable; Vault copy updated
+Phase: 7 of 7 — **deployed & live on staging**
+Status: Site LIVE at https://darktierstudios-b846f.web.app (Firebase project darktierstudios-b846f, free Spark). Hosting + Firestore rules (owner-UID) deployed. Admin configured (config + owner UID inlined); "Load starter catalog" button added to seed Firestore client-side. Firestore rules emulator-tested 8/8 with the real UID.
+Last activity: 2026-08-17 — deployed to Firebase Hosting + rules; fixed project id, env var names, client-init crash guard; hardcoded owner UID; added client-side seed
 
-Progress: [██████████] 100% built
+Remaining (owner steps, LAUNCH.md): enable Google sign-in provider · sign in + click "Load starter catalog" · custom domain darktierstudios.com DNS · Cloudflare analytics token · service-account secret for CI build-time Firestore read (so admin edits publish live)
+
+Progress: [██████████] 100% built · deployed to staging
 
 ## Performance Metrics
 
@@ -62,8 +64,8 @@ None yet.
 
 ### Blockers/Concerns
 
-- [Phase 5 — Auth & Admin CMS]: Firestore security-rules correctness is the highest-risk item in the roadmap (research Pitfall #2). Must be verified with Firebase Emulator Suite rules-unit tests (unauthenticated write, non-owner UID write, draft-doc read all denied), not manual checks alone.
-- [Phase 6 — Publish Pipeline & Deploy]: The rebuild-on-publish wiring (Cloud Function → GitHub `repository_dispatch`, vs. cron, vs. manual Publish button) is a synthesized pattern with no single authoritative tutorial (research MEDIUM confidence) — flag for deeper research when this phase is planned.
+- [RESOLVED] Firestore rules: emulator rules-unit tests pass 8/8 (with the real owner UID); rules deployed to production.
+- [RESOLVED] Publish wiring: shipped as GitHub Actions + manual `npm run deploy` (no Cloud Functions, free tier). First deploy done manually to the staging URL.
 - [Phase 2 — Content & Data]: Archive-reconstructed game synopses and the PDF↔game filename mapping (e.g. `amaranth.pdf` → Amaranthine) need an explicit owner review pass before being presented as fact.
 
 ## Deferred Items

@@ -72,16 +72,20 @@ A fast, great-looking, search- and share-optimized public site that becomes the 
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Firebase Hosting + custom domain darktierstudios.com | Matches owner's existing Charlie Mike app; owns the domain | — Pending |
-| Firestore as the catalog datastore (games/tools/news) | Live admin edits without redeploys; low volume | — Pending |
-| Firebase Auth, Google sign-in, single admin (owner UID) | Simplest secure admin; no password management | — Pending |
-| Convert design prototypes off the DC/localStorage runtime to a real SEO-friendly stack | Prototype format isn't production/SEO-suitable | — Pending |
-| Reuse Nocturne `styles.css` verbatim; match approved designs | Design already approved and coherent | — Pending |
-| Free tier only — Firebase Spark, no Blaze/Cloud Functions | Personal low-volume site; owner wants $0/month | — Pending |
-| Rebuild-on-publish via GitHub Actions or a manual Publish button (NOT a Cloud Function) | Cloud Functions require the paid Blaze plan; GitHub Actions/manual keep it free | — Pending |
-| Cloudflare Web Analytics (free, cookie-free) — not Plausible | Same privacy-friendly visits/referrers at $0 (Plausible is ~$9/mo) | — Pending |
-| No on-site commerce; link out to The Game Crafter | Sales already handled there; keeps v1 lean | — Pending |
-| No email capture / no Facebook link in v1 | Owner deferred email; goal is to leave Facebook | — Pending |
+| Firebase Hosting + custom domain darktierstudios.com | Matches owner's existing Charlie Mike app; owns the domain | ✓ Done |
+| Firestore as the catalog datastore (games/tools/news) | Live admin edits without redeploys; low volume | ✓ Done |
+| Firebase Auth, Google sign-in, single admin (owner UID) | Simplest secure admin; no password management | ✓ Done |
+| Convert design prototypes off the DC/localStorage runtime to a real SEO-friendly stack | Prototype format isn't production/SEO-suitable | ✓ Done |
+| Reuse Nocturne `styles.css` verbatim; match approved designs | Design already approved and coherent | ✓ Done |
+| Free tier only — Firebase Spark, no Blaze/Cloud Functions | Personal low-volume site; owner wants $0/month | ✓ Done |
+| Rebuild-on-publish via GitHub Actions or a manual Publish button (NOT a Cloud Function) | Cloud Functions require the paid Blaze plan; GitHub Actions/manual keep it free | ✓ Done |
+| Cloudflare Web Analytics (free, cookie-free) — not Plausible | Same privacy-friendly visits/referrers at $0 (Plausible is ~$9/mo) | ✓ Done |
+| No on-site commerce; link out to The Game Crafter | Sales already handled there; keeps v1 lean | ✓ Done |
+| No email capture / no Facebook link in v1 | Owner deferred email; goal is to leave Facebook | ✓ Done |
+| Firebase project id is `darktierstudios-b846f` | Owner's actual project (repo is `darktier-studio`) | ✓ Done |
+| Deploy manually (`npm run deploy`) + GitHub Actions; first ship to the `*.web.app` staging URL before the custom domain | Free, no Cloud Functions; verify before DNS cutover | ✓ Done |
+| Client-side "Load starter catalog" button seeds Firestore as the owner | Avoids a service-account key for initial content | ✓ Done |
+| Owner UID hardcoded in `firestore.rules` (not abstracted) | A UID is an identifier, not a credential; rules enforced server-side — safe. Owner chose simplicity | ✓ Done |
 
 ## Evolution
 
@@ -101,4 +105,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-08-17 after initialization*
+*Last updated: 2026-08-17 after launch to staging (darktierstudios-b846f.web.app)*

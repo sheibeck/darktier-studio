@@ -4,6 +4,10 @@
 
 The site is built in dependency order: stand up the Astro + Firebase shell wearing the approved Nocturne design (Phase 1), then build the Firestore catalog — schema, seeded and owner-reviewed content, migrated covers/PDFs (Phase 2) — before any page can render real data. With data in place, every public page (Home, The Vault, The Armory, Dispatches, 404) is built from that catalog as crawlable static HTML (Phase 3), which unlocks the SEO/social metadata layer that depends on real routes and slugs (Phase 4). In parallel dependency terms, the data model from Phase 2 also unblocks Firebase Auth and the owner-only admin CMS, with Firestore security rules verified by emulator tests (Phase 5). Once the admin has a real "Publish" action to trigger against, the build+deploy pipeline, rebuild-on-publish wiring, and analytics go live (Phase 6). Only after the full stack is verified on a throwaway `*.web.app` URL does the project cut over to the custom domain with an old-URL redirect inventory (Phase 7) — closing the loop on the core goal: every shared link drives traffic to a fast, discoverable, canonical home.
 
+## Deployment status
+
+**Deployed & live (staging):** https://darktierstudios-b846f.web.app — 2026-08-17 (Firebase project `darktierstudios-b846f`, free Spark plan). Hosting + Firestore rules (owner-UID) deployed. Admin configured; "Load starter catalog" seeds Firestore client-side. Remaining owner steps: enable Google sign-in, seed catalog, custom domain `darktierstudios.com` DNS, Cloudflare analytics token, CI service account (build-time Firestore read). See `LAUNCH.md`.
+
 ## Phases
 
 **Phase Numbering:**
@@ -128,4 +132,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 4. SEO & Social | 1/1 | ✓ Complete | 2026-08-17 |
 | 5. Auth & Admin CMS | 1/1 | ✓ Complete | 2026-08-17 |
 | 6. Publish Pipeline & Deploy | 1/1 | ✓ Complete | 2026-08-17 |
-| 7. Launch & Cutover | 1/1 | ◑ Built (domain = user launch step) | 2026-08-17 |
+| 7. Launch & Cutover | 1/1 | ✓ Deployed to staging (custom domain DNS pending) | 2026-08-17 |
