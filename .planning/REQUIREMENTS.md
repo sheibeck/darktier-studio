@@ -68,7 +68,7 @@ Initial release. Owner chose "everything before launch" — public site, admin C
 - [ ] **PUB-01**: The site builds and deploys to Firebase Hosting
 - [ ] **PUB-02**: An admin edit propagates to the public site via a free rebuild-on-publish mechanism — GitHub Actions or an explicit "Publish" action, **no Cloud Functions** — with a visible last-published indicator
 - [ ] **PUB-03**: The site is live on the custom domain `darktierstudios.com` over HTTPS (Firebase Hosting Advanced Setup)
-- [ ] **PUB-04**: Known old-site URLs 301-redirect to their new equivalents so existing inbound links do not 404
+- [x] ~~**PUB-04**: Known old-site URLs 301-redirect~~ — **N/A**: there is no live old site (only a Facebook page + a non-live archived repo), so there are no inbound URLs to preserve. Dropped 2026-08-17.
 
 ### Analytics
 

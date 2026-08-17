@@ -1,12 +1,12 @@
 ---
 gsd_state_version: '1.0'
-status: executing
+status: built
 progress:
   total_phases: 7
-  completed_phases: 6
-  total_plans: 6
-  completed_plans: 6
-  percent: 85
+  completed_phases: 7
+  total_plans: 7
+  completed_plans: 7
+  percent: 100
 ---
 
 # Project State
@@ -16,16 +16,15 @@ progress:
 See: .planning/PROJECT.md (updated 2026-08-17)
 
 **Core value:** A fast, great-looking, search- and share-optimized public site that becomes the studio's canonical home — so links shared anywhere drive traffic here and every game is discoverable with its cover, blurb, and download/buy link.
-**Current focus:** Phase 7 — Launch & Cutover
+**Current focus:** Launch (user action) — see LAUNCH.md
 
 ## Current Position
 
-Phase: 7 of 7 (Launch & Cutover)
-Plan: Phases 1–6 complete
-Status: Phase 6 (Publish Pipeline & Deploy) ✓ — GitHub Actions deploy + manual Publish (no Cloud Functions), last-published indicator, Cloudflare analytics (env-gated). Build green. Executing autonomously.
-Last activity: 2026-08-17 — Phase 6 Publish Pipeline built and committed
+Phase: 7 of 7 built — milestone code-complete
+Status: All 7 phases built & locally verified (build green; rules 8/8; seed→read verified). Go-live steps (Firebase project, deploy, custom domain DNS, analytics token, live Google sign-in) need the owner — see LAUNCH.md. PUB-04 (old-site redirects) dropped: no live old site exists.
+Last activity: 2026-08-17 — Phase 7 domain config + LAUNCH.md; games covers/titles made clickable; Vault copy updated
 
-Progress: [████████░░] 85%
+Progress: [██████████] 100% built
 
 ## Performance Metrics
 

@@ -18,7 +18,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 4: SEO & Social** - Per-page metadata, Open Graph/Twitter cards, sitemap, robots.txt, favicons, and structured data
 - [x] **Phase 5: Auth & Admin CMS** - Owner-only Google sign-in and a full CRUD editor for games/tools/news, backed by emulator-verified security rules
 - [x] **Phase 6: Publish Pipeline & Deploy** - Build+deploy to Firebase Hosting, a publish action with visible last-published status, and analytics
-- [ ] **Phase 7: Launch & Cutover** - Custom domain darktierstudios.com over HTTPS with 301 redirects from known old-site URLs
+- [x] **Phase 7: Launch & Cutover** - Custom domain darktierstudios.com over HTTPS with 301 redirects from known old-site URLs
 
 ## Phase Details
 
@@ -109,10 +109,10 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Goal**: darktierstudios.com is the live, canonical home of the studio, and existing inbound links from the old site keep working
 **Mode:** mvp
 **Depends on**: Phase 4, Phase 6
-**Requirements**: PUB-03, PUB-04
+**Requirements**: PUB-03 (PUB-04 dropped — no live old site to redirect from)
 **Success Criteria** (what must be TRUE):
   1. `https://darktierstudios.com` serves the site over valid HTTPS via Firebase Hosting's Advanced Setup custom domain
-  2. Visiting a known old-site URL (from the archived-site inventory) 301-redirects to its correct new-site equivalent rather than returning a 404
+  2. ~~old-site URL 301 redirects~~ — N/A: no live old site exists (only a Facebook page + a non-live archived repo); nothing to redirect
 **Plans**: TBD
 
 ## Progress
@@ -128,4 +128,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 4. SEO & Social | 1/1 | ✓ Complete | 2026-08-17 |
 | 5. Auth & Admin CMS | 1/1 | ✓ Complete | 2026-08-17 |
 | 6. Publish Pipeline & Deploy | 1/1 | ✓ Complete | 2026-08-17 |
-| 7. Launch & Cutover | 0/TBD | Not started | - |
+| 7. Launch & Cutover | 1/1 | ◑ Built (domain = user launch step) | 2026-08-17 |
