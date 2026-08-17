@@ -18,10 +18,12 @@
     "test:rules": "node --experimental-strip-types --test scripts/rules.test.ts"
   },
   "dependencies": {
-    "astro": "^7.2.2",
     "@astrojs/sitemap": "^3.7.3",
-    "astro-icon": "^1.1.5",
     "@iconify-json/ph": "^1.2.2",
+    "astro": "^7.2.2",
+    "astro-icon": "^1.1.5",
+    "firebase": "^12.17.1",
+    "firebase-admin": "^14.2.0",
     "sharp": "^0.35.3"
   },
   "devDependencies": {

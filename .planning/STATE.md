@@ -3,10 +3,10 @@ gsd_state_version: '1.0'
 status: executing
 progress:
   total_phases: 7
-  completed_phases: 1
-  total_plans: 1
-  completed_plans: 1
-  percent: 14
+  completed_phases: 2
+  total_plans: 2
+  completed_plans: 2
+  percent: 28
 ---
 
 # Project State
@@ -16,16 +16,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-08-17)
 
 **Core value:** A fast, great-looking, search- and share-optimized public site that becomes the studio's canonical home — so links shared anywhere drive traffic here and every game is discoverable with its cover, blurb, and download/buy link.
-**Current focus:** Phase 2 — Content & Data
+**Current focus:** Phase 3 — Public Pages
 
 ## Current Position
 
-Phase: 2 of 7 (Content & Data)
-Plan: Phase 1 complete
-Status: Phase 1 (Foundation) ✓ built & verified (npm build passes, 3 static pages + sitemap) — executing autonomously (verification deferred to end)
-Last activity: 2026-08-17 — Phase 1 Foundation: Astro scaffold + Nocturne port + shell built and committed
+Phase: 3 of 7 (Public Pages)
+Plan: Phases 1–2 complete
+Status: Phase 2 (Content & Data) ✓ — 23 assets migrated, typed catalog (13 games/3 tools/2 news), build-time loader (Firestore-or-seed), seed script, Firebase config. Build green. Executing autonomously (verification deferred to end)
+Last activity: 2026-08-17 — Phase 2 Content & Data built and committed
 
-Progress: [█░░░░░░░░░] 14%
+Progress: [██░░░░░░░░] 28%
 
 ## Performance Metrics
 

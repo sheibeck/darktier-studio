@@ -1,0 +1,17 @@
+rules_version = '2';
+
+// INTERIM rules (Phase 2). Public read of non-hidden catalog docs; ALL writes
+// denied. Phase 5 (Auth & Admin CMS) replaces the write rule with an
+// owner-UID exception and adds emulator-verified rules-unit tests.
+//
+// Build-time reads and the seed script use the Admin SDK, which bypasses these
+// rules — so seeding and SSG work regardless of what is allowed here.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /games/{slug}   { allow read: if resource.data.hidden != true; allow write: if false; }
+    match /tools/{slug}   { allow read: if resource.data.hidden != true; allow write: if false; }
+    match /news/{slug}    { allow read: if resource.data.hidden != true; allow write: if false; }
+    // Everything else: closed.
+    match /{document=**}  { allow read, write: if false; }
+  }
+}
