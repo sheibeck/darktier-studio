@@ -1,0 +1,1 @@
+{"content":"Astro prerenders pages to static HTML by default and deploys to Firebase Hosting with no config changes; fetch Firestore data at build time via firebase-admin service-account credentials inside .astro pages/getStaticPaths.","source":"web","provider":"websearch","confidence":"LOW","fetched_at":"2026-08-17T19:18:29.368Z","ttl":86400000,"kind":"web"}
