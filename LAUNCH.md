@@ -6,7 +6,7 @@ None of it requires a credit card (no Blaze, no Cloud Functions).
 
 ## 1. Firebase project
 
-- [ ] Create a project at <https://console.firebase.google.com> (free **Spark** plan). Suggested id: `darktier-studio`.
+- [x] Firebase project already exists: **`darktierstudios-b846f`** (free **Spark** plan). `.firebaserc` points at it.
 - [ ] **Web app**: Project settings → *Your apps* → add a Web app → copy the config values into `PUBLIC_FIREBASE_*` (see [`docs/environment.md`](./docs/environment.md)).
 - [ ] Update `.firebaserc` `default` to your real project id, or run `firebase use <project-id>`.
 

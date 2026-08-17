@@ -13,9 +13,9 @@ is Firestore rules + the owner-UID check. Get the values from
 | Variable | Example | Notes |
 |----------|---------|-------|
 | `PUBLIC_FIREBASE_API_KEY` | `AIza…` | Web API key (public) |
-| `PUBLIC_FIREBASE_AUTH_DOMAIN` | `darktier-studio.firebaseapp.com` | |
-| `PUBLIC_FIREBASE_PROJECT_ID` | `darktier-studio` | |
-| `PUBLIC_FIREBASE_STORAGE_BUCKET` | `darktier-studio.appspot.com` | |
+| `PUBLIC_FIREBASE_AUTH_DOMAIN` | `darktierstudios-b846f.firebaseapp.com` | |
+| `PUBLIC_FIREBASE_PROJECT_ID` | `darktierstudios-b846f` | |
+| `PUBLIC_FIREBASE_STORAGE_BUCKET` | `darktierstudios-b846f.firebasestorage.app` | copy the exact value from the console (may be `.appspot.com`) |
 | `PUBLIC_FIREBASE_MESSAGING_SENDER_ID` | `1234567890` | |
 | `PUBLIC_FIREBASE_APP_ID` | `1:123…:web:abc…` | |
 | `PUBLIC_ADMIN_UID` | `a1b2c3…` | **Your Google account UID.** Only this account may edit. Find it in Firebase Console → Authentication → Users after your first sign-in. Also paste it into `firestore.rules` (replace `OWNER_UID_PLACEHOLDER`). |
@@ -28,7 +28,7 @@ committed seed. In CI, set a service account secret.
 
 | Variable | Notes |
 |----------|-------|
-| `FIREBASE_PROJECT_ID` | e.g. `darktier-studio` |
+| `FIREBASE_PROJECT_ID` | `darktierstudios-b846f` |
 | `FIREBASE_SERVICE_ACCOUNT` | The service-account JSON, as a single-line secret. (Or `GOOGLE_APPLICATION_CREDENTIALS` pointing at a file.) |
 
 ## Local emulator (dev)
