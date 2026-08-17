@@ -1,0 +1,38 @@
+---
+import { navItems, site } from "../data/site";
+interface Props {
+  current?: string;
+}
+const { current } = Astro.props;
+---
+<nav class="nav site-nav" aria-label="Primary">
+  <a class="nav-brand" href="/" aria-label="Darktier Studios — home" style="display:flex;align-items:center;text-decoration:none">
+    <img
+      src="/assets/logo.png"
+      alt="Darktier Studios"
+      width="120"
+      height="24"
+      style="height:24px;width:auto;display:block;filter:invert(0.91)"
+    />
+  </a>
+  {
+    navItems.map((item) => (
+      <a
+        href={item.href}
+        aria-current={current === item.href ? "page" : undefined}
+        style={current === item.href ? "color:var(--color-accent)" : undefined}
+      >
+        {item.label}
+      </a>
+    ))
+  }
+  <a
+    class="btn btn-primary"
+    href={site.gameCrafter}
+    target="_blank"
+    rel="noopener"
+    style="text-decoration:none"
+  >
+    Shop our games
+  </a>
+</nav>

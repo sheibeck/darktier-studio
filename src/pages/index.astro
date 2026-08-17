@@ -1,0 +1,95 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { site } from "../data/site";
+---
+<Layout
+  title={site.name}
+  description={site.description}
+  page="home"
+  current="/"
+>
+  <!-- Hero -->
+  <section style="position:relative;overflow:hidden;min-height:78vh;display:grid;align-items:center">
+    <div class="lighten" style="position:absolute;inset:0;z-index:0">
+      <div style="width:100%;height:100%;background-image:url('/assets/covers/woe.png');background-size:cover;background-position:center 30%;opacity:0.5;filter:saturate(0.7)"></div>
+    </div>
+    <div style="position:absolute;inset:0;z-index:1;background:linear-gradient(to right, var(--color-bg) 8%, color-mix(in srgb, var(--color-bg) 55%, transparent) 45%, transparent 80%)"></div>
+    <div class="container" style="position:relative;z-index:2;width:100%;padding-top:96px;padding-bottom:96px">
+      <p class="kicker">Darktier Studios · est. 2013 · Grand Rapids, MI</p>
+      <h1 style="font-size:clamp(52px,8vw,112px);line-height:1.04;letter-spacing:-0.02em;margin:0 0 0 -0.06em;max-width:12ch">
+        <span style="display:block">Roll initiative.</span>
+        <span style="display:block;color:var(--color-accent-300)">The dark tier awaits.</span>
+      </h1>
+      <p style="font-size:17px;line-height:28px;max-width:46ch;margin:28px 0 0;color:color-mix(in srgb, var(--color-text) 85%, transparent)">
+        Board games that punish greed. TTRPGs that leave marks. And the digital tools to run them all — forged by one designer, played at your table.
+      </p>
+      <div style="display:flex;gap:var(--space-3);flex-wrap:wrap;margin-top:35px">
+        <a class="btn btn-primary" href="/games" style="text-decoration:none">Enter the vault</a>
+        <a class="btn btn-ghost" href="/tools" style="text-decoration:none">Open the armory</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sitrep band -->
+  <section aria-label="Now deployed" style="background:radial-gradient(900px 420px at 85% -40%, color-mix(in srgb, var(--color-section-glow) 70%, transparent), transparent 64%), var(--color-section);padding:49px 0">
+    <div class="container" style="display:flex;gap:28px clamp(28px,4vw,64px);align-items:center;flex-wrap:wrap">
+      <p style="font-size:13px;line-height:21px;letter-spacing:0.22em;text-transform:uppercase;margin:0;color:color-mix(in srgb, var(--color-text) 64%, transparent)">Sitrep</p>
+      <p style="font-family:var(--font-heading);font-weight:var(--font-heading-weight);font-size:clamp(20px,2.2vw,28px);line-height:1.3;margin:0;flex:1;min-width:260px">
+        CHARLIE MIKE — our military TTRPG — is in active development. The TOC companion app is live.
+      </p>
+      <a class="btn btn-secondary" href={site.charlieMike} target="_blank" rel="noopener" style="text-decoration:none;white-space:nowrap">Launch the TOC ▸</a>
+    </div>
+  </section>
+
+  <div class="container">
+    <!-- The vault (featured games) — wired to catalog data in Phase 3 -->
+    <section style="padding:98px 0 84px">
+      <div style="display:flex;align-items:baseline;gap:21px;flex-wrap:wrap">
+        <h2 style="font-size:clamp(32px,4vw,52px);line-height:1.1;letter-spacing:-0.015em;margin:0 0 0 -0.06em">The vault</h2>
+        <span style="font-size:13px;letter-spacing:0.22em;text-transform:uppercase;color:var(--color-accent)">12 titles · print &amp; play · PDF</span>
+      </div>
+      <p class="text-muted" style="margin-top:24px" data-placeholder="featured">Featured titles appear here.</p>
+      <div style="margin-top:35px"><a class="btn btn-secondary" href="/games" style="text-decoration:none">Open the full vault ▸</a></div>
+    </section>
+
+    <hr class="section-rule" />
+
+    <!-- Category cards -->
+    <section style="padding:84px 0;display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:21px">
+      <a href="/games" style="text-decoration:none;color:var(--color-text);border:1px solid var(--color-neutral-700);border-radius:var(--radius-md);padding:28px">
+        <p style="font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--color-accent);margin:0">01 / Cardboard</p>
+        <p style="font-family:var(--font-heading);font-weight:var(--font-heading-weight);font-size:24px;line-height:1.2;margin:14px 0 0">Board &amp; card games</p>
+        <p style="font-size:14px;line-height:24px;color:color-mix(in srgb, var(--color-text) 72%, transparent);margin:10px 0 0">Professionally manufactured print-and-play at The Game Crafter. EXFIL, Woe, Fate of Wæteria and more.</p>
+      </a>
+      <a href="/games" style="text-decoration:none;color:var(--color-text);border:1px solid var(--color-neutral-700);border-radius:var(--radius-md);padding:28px">
+        <p style="font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--color-accent);margin:0">02 / Dice &amp; paper</p>
+        <p style="font-family:var(--font-heading);font-weight:var(--font-heading-weight);font-size:24px;line-height:1.2;margin:14px 0 0">Roleplaying games</p>
+        <p style="font-size:14px;line-height:24px;color:color-mix(in srgb, var(--color-text) 72%, transparent);margin:10px 0 0">Charlie Mike, Euangelion, Amaranthine, Baneful — worlds in PDF, from military ops to undying suns.</p>
+      </a>
+      <a href="/tools" style="text-decoration:none;color:var(--color-text);border:1px solid var(--color-neutral-700);border-radius:var(--radius-md);padding:28px">
+        <p style="font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--color-accent);margin:0">03 / Software</p>
+        <p style="font-family:var(--font-heading);font-weight:var(--font-heading-weight);font-size:24px;line-height:1.2;margin:14px 0 0">Companions &amp; tools</p>
+        <p style="font-size:14px;line-height:24px;color:color-mix(in srgb, var(--color-text) 72%, transparent);margin:10px 0 0">Apps that run your table: trackers, TOCs and toolkits, all docking here under one roof.</p>
+      </a>
+    </section>
+
+    <hr class="section-rule" />
+
+    <!-- Studio -->
+    <section id="studio" style="padding:84px 0 70px">
+      <p style="font-size:13px;letter-spacing:0.22em;text-transform:uppercase;color:var(--color-accent);margin:0 0 14px">The studio</p>
+      <p style="font-family:var(--font-heading);font-weight:var(--font-heading-weight);font-size:clamp(24px,2.8vw,36px);line-height:1.35;letter-spacing:-0.01em;max-width:30ch;margin:0">
+        One designer. A decade of games. Every table welcome — bring your own dice.
+      </p>
+      <p style="font-size:15.5px;line-height:28px;color:color-mix(in srgb, var(--color-text) 78%, transparent);max-width:58ch;margin:28px 0 0">
+        Darktier Studios, LLC is Sterling Heibeck's one-man shop. News and playtest calls post below.
+      </p>
+    </section>
+
+    <!-- Dispatches — wired to the news collection in Phase 3 -->
+    <section id="dispatches" style="padding:0 0 70px">
+      <p style="font-size:13px;letter-spacing:0.22em;text-transform:uppercase;color:var(--color-accent);margin:0 0 28px">Dispatches</p>
+      <p class="text-muted" data-placeholder="dispatches">News &amp; playtest dispatches appear here.</p>
+    </section>
+  </div>
+</Layout>

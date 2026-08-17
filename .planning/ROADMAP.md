@@ -12,7 +12,7 @@ The site is built in dependency order: stand up the Astro + Firebase shell weari
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation** - Astro + Firebase scaffold wearing the ported Nocturne design system, with a navigable static shell
+- [x] **Phase 1: Foundation** - Astro + Firebase scaffold wearing the ported Nocturne design system, with a navigable static shell ✓ 2026-08-17
 - [ ] **Phase 2: Content & Data** - Firestore catalog schema seeded with the verified, owner-reviewed game/tool/news content and migrated static assets
 - [ ] **Phase 3: Public Pages** - Home, The Vault, The Armory, and Dispatches render real catalog data as crawlable static HTML, plus a custom 404
 - [ ] **Phase 4: SEO & Social** - Per-page metadata, Open Graph/Twitter cards, sitemap, robots.txt, favicons, and structured data
@@ -122,7 +122,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 0/TBD | Not started | - |
+| 1. Foundation | 1/1 | ✓ Complete | 2026-08-17 |
 | 2. Content & Data | 0/TBD | Not started | - |
 | 3. Public Pages | 0/TBD | Not started | - |
 | 4. SEO & Social | 0/TBD | Not started | - |

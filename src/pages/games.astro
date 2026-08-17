@@ -1,0 +1,24 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { site } from "../data/site";
+---
+<Layout
+  title="The Vault"
+  description="The full Darktier Studios games catalog — board games, TTRPGs and card games. Print-and-play at The Game Crafter and downloadable rulebook PDFs."
+  current="/games"
+>
+  <div class="container">
+    <section style="padding:84px 0 56px">
+      <p class="kicker">Darktier Studios · the catalog</p>
+      <div style="display:flex;align-items:baseline;gap:21px;flex-wrap:wrap">
+        <h1 style="font-size:clamp(44px,6vw,84px);line-height:1.04;letter-spacing:-0.02em;margin:0 0 0 -0.06em">The vault</h1>
+        <span style="font-size:13px;letter-spacing:0.22em;text-transform:uppercase;color:var(--color-accent)">print &amp; play · PDF</span>
+      </div>
+      <p style="font-size:16px;line-height:28px;color:color-mix(in srgb, var(--color-text) 78%, transparent);max-width:58ch;margin:28px 0 0">
+        Board games published at The Game Crafter are print-and-play titles, professionally manufactured to order. The PDF archive holds our older games, recovered from the previous site.
+      </p>
+      <div style="margin-top:28px"><a class="btn btn-secondary" href={site.gameCrafter} target="_blank" rel="noopener" style="text-decoration:none">Shop at The Game Crafter</a></div>
+    </section>
+    <p class="text-muted" data-placeholder="catalog">The full catalog loads here.</p>
+  </div>
+</Layout>

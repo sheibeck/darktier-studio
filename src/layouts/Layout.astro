@@ -1,0 +1,85 @@
+---
+import "../styles/nocturne.css";
+import "../styles/site.css";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+import { site } from "../data/site";
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Page-relative or absolute OG/Twitter image. Defaults to the site share image. */
+  image?: string;
+  /** Set true on /admin and any non-public route to keep it out of search. */
+  noindex?: boolean;
+  /** Which nav item is current (matches nav href, e.g. "/games"). */
+  current?: string;
+  /** body[data-page] hook for page-specific ground (e.g. "home"). */
+  page?: string;
+  /** Hide the shared footer (e.g. on the admin app). */
+  hideChrome?: boolean;
+}
+
+const {
+  title,
+  description = site.description,
+  image = site.ogImage,
+  noindex = false,
+  current,
+  page,
+  hideChrome = false,
+} = Astro.props;
+
+// Absolute canonical + social image URLs (crawlers/scrapers need absolute).
+// Normalize to the clean URLs Firebase Hosting serves (cleanUrls: true):
+// strip a trailing `index.html` and any `.html` extension.
+const cleanPath =
+  Astro.url.pathname.replace(/index\.html$/, "").replace(/\.html$/, "") || "/";
+const canonical = new URL(cleanPath, site.url).href;
+const ogImage = new URL(image, site.url).href;
+const fullTitle = title === site.name ? title : `${title} · ${site.name}`;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <meta name="theme-color" content="#161826" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Icons (assets wired in the content phase) -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <slot name="head" />
+  </head>
+  <body data-page={page}>
+    {!hideChrome && <Nav current={current} />}
+    <slot />
+    {!hideChrome && <Footer />}
+  </body>
+</html>

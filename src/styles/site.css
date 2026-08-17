@@ -1,0 +1,67 @@
+/* Site chrome layered over nocturne.css — the shared page ground and link
+   treatment lifted from the approved prototypes. Tokens only; no new colors. */
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(1200px 720px at 82% -160px, color-mix(in srgb, var(--color-accent-900) 75%, transparent), transparent 60%),
+    radial-gradient(1100px 800px at -10% 100%, color-mix(in srgb, black 30%, transparent), transparent 55%),
+    var(--color-bg);
+  text-wrap: pretty;
+  font-family: var(--font-body);
+  color: var(--color-text);
+}
+
+/* The home hero carries a larger, warmer gradient than inner pages. */
+body[data-page="home"] {
+  background:
+    radial-gradient(1400px 900px at 78% -200px, color-mix(in srgb, var(--color-accent-900) 85%, transparent), transparent 62%),
+    radial-gradient(1100px 800px at -10% 100%, color-mix(in srgb, black 40%, transparent), transparent 55%),
+    var(--color-bg);
+}
+
+a { color: var(--color-accent-300); }
+a:hover { color: var(--color-accent); }
+
+/* Shared layout primitives */
+.container { max-width: 1240px; margin: 0 auto; padding: 0 clamp(20px, 5vw, 72px); }
+
+.site-nav {
+  padding-inline: max(clamp(20px, 5vw, 72px), calc((100% - 1240px) / 2 + clamp(20px, 5vw, 72px)));
+}
+
+/* Eyebrow / kicker used across page headers */
+.kicker {
+  font-size: 13px;
+  line-height: 14px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  font-feature-settings: 'tnum' 1;
+  margin: 0 0 21px;
+}
+
+.section-rule {
+  height: 1px;
+  border: 0;
+  margin: 0;
+  background: linear-gradient(to right, transparent, var(--color-divider) 48px, var(--color-divider) calc(100% - 48px), transparent);
+}
+
+.site-footer {
+  padding: 56px 0;
+  font-size: 13px;
+  line-height: 28px;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.site-footer a { color: color-mix(in srgb, var(--color-text) 72%, transparent); text-decoration: none; }
+.site-footer a:hover { color: var(--color-accent); }
+
+/* Respect reduced-motion for any future transitions */
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
