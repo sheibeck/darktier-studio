@@ -3,10 +3,10 @@ gsd_state_version: '1.0'
 status: executing
 progress:
   total_phases: 7
-  completed_phases: 5
-  total_plans: 5
-  completed_plans: 5
-  percent: 71
+  completed_phases: 6
+  total_plans: 6
+  completed_plans: 6
+  percent: 85
 ---
 
 # Project State
@@ -16,16 +16,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-08-17)
 
 **Core value:** A fast, great-looking, search- and share-optimized public site that becomes the studio's canonical home — so links shared anywhere drive traffic here and every game is discoverable with its cover, blurb, and download/buy link.
-**Current focus:** Phase 6 — Publish Pipeline & Deploy
+**Current focus:** Phase 7 — Launch & Cutover
 
 ## Current Position
 
-Phase: 6 of 7 (Publish Pipeline & Deploy)
-Plan: Phases 1–5 complete
-Status: Phase 5 (Auth & Admin CMS) ✓ — React admin at /admin (Google sign-in, owner-UID gate, CRUD for games/tools/news), hardened Firestore rules. Rules unit tests 8/8 PASS on emulator; seed→Admin-SDK read verified. Live Google sign-in deferred (needs owner Firebase project). Executing autonomously.
-Last activity: 2026-08-17 — Phase 5 Auth & Admin built, rules emulator-tested, committed
+Phase: 7 of 7 (Launch & Cutover)
+Plan: Phases 1–6 complete
+Status: Phase 6 (Publish Pipeline & Deploy) ✓ — GitHub Actions deploy + manual Publish (no Cloud Functions), last-published indicator, Cloudflare analytics (env-gated). Build green. Executing autonomously.
+Last activity: 2026-08-17 — Phase 6 Publish Pipeline built and committed
 
-Progress: [███████░░░] 71%
+Progress: [████████░░] 85%
 
 ## Performance Metrics
 

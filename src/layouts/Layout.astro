@@ -60,6 +60,11 @@ const websiteLd = {
   name: site.name,
   url: site.url,
 };
+
+// Cloudflare Web Analytics (free, cookie-free). Only injected when a token is
+// configured and never on private/noindex pages (e.g. /admin).
+const cfToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
+const showAnalytics = Boolean(cfToken) && !noindex;
 ---
 <!doctype html>
 <html lang="en">
@@ -106,5 +111,15 @@ const websiteLd = {
     {!hideChrome && <Nav current={current} />}
     <slot />
     {!hideChrome && <Footer />}
+    {
+      showAnalytics && (
+        <script
+          is:inline
+          defer
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon={`{"token": "${cfToken}"}`}
+        />
+      )
+    }
   </body>
 </html>

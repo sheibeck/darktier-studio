@@ -124,6 +124,7 @@ export default function AdminApp() {
   const [user, setUser] = useState<User | null>(null);
   const [ready, setReady] = useState(false);
   const [authErr, setAuthErr] = useState<string | null>(null);
+  const [builtAt, setBuiltAt] = useState<string | null>(null);
 
   useEffect(() => {
     if (!firebaseConfigured) return;
@@ -131,6 +132,13 @@ export default function AdminApp() {
       setUser(u);
       setReady(true);
     });
+  }, []);
+
+  useEffect(() => {
+    fetch("/build-info.json")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => d?.builtAt && setBuiltAt(d.builtAt))
+      .catch(() => {});
   }, []);
 
   if (!firebaseConfigured) {
@@ -196,10 +204,19 @@ export default function AdminApp() {
       <div style={{ display: "flex", alignItems: "center", gap: "var(--space-3)", flexWrap: "wrap", marginTop: "8px" }}>
         <span className="tag tag-accent">Signed in</span>
         <span style={{ fontSize: "13px", color: "color-mix(in srgb, var(--color-text) 70%, transparent)" }}>{user.email}</span>
+        {builtAt && (
+          <span style={{ fontSize: "12px", color: "color-mix(in srgb, var(--color-text) 50%, transparent)", fontFeatureSettings: "'tnum' 1" }}>
+            Last published {new Date(builtAt).toLocaleString()}
+          </span>
+        )}
         <button type="button" className="btn btn-ghost" style={{ marginLeft: "auto" }} onClick={() => signOut(auth)}>
           Sign out
         </button>
       </div>
+      <p style={{ fontSize: "13px", lineHeight: "22px", color: "color-mix(in srgb, var(--color-text) 60%, transparent)", maxWidth: "62ch", marginTop: "12px" }}>
+        Edits save to Firestore immediately. They reach the public site on the next <strong>Publish</strong> — trigger a rebuild from
+        the repo's GitHub Actions ("Deploy" → "Run workflow"), or run <code>npm run deploy</code> locally.
+      </p>
 
       <Manager<Game>
         name="games"
