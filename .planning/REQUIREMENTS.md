@@ -110,26 +110,56 @@ Explicitly excluded to prevent scope creep.
 
 ## Traceability
 
-Populated during roadmap creation — each v1 requirement maps to exactly one phase.
+Each v1 requirement maps to exactly one phase in .planning/ROADMAP.md.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SITE-01 … SITE-06 | TBD | Pending |
-| GAME-01 … GAME-06 | TBD | Pending |
-| TOOL-01 … TOOL-02 | TBD | Pending |
-| NEWS-01 … NEWS-02 | TBD | Pending |
-| SEO-01 … SEO-06 | TBD | Pending |
-| DATA-01 … DATA-04 | TBD | Pending |
-| AUTH-01 … AUTH-03 | TBD | Pending |
-| ADMIN-01 … ADMIN-06 | TBD | Pending |
-| PUB-01 … PUB-04 | TBD | Pending |
-| ANALYTICS-01 | TBD | Pending |
+| SITE-01 | Phase 1 — Foundation | Pending |
+| SITE-03 | Phase 1 — Foundation | Pending |
+| SITE-04 | Phase 1 — Foundation | Pending |
+| DATA-01 | Phase 2 — Content & Data | Pending |
+| DATA-02 | Phase 2 — Content & Data | Pending |
+| DATA-03 | Phase 2 — Content & Data | Pending |
+| DATA-04 | Phase 2 — Content & Data | Pending |
+| SITE-02 | Phase 3 — Public Pages | Pending |
+| SITE-05 | Phase 3 — Public Pages | Pending |
+| SITE-06 | Phase 3 — Public Pages | Pending |
+| GAME-01 | Phase 3 — Public Pages | Pending |
+| GAME-02 | Phase 3 — Public Pages | Pending |
+| GAME-03 | Phase 3 — Public Pages | Pending |
+| GAME-04 | Phase 3 — Public Pages | Pending |
+| GAME-05 | Phase 3 — Public Pages | Pending |
+| GAME-06 | Phase 3 — Public Pages | Pending |
+| TOOL-01 | Phase 3 — Public Pages | Pending |
+| TOOL-02 | Phase 3 — Public Pages | Pending |
+| NEWS-01 | Phase 3 — Public Pages | Pending |
+| NEWS-02 | Phase 3 — Public Pages | Pending |
+| SEO-01 | Phase 4 — SEO & Social | Pending |
+| SEO-02 | Phase 4 — SEO & Social | Pending |
+| SEO-03 | Phase 4 — SEO & Social | Pending |
+| SEO-04 | Phase 4 — SEO & Social | Pending |
+| SEO-05 | Phase 4 — SEO & Social | Pending |
+| SEO-06 | Phase 4 — SEO & Social | Pending |
+| AUTH-01 | Phase 5 — Auth & Admin CMS | Pending |
+| AUTH-02 | Phase 5 — Auth & Admin CMS | Pending |
+| AUTH-03 | Phase 5 — Auth & Admin CMS | Pending |
+| ADMIN-01 | Phase 5 — Auth & Admin CMS | Pending |
+| ADMIN-02 | Phase 5 — Auth & Admin CMS | Pending |
+| ADMIN-03 | Phase 5 — Auth & Admin CMS | Pending |
+| ADMIN-04 | Phase 5 — Auth & Admin CMS | Pending |
+| ADMIN-05 | Phase 5 — Auth & Admin CMS | Pending |
+| ADMIN-06 | Phase 5 — Auth & Admin CMS | Pending |
+| PUB-01 | Phase 6 — Publish Pipeline & Deploy | Pending |
+| PUB-02 | Phase 6 — Publish Pipeline & Deploy | Pending |
+| ANALYTICS-01 | Phase 6 — Publish Pipeline & Deploy | Pending |
+| PUB-03 | Phase 7 — Launch & Cutover | Pending |
+| PUB-04 | Phase 7 — Launch & Cutover | Pending |
 
 **Coverage:**
 - v1 requirements: 40 total
-- Mapped to phases: 0 (set by roadmapper)
-- Unmapped: 40 ⚠️ (resolved at roadmap creation)
+- Mapped to phases: 40
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-08-17*
-*Last updated: 2026-08-17 after initial definition*
+*Last updated: 2026-08-17 after roadmap creation (all 40 v1 requirements mapped to 7 phases)*
