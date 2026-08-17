@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/nocturne-67cd9946-e94d-4ca6-a321-43b2d8edbd8f/styles.css">
+<script src="_ds/nocturne-67cd9946-e94d-4ca6-a321-43b2d8edbd8f/_ds_bundle.js"></script>
+<style>
+body{margin:0;background:radial-gradient(1200px 720px at 82% -160px,color-mix(in srgb,var(--color-accent-900) 75%,transparent),transparent 60%),radial-gradient(1100px 800px at -10% 100%,color-mix(in srgb,black 30%,transparent),transparent 55%),var(--color-bg);text-wrap:pretty;font-family:var(--font-body);color:var(--color-text)}
+a{color:var(--color-accent-300)}a:hover{color:var(--color-accent)}
+</style>
+</helmet>
+<nav class="nav" style="padding-inline: max(clamp(20px,5vw,72px), calc((100% - 1240px) / 2 + clamp(20px,5vw,72px)))">
+  <a class="nav-brand" href="Home.dc.html" style="display: flex; align-items: center; text-decoration: none"><img src="darktierstudios/images/logo.png" alt="Darktier Studios" style="height: 24px; display: block; filter: invert(0.91)"></a>
+  <a href="Home.dc.html">Home</a>
+  <a href="Games.dc.html">The Vault</a>
+  <a href="Tools.dc.html" aria-current="page" style="color: var(--color-accent)">The Armory</a>
+  <a class="btn btn-primary" href="https://www.thegamecrafter.com/designers/sterling-heibeck" target="_blank" rel="noopener" style="text-decoration: none">Shop our games</a>
+</nav>
+<div style="max-width: 1240px; margin: 0 auto; padding: 0 clamp(20px,5vw,72px)">
+  <section style="padding: 84px 0 56px">
+    <p style="font-size: 13px; line-height: 14px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--color-accent); font-feature-settings: 'tnum' 1; margin: 0 0 21px">Darktier Studios · software</p>
+    <div style="display: flex; align-items: baseline; gap: 21px; flex-wrap: wrap">
+      <h1 style="font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: clamp(44px,6vw,84px); line-height: 1.04; letter-spacing: -0.02em; margin: 0 0 0 -0.06em">The armory</h1>
+      <span style="font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--color-accent)">companions &amp; tools</span>
+    </div>
+    <p style="font-size: 16px; line-height: 28px; color: color-mix(in srgb, var(--color-text) 78%, transparent); max-width: 58ch; margin: 28px 0 0">Darktier's companions and utilities for board games and TTRPGs are consolidating here — one login, one shelf, no more scattered sites. Slots below fill in as each app docks.</p>
+  </section>
+  <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding-bottom: 28px">
+    <sc-for list="{{ tools }}" as="t" hint-placeholder-count="3">
+      <div style="border: 1px solid {{ t.borderColor }}; border-radius: var(--radius-md); padding: 28px; background: color-mix(in srgb, var(--color-neutral-900) 45%, transparent)" style-hover="border-color: var(--color-accent); box-shadow: var(--shadow-md)">
+        <p style="font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: {{ t.kickerColor }}; margin: 0">{{ t.num }} / {{ t.kickerLine }}</p>
+        <p style="font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 24px; line-height: 1.2; margin: 14px 0 0">{{ t.name }}</p>
+        <p style="font-size: 14px; line-height: 24px; color: color-mix(in srgb, var(--color-text) 72%, transparent); margin: 10px 0 0">{{ t.description }}</p>
+        <sc-if value="{{ t.appUrl }}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; gap: var(--space-3); margin-top: 21px"><a class="btn btn-primary" href="{{ t.appUrl }}" target="_blank" rel="noopener" style="text-decoration: none">Launch ▸</a></div>
+        </sc-if>
+        <sc-if value="{{ t.isSoon }}" hint-placeholder-val="{{ false }}">
+          <p style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: color-mix(in srgb, var(--color-text) 45%, transparent); margin: 21px 0 0">Slot reserved</p>
+        </sc-if>
+      </div>
+    </sc-for>
+  </div>
+  <p style="font-size: 13px; line-height: 21px; color: color-mix(in srgb, var(--color-text) 55%, transparent); max-width: 60ch; margin: 14px 0 0">Which apps land next is still being decided — check back here for new arrivals.</p>
+  <footer style="padding: 56px 0; font-size: 13px; line-height: 28px; color: color-mix(in srgb, var(--color-text) 55%, transparent); display: flex; gap: 24px; flex-wrap: wrap">
+    <span>© 2026 Darktier Studios, LLC</span>
+    <a href="Home.dc.html">Home</a>
+    <a href="Games.dc.html">Games</a>
+    <a href="Admin.dc.html">Admin</a>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { tools: [] };
+  async componentDidMount() {
+    const m = await import("./tools-data.js");
+    this.setState({ tools: m.loadTools() });
+  }
+  renderVals() {
+    const tools = this.state.tools
+      .filter(t => !t.hidden)
+      .map((t, i) => ({
+        ...t,
+        num: String(i + 1).padStart(2, "0"),
+        kickerLine: (t.status === "live" ? "Live now · " : "") + (t.kicker || (t.status === "live" ? "Companion app" : "Docking soon")),
+        kickerColor: t.status === "live" ? "var(--color-accent)" : "color-mix(in srgb, var(--color-text) 55%, transparent)",
+        borderColor: t.status === "live" ? "var(--color-accent-700)" : "var(--color-neutral-700)",
+        appUrl: t.status === "live" ? (t.app || null) : null,
+        isSoon: t.status !== "live",
+      }));
+    return { tools };
+  }
+}
+</script>
+</body>
+</html>

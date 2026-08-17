@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/nocturne-67cd9946-e94d-4ca6-a321-43b2d8edbd8f/styles.css">
+<script src="_ds/nocturne-67cd9946-e94d-4ca6-a321-43b2d8edbd8f/_ds_bundle.js"></script>
+<style>
+body{margin:0;background:radial-gradient(1200px 720px at 82% -160px,color-mix(in srgb,var(--color-accent-900) 75%,transparent),transparent 60%),radial-gradient(1100px 800px at -10% 100%,color-mix(in srgb,black 30%,transparent),transparent 55%),var(--color-bg);text-wrap:pretty;font-family:var(--font-body);color:var(--color-text)}
+a{color:var(--color-accent-300)}a:hover{color:var(--color-accent)}
+</style>
+</helmet>
+<nav class="nav" style="padding-inline: max(clamp(20px,5vw,72px), calc((100% - 1240px) / 2 + clamp(20px,5vw,72px)))">
+  <a class="nav-brand" href="Home.dc.html" style="display: flex; align-items: center; text-decoration: none"><img src="darktierstudios/images/logo.png" alt="Darktier Studios" style="height: 24px; display: block; filter: invert(0.91)"></a>
+  <a href="Games.dc.html">The Vault</a>
+  <a href="Tools.dc.html">The Armory</a>
+  <span class="tag tag-outline">Admin</span>
+</nav>
+<div style="max-width: 1240px; margin: 0 auto; padding: 0 clamp(20px,5vw,72px)">
+  <section style="padding: 56px 0 28px">
+    <p style="font-size: 13px; line-height: 14px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--color-accent); font-feature-settings: 'tnum' 1; margin: 0 0 21px">Darktier Studios · catalog manager</p>
+    <h1 style="font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: clamp(32px,3.6vw,48px); line-height: 1.11; letter-spacing: -0.015em; margin: 0 0 0 -0.06em">Manage the games</h1>
+    <p style="font-size: 15.5px; line-height: 28px; color: color-mix(in srgb, var(--color-text) 78%, transparent); max-width: 62ch; margin: 21px 0 0">Classify, reorder, showcase or hide any title — changes save in this browser and drive the public <a href="Games.dc.html">Games page</a> immediately.</p>
+    <div style="display: flex; gap: var(--space-3); flex-wrap: wrap; align-items: center; margin-top: 28px">
+      <button type="button" class="btn btn-primary" onClick="{{ addGame }}">Add a game</button>
+      <button type="button" class="btn btn-ghost" onClick="{{ resetAll }}">Reset to defaults</button>
+      <span style="font-size: 13px; color: color-mix(in srgb, var(--color-text) 55%, transparent)">{{ statusNote }}</span>
+    </div>
+  </section>
+  <table class="table" style="width: 100%">
+    <thead><tr><th style="width: 90px">Order</th><th style="width: 76px">Cover</th><th>Title</th><th>Type</th><th>Publication</th><th style="width: 110px">Showcase</th><th style="width: 90px">Visible</th><th style="width: 70px"></th></tr></thead>
+    <tbody>
+      <sc-for list="{{ games }}" as="g" hint-placeholder-count="12">
+        <tr>
+          <td><span style="display: inline-flex; gap: 4px"><button type="button" class="btn btn-icon btn-ghost" aria-label="Move up" onClick="{{ g.moveUp }}">↑</button><button type="button" class="btn btn-icon btn-ghost" aria-label="Move down" onClick="{{ g.moveDown }}">↓</button></span></td>
+          <td><div style="width: 56px; height: 36px; border-radius: var(--radius-sm); background-color: var(--color-neutral-800); background-image: {{ g.imgCss }}; background-size: cover; background-position: center"></div></td>
+          <td style="font-weight: 500"><span style="display: inline-flex; align-items: center; gap: 8px">{{ g.name }}<sc-if value="{{ g.isNewFlag }}" hint-placeholder-val="{{ false }}"><span class="tag tag-accent">NEW</span></sc-if></span></td>
+          <td><span class="tag tag-neutral">{{ g.type }}</span></td>
+          <td><span class="{{ g.pubTagClass }}">{{ g.pubLabel }}</span></td>
+          <td><label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px"><input type="checkbox" checked="{{ g.showcase }}" onChange="{{ g.toggleShowcase }}">Featured</label></td>
+          <td><label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px"><input type="checkbox" checked="{{ g.visible }}" onChange="{{ g.toggleHidden }}">Shown</label></td>
+          <td><button type="button" class="btn btn-secondary" onClick="{{ g.edit }}">Edit</button></td>
+        </tr>
+      </sc-for>
+    </tbody>
+  </table>
+  <sc-if value="{{ isEditing }}" hint-placeholder-val="{{ false }}">
+  <section class="card elev-md" style="margin-top: 28px; max-width: 720px">
+    <p class="card-kicker" style="color: var(--color-accent)">{{ editTitle }}</p>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4)">
+      <div class="field"><label>Title</label><input class="input" type="text" value="{{ editName }}" onChange="{{ setEditName }}"></div>
+      <div class="field"><label>Type</label>
+        <select class="input" value="{{ editType }}" onChange="{{ setEditType }}">
+          <option value="Board game">Board game</option>
+          <option value="Card game">Card game</option>
+          <option value="TTRPG">TTRPG</option>
+          <option value="Game system">Game system</option>
+          <option value="Game engine">Game engine</option>
+        </select>
+      </div>
+      <div class="field"><label>Publication</label>
+        <select class="input" value="{{ editPub }}" onChange="{{ setEditPub }}">
+          <option value="tgc">The Game Crafter (print &amp; play)</option>
+          <option value="pdf">PDF archive</option>
+          <option value="dev">In development</option>
+        </select>
+      </div>
+      <div class="field"><label>Cover image path</label><input class="input" type="text" value="{{ editImg }}" onChange="{{ setEditImg }}" placeholder="projects/name_cover.png"></div>
+      <div class="field"><label>Release date (shown on the game panel)</label><input class="input" type="month" value="{{ editReleased }}" onChange="{{ setEditReleased }}"></div>
+      <div class="field"><label>PDF link ("Download PDF" button)</label><input class="input" type="url" value="{{ editPdf }}" onChange="{{ setEditPdf }}" placeholder="https://… or files/rulebook.pdf"></div>
+      <div class="field"><label>App link ("Launch the app" button)</label><input class="input" type="url" value="{{ editApp }}" onChange="{{ setEditApp }}" placeholder="https://…"></div>
+      <div class="field"><label>Website link ("Visit the website" button)</label><input class="input" type="url" value="{{ editSite }}" onChange="{{ setEditSite }}" placeholder="https://…"></div>
+      <label style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13.5px; align-self: end; padding-bottom: 8px"><input type="checkbox" checked="{{ editIsNew }}" onChange="{{ setEditIsNew }}">Flag as NEW — highlights this game across the site</label>
+      <label style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13.5px; grid-column: 1 / -1"><input type="checkbox" checked="{{ editAi }}" onChange="{{ setEditAi }}">AI-assisted generation — shows an "AI-assisted" tag on the game panel</label>
+      <div class="field" style="grid-column: 1 / -1"><label>Synopsis</label><textarea class="input" rows="3" value="{{ editSynopsis }}" onChange="{{ setEditSynopsis }}"></textarea></div>
+    </div>
+    <div class="dialog-actions" style="display: flex; gap: var(--space-3); margin-top: var(--space-4)">
+      <button type="button" class="btn btn-primary" onClick="{{ saveEdit }}">Save</button>
+      <button type="button" class="btn btn-ghost" onClick="{{ cancelEdit }}">Cancel</button>
+      <button type="button" class="btn btn-ghost" style="margin-left: auto; color: var(--color-accent-300)" onClick="{{ deleteGame }}">Delete game</button>
+    </div>
+  </section>
+  </sc-if>
+  <!-- Armory manager (tools CRUD) and Dispatches manager (news CRUD) follow the identical table+edit-card pattern.
+       Tools fields: name, status (live|soon), app link, description. News fields: title, date, tag (News|Playtest call|Release), body, link.
+       Full logic in the original prototype; the production admin reimplements all three managers against Firestore. -->
+  <footer style="padding: 56px 0; font-size: 13px; line-height: 28px; color: color-mix(in srgb, var(--color-text) 55%, transparent); display: flex; gap: 24px; flex-wrap: wrap">
+    <span>Admin prototype — saves to this browser only; a real backend comes with the app platform.</span>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+// PROTOTYPE LOGIC (localStorage-backed). The production admin reimplements this against Firestore
+// with Firebase Auth (Google sign-in, owner UID only). Managers: games, tools, news — each with
+// add / edit / delete / reorder (moveUp/moveDown) / toggle visible / toggle showcase.
+// Games fields: slug,name,type,pub(tgc|pdf|dev),released,pdf,app,site,isNew,ai,showcase,hidden,img,synopsis.
+// Publication labels: tgc→"The Game Crafter" (tag-accent), pdf→"PDF archive" (tag-neutral), dev→"In development" (tag-outline).
+// See the imported Admin.dc.html in the Claude Design project for the full DCLogic class if deeper reference is needed.
+class Component extends DCLogic {
+  state = { games: [], editing: null, draft: null, status: "", tools: [], editingTool: null, draftTool: null, toolStatus: "" };
+  async componentDidMount() {
+    this._data = await import("./games-data.js");
+    this._toolsData = await import("./tools-data.js");
+    this._newsData = await import("./news-data.js");
+    this.setState({ games: this._data.loadGames(), tools: this._toolsData.loadTools(), news: this._newsData.loadNews() });
+  }
+}
+</script>
+</body>
+</html>

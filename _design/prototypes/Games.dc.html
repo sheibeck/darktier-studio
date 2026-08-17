@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/nocturne-67cd9946-e94d-4ca6-a321-43b2d8edbd8f/styles.css">
+<script src="_ds/nocturne-67cd9946-e94d-4ca6-a321-43b2d8edbd8f/_ds_bundle.js"></script>
+<style>
+body{margin:0;background:radial-gradient(1200px 720px at 82% -160px,color-mix(in srgb,var(--color-accent-900) 75%,transparent),transparent 60%),radial-gradient(1100px 800px at -10% 100%,color-mix(in srgb,black 30%,transparent),transparent 55%),var(--color-bg);text-wrap:pretty;font-family:var(--font-body);color:var(--color-text)}
+a{color:var(--color-accent-300)}a:hover{color:var(--color-accent)}
+</style>
+</helmet>
+<nav class="nav" style="padding-inline: max(clamp(20px,5vw,72px), calc((100% - 1240px) / 2 + clamp(20px,5vw,72px)))">
+  <a class="nav-brand" href="Home.dc.html" style="display: flex; align-items: center; text-decoration: none"><img src="darktierstudios/images/logo.png" alt="Darktier Studios" style="height: 24px; display: block; filter: invert(0.91)"></a>
+  <a href="Home.dc.html">Home</a>
+  <a href="Games.dc.html" aria-current="page" style="color: var(--color-accent)">The Vault</a>
+  <a href="Tools.dc.html">The Armory</a>
+  <a class="btn btn-primary" href="https://www.thegamecrafter.com/designers/sterling-heibeck" target="_blank" rel="noopener" style="text-decoration: none">Shop our games</a>
+</nav>
+<div style="max-width: 1240px; margin: 0 auto; padding: 0 clamp(20px,5vw,72px)">
+  <section style="padding: 84px 0 56px">
+    <p style="font-size: 13px; line-height: 14px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--color-accent); font-feature-settings: 'tnum' 1; margin: 0 0 21px">Darktier Studios · the catalog</p>
+    <div style="display: flex; align-items: baseline; gap: 21px; flex-wrap: wrap">
+      <h1 style="font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: clamp(44px,6vw,84px); line-height: 1.04; letter-spacing: -0.02em; margin: 0 0 0 -0.06em">The vault</h1>
+      <span style="font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--color-accent)">print &amp; play · PDF</span>
+    </div>
+    <p style="font-size: 16px; line-height: 28px; color: color-mix(in srgb, var(--color-text) 78%, transparent); max-width: 58ch; margin: 28px 0 0">Board games published at The Game Crafter are print-and-play titles, professionally manufactured to order. The PDF archive holds our older games, recovered from the previous site.</p>
+    <div style="margin-top: 28px"><a class="btn btn-secondary" href="https://www.thegamecrafter.com/designers/sterling-heibeck" target="_blank" rel="noopener" style="text-decoration: none">Shop at The Game Crafter</a></div>
+  </section>
+  <div style="display: flex; flex-direction: column; gap: 21px">
+  <sc-for list="{{ games }}" as="g" hint-placeholder-count="12">
+    <div id="{{ g.slug }}" style="display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 28px clamp(24px,4vw,64px); align-items: start; padding: 28px; border: 1px solid var(--color-neutral-700); border-radius: var(--radius-md); background: color-mix(in srgb, var(--color-neutral-900) 45%, transparent)" style-hover="border-color: var(--color-accent); box-shadow: var(--shadow-md)">
+      <div class="lighten" style="aspect-ratio: 460/300; overflow: hidden; border-radius: var(--radius-sm); background: var(--color-neutral-800)"><div role="img" aria-label="{{ g.name }} cover art" style="width: 100%; height: 100%; background-image: {{ g.imgCss }}; background-size: cover; background-position: center"></div></div>
+      <div>
+        <p style="font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--color-accent); margin: 0 0 10px">{{ g.type }}</p>
+        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap">
+          <h2 style="font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 28px; line-height: 32px; letter-spacing: -0.01em; margin: 0">{{ g.name }}</h2>
+          <sc-if value="{{ g.isNew }}" hint-placeholder-val="{{ false }}"><span class="tag tag-accent">NEW</span></sc-if>
+          <sc-if value="{{ g.isTgc }}" hint-placeholder-val="{{ false }}"><span class="tag tag-outline">Print &amp; play · The Game Crafter</span></sc-if>
+          <sc-if value="{{ g.isPdf }}" hint-placeholder-val="{{ false }}"><span class="tag tag-neutral">PDF archive</span></sc-if>
+          <sc-if value="{{ g.aiFlag }}" hint-placeholder-val="{{ false }}"><span class="tag tag-neutral" title="This game was made with AI-assisted generation">AI-assisted</span></sc-if>
+          <sc-if value="{{ g.releasedLabel }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: color-mix(in srgb, var(--color-text) 55%, transparent); font-feature-settings: 'tnum' 1">Released {{ g.releasedLabel }}</span></sc-if>
+        </div>
+        <p style="font-size: 15.5px; line-height: 28px; color: color-mix(in srgb, var(--color-text) 78%, transparent); max-width: 58ch; margin: 14px 0 0">{{ g.synopsis }}</p>
+        <sc-if value="{{ g.hasLinks }}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; gap: var(--space-3); flex-wrap: wrap; margin-top: 21px">
+            <sc-if value="{{ g.appUrl }}" hint-placeholder-val="{{ false }}"><a class="btn btn-primary" href="{{ g.appUrl }}" target="_blank" rel="noopener" style="text-decoration: none">Launch the app ▸</a></sc-if>
+            <sc-if value="{{ g.pdfUrl }}" hint-placeholder-val="{{ false }}"><a class="btn btn-secondary" href="{{ g.pdfUrl }}" target="_blank" rel="noopener" download style="text-decoration: none">Download PDF ↓</a></sc-if>
+            <sc-if value="{{ g.siteUrl }}" hint-placeholder-val="{{ false }}"><a class="btn btn-ghost" href="{{ g.siteUrl }}" target="_blank" rel="noopener" style="text-decoration: none">Visit the website ▸</a></sc-if>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-for>
+  </div>
+  <p style="font-size: 13px; line-height: 21px; color: color-mix(in srgb, var(--color-text) 55%, transparent); max-width: 60ch; margin: 42px 0 0">Synopses are reconstructions from the archive — tell us what each game is really about and we'll set the record straight.</p>
+  <footer style="padding: 56px 0; font-size: 13px; line-height: 28px; color: color-mix(in srgb, var(--color-text) 55%, transparent); display: flex; gap: 24px; flex-wrap: wrap">
+    <span>© 2026 Darktier Studios, LLC</span>
+    <a href="Home.dc.html">Home</a>
+    <a href="Tools.dc.html">Tools</a>
+    <a href="Admin.dc.html">Admin</a>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { loaded: null };
+  async componentDidMount() {
+    const m = await import("./games-data.js");
+    this.setState({ loaded: m.loadGames() });
+  }
+  renderVals() {
+    if (this.state.loaded) {
+      const games = this.state.loaded.filter(g => !g.hidden).map(g => ({
+        ...g,
+        imgCss: g.img ? 'url("' + g.img + '")' : "none",
+        isTgc: g.pub === "tgc",
+        isPdf: g.pub !== "tgc",
+        releasedLabel: this.fmtDate(g.released),
+        pdfUrl: g.pdf || null,
+        appUrl: g.app || null,
+        siteUrl: g.site || null,
+        hasLinks: !!(g.pdf || g.app || g.site),
+        aiFlag: !!g.ai,
+      }));
+      return { games };
+    }
+    return this.defaultVals();
+  }
+  fmtDate(r) {
+    if (!r) return null;
+    const [y, m] = String(r).split("-");
+    const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+    return m ? months[parseInt(m, 10) - 1] + " " + y : y;
+  }
+}
+</script>
+</body>
+</html>
