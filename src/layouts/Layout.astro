@@ -38,6 +38,28 @@ const cleanPath =
 const canonical = new URL(cleanPath, site.url).href;
 const ogImage = new URL(image, site.url).href;
 const fullTitle = title === site.name ? title : `${title} · ${site.name}`;
+
+// Organization + WebSite structured data (emitted on every page).
+const orgLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: site.name,
+  legalName: site.legalName,
+  url: site.url,
+  logo: new URL("/assets/icon-512.png", site.url).href,
+  image: new URL(site.ogImage, site.url).href,
+  foundingDate: String(site.since),
+  founder: { "@type": "Person", name: site.founder },
+  address: { "@type": "PostalAddress", addressLocality: "Grand Rapids", addressRegion: "MI", addressCountry: "US" },
+  sameAs: [site.gameCrafter],
+  description: site.description,
+};
+const websiteLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: site.name,
+  url: site.url,
+};
 ---
 <!doctype html>
 <html lang="en">
@@ -54,10 +76,11 @@ const fullTitle = title === site.name ? title : `${title} · ${site.name}`;
     <meta name="theme-color" content="#161826" />
     <meta name="generator" content={Astro.generator} />
 
-    <!-- Icons (assets wired in the content phase) -->
-    <link rel="icon" href="/favicon.ico" sizes="any" />
-    <link rel="icon" type="image/png" href="/favicon.png" />
+    <!-- Icons -->
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
     <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
@@ -75,6 +98,8 @@ const fullTitle = title === site.name ? title : `${title} · ${site.name}`;
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
 
+    <script type="application/ld+json" set:html={JSON.stringify(orgLd)} />
+    <script type="application/ld+json" set:html={JSON.stringify(websiteLd)} />
     <slot name="head" />
   </head>
   <body data-page={page}>

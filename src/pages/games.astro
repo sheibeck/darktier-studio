@@ -5,12 +5,34 @@ import { getGames } from "../lib/catalog";
 import { pubVaultLabel, pubTagClass, releasedLabel } from "../lib/display";
 
 const games = await getGames();
+
+const gamesLd = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "Darktier Studios — The Vault",
+  itemListElement: games.map((g, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    item: {
+      "@type": "Game",
+      name: g.name,
+      genre: g.type,
+      url: new URL(`/games#${g.slug}`, site.url).href,
+      ...(g.img ? { image: new URL(g.img, site.url).href } : {}),
+      description: g.synopsis,
+      publisher: { "@type": "Organization", name: site.name },
+    },
+  })),
+};
 ---
 <Layout
   title="The Vault"
   description="The full Darktier Studios games catalog — board games, TTRPGs and card games. Print-and-play at The Game Crafter and downloadable rulebook PDFs."
   current="/games"
 >
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(gamesLd)} />
+  </Fragment>
   <div class="container">
     <section style="padding:84px 0 56px">
       <p class="kicker">Darktier Studios · the catalog</p>

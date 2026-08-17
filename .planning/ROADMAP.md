@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Foundation** - Astro + Firebase scaffold wearing the ported Nocturne design system, with a navigable static shell ✓ 2026-08-17
 - [x] **Phase 2: Content & Data** - Firestore catalog schema seeded with the verified, owner-reviewed game/tool/news content and migrated static assets
 - [x] **Phase 3: Public Pages** - Home, The Vault, The Armory, and Dispatches render real catalog data as crawlable static HTML, plus a custom 404
-- [ ] **Phase 4: SEO & Social** - Per-page metadata, Open Graph/Twitter cards, sitemap, robots.txt, favicons, and structured data
+- [x] **Phase 4: SEO & Social** - Per-page metadata, Open Graph/Twitter cards, sitemap, robots.txt, favicons, and structured data
 - [ ] **Phase 5: Auth & Admin CMS** - Owner-only Google sign-in and a full CRUD editor for games/tools/news, backed by emulator-verified security rules
 - [ ] **Phase 6: Publish Pipeline & Deploy** - Build+deploy to Firebase Hosting, a publish action with visible last-published status, and analytics
 - [ ] **Phase 7: Launch & Cutover** - Custom domain darktierstudios.com over HTTPS with 301 redirects from known old-site URLs
@@ -125,7 +125,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 1. Foundation | 1/1 | ✓ Complete | 2026-08-17 |
 | 2. Content & Data | 1/1 | ✓ Complete | 2026-08-17 |
 | 3. Public Pages | 1/1 | ✓ Complete | 2026-08-17 |
-| 4. SEO & Social | 0/TBD | Not started | - |
+| 4. SEO & Social | 1/1 | ✓ Complete | 2026-08-17 |
 | 5. Auth & Admin CMS | 0/TBD | Not started | - |
 | 6. Publish Pipeline & Deploy | 0/TBD | Not started | - |
 | 7. Launch & Cutover | 0/TBD | Not started | - |
