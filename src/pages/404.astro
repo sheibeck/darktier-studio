@@ -1,0 +1,23 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+<Layout
+  title="Off the map"
+  description="That page slipped into the dark tier. Head back to known ground."
+  noindex
+>
+  <div class="container" style="min-height:64vh;display:grid;align-content:center;padding:120px 0">
+    <p class="kicker">Error · 404</p>
+    <h1 style="font-size:clamp(44px,7vw,88px);line-height:1.04;letter-spacing:-0.02em;margin:0 0 0 -0.06em;max-width:14ch">
+      Off the map.
+    </h1>
+    <p style="font-size:16px;line-height:28px;color:color-mix(in srgb, var(--color-text) 78%, transparent);max-width:48ch;margin:24px 0 0">
+      That page slipped into the dark tier — moved, renamed, or never existed. Head back to known ground.
+    </p>
+    <div style="display:flex;gap:var(--space-3);flex-wrap:wrap;margin-top:32px">
+      <a class="btn btn-primary" href="/" style="text-decoration:none">Back to home</a>
+      <a class="btn btn-secondary" href="/games" style="text-decoration:none">The Vault</a>
+      <a class="btn btn-ghost" href="/tools" style="text-decoration:none">The Armory</a>
+    </div>
+  </div>
+</Layout>

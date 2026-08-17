@@ -3,10 +3,10 @@ gsd_state_version: '1.0'
 status: executing
 progress:
   total_phases: 7
-  completed_phases: 2
-  total_plans: 2
-  completed_plans: 2
-  percent: 28
+  completed_phases: 3
+  total_plans: 3
+  completed_plans: 3
+  percent: 42
 ---
 
 # Project State
@@ -16,16 +16,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-08-17)
 
 **Core value:** A fast, great-looking, search- and share-optimized public site that becomes the studio's canonical home — so links shared anywhere drive traffic here and every game is discoverable with its cover, blurb, and download/buy link.
-**Current focus:** Phase 3 — Public Pages
+**Current focus:** Phase 4 — SEO & Social
 
 ## Current Position
 
-Phase: 3 of 7 (Public Pages)
-Plan: Phases 1–2 complete
-Status: Phase 2 (Content & Data) ✓ — 23 assets migrated, typed catalog (13 games/3 tools/2 news), build-time loader (Firestore-or-seed), seed script, Firebase config. Build green. Executing autonomously (verification deferred to end)
-Last activity: 2026-08-17 — Phase 2 Content & Data built and committed
+Phase: 4 of 7 (SEO & Social)
+Plan: Phases 1–3 complete
+Status: Phase 3 (Public Pages) ✓ — Home/Vault/Armory/404 render real catalog data as static HTML; 13 games, 8 PDFs, 4 shop links, dispatches, tools all verified in dist/. Executing autonomously (verification deferred to end)
+Last activity: 2026-08-17 — Phase 3 Public Pages built and committed
 
-Progress: [██░░░░░░░░] 28%
+Progress: [████░░░░░░] 42%
 
 ## Performance Metrics
 

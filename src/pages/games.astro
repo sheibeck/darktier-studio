@@ -1,6 +1,10 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { site } from "../data/site";
+import { getGames } from "../lib/catalog";
+import { pubVaultLabel, pubTagClass, releasedLabel } from "../lib/display";
+
+const games = await getGames();
 ---
 <Layout
   title="The Vault"
@@ -19,6 +23,106 @@ import { site } from "../data/site";
       </p>
       <div style="margin-top:28px"><a class="btn btn-secondary" href={site.gameCrafter} target="_blank" rel="noopener" style="text-decoration:none">Shop at The Game Crafter</a></div>
     </section>
-    <p class="text-muted" data-placeholder="catalog">The full catalog loads here.</p>
+
+    <div class="vault">
+      {
+        games.map((g) => (
+          <article id={g.slug} class="vault-row">
+            <div class="vault-cover lighten">
+              {g.img ? (
+                <img src={g.img} alt={`${g.name} cover art`} loading="lazy" decoding="async" />
+              ) : (
+                <div class="vault-cover-empty" aria-hidden="true" />
+              )}
+            </div>
+            <div>
+              <p class="vault-type">{g.type}</p>
+              <div class="vault-title-row">
+                <h2 class="vault-name">{g.name}</h2>
+                {g.isNew && <span class="tag tag-accent">NEW</span>}
+                <span class={pubTagClass(g.pub)}>{pubVaultLabel(g.pub)}</span>
+                {g.ai && (
+                  <span class="tag tag-neutral" title="This game was made with AI-assisted generation">
+                    AI-assisted
+                  </span>
+                )}
+                {releasedLabel(g.released) && (
+                  <span class="vault-released">Released {releasedLabel(g.released)}</span>
+                )}
+              </div>
+              <p class="vault-synopsis">{g.synopsis}</p>
+              <div class="vault-actions">
+                {g.app && (
+                  <a class="btn btn-primary" href={g.app} target="_blank" rel="noopener">Launch the app ▸</a>
+                )}
+                {g.pub === "tgc" && (
+                  <a class="btn btn-primary" href={site.gameCrafter} target="_blank" rel="noopener">Shop at The Game Crafter ▸</a>
+                )}
+                {g.pdf && (
+                  <a class="btn btn-secondary" href={g.pdf} download>Download PDF ↓</a>
+                )}
+                {g.charSheet && (
+                  <a class="btn btn-ghost" href={g.charSheet} download>Character sheet ↓</a>
+                )}
+                {g.site && (
+                  <a class="btn btn-ghost" href={g.site} target="_blank" rel="noopener">Visit the website ▸</a>
+                )}
+              </div>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+
+    <p style="font-size:13px;line-height:21px;color:color-mix(in srgb, var(--color-text) 55%, transparent);max-width:60ch;margin:42px 0 0">
+      Synopses are reconstructions from the archive — tell us what each game is really about and we'll set the record straight.
+    </p>
   </div>
 </Layout>
+
+<style>
+  .vault { display: flex; flex-direction: column; gap: 21px; }
+  .vault-row {
+    display: grid;
+    grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
+    gap: 28px clamp(24px, 4vw, 64px);
+    align-items: start;
+    padding: 28px;
+    border: 1px solid var(--color-neutral-700);
+    border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--color-neutral-900) 45%, transparent);
+    scroll-margin-top: 84px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .vault-row:hover { border-color: var(--color-accent); box-shadow: var(--shadow-md); }
+  .vault-cover {
+    aspect-ratio: 460 / 300;
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+    background: var(--color-neutral-800);
+  }
+  .vault-cover img { width: 100%; height: 100%; object-fit: cover; }
+  .vault-cover-empty { width: 100%; height: 100%; }
+  .vault-type {
+    font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--color-accent); margin: 0 0 10px;
+  }
+  .vault-title-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .vault-name { font-size: 28px; line-height: 32px; letter-spacing: -0.01em; margin: 0; }
+  .vault-released {
+    font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-text) 55%, transparent);
+    font-feature-settings: 'tnum' 1;
+  }
+  .vault-synopsis {
+    font-size: 15.5px; line-height: 28px;
+    color: color-mix(in srgb, var(--color-text) 78%, transparent);
+    max-width: 58ch; margin: 14px 0 0;
+  }
+  .vault-actions { display: flex; gap: var(--space-3); flex-wrap: wrap; margin-top: 21px; }
+  .vault-actions .btn { text-decoration: none; }
+  @media (max-width: 640px) {
+    .vault-row { grid-template-columns: 1fr; }
+    .vault-cover { max-width: 300px; }
+  }
+</style>

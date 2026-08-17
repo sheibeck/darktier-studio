@@ -1,5 +1,14 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { getTools } from "../lib/catalog";
+
+const tools = await getTools();
+const numbered = tools.map((t, i) => ({
+  ...t,
+  num: String(i + 1).padStart(2, "0"),
+  isLive: t.status === "live",
+  kickerLine: (t.status === "live" ? "Live now · " : "") + (t.kicker || (t.status === "live" ? "Companion app" : "Docking soon")),
+}));
 ---
 <Layout
   title="The Armory"
@@ -17,6 +26,54 @@ import Layout from "../layouts/Layout.astro";
         Darktier's companions and utilities for board games and TTRPGs are consolidating here — one login, one shelf, no more scattered sites. Slots below fill in as each app docks.
       </p>
     </section>
-    <p class="text-muted" data-placeholder="tools">The armory loads here.</p>
+
+    <div class="armory">
+      {
+        numbered.map((t) => (
+          <div class:list={["tool-card", { "tool-card-live": t.isLive }]}>
+            <p class="tool-kicker" style={t.isLive ? "color:var(--color-accent)" : "color:color-mix(in srgb, var(--color-text) 55%, transparent)"}>
+              {t.num} / {t.kickerLine}
+            </p>
+            <p class="tool-name">{t.name}</p>
+            <p class="tool-desc">{t.description}</p>
+            {t.isLive && t.app && (
+              <div style="display:flex;gap:var(--space-3);margin-top:21px">
+                <a class="btn btn-primary" href={t.app} target="_blank" rel="noopener" style="text-decoration:none">Launch ▸</a>
+              </div>
+            )}
+            {!t.isLive && <p class="tool-reserved">Slot reserved</p>}
+          </div>
+        ))
+      }
+    </div>
+
+    <p style="font-size:13px;line-height:21px;color:color-mix(in srgb, var(--color-text) 55%, transparent);max-width:60ch;margin:14px 0 0">
+      Which apps land next is still being decided — check back here for new arrivals.
+    </p>
   </div>
 </Layout>
+
+<style>
+  .armory {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    padding-bottom: 28px;
+  }
+  .tool-card {
+    border: 1px solid var(--color-neutral-700);
+    border-radius: var(--radius-md);
+    padding: 28px;
+    background: color-mix(in srgb, var(--color-neutral-900) 45%, transparent);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .tool-card-live { border-color: var(--color-accent-700); }
+  .tool-card:hover { border-color: var(--color-accent); box-shadow: var(--shadow-md); }
+  .tool-kicker { font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; margin: 0; }
+  .tool-name { font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 24px; line-height: 1.2; margin: 14px 0 0; }
+  .tool-desc { font-size: 14px; line-height: 24px; color: color-mix(in srgb, var(--color-text) 72%, transparent); margin: 10px 0 0; }
+  .tool-reserved {
+    font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-text) 45%, transparent); margin: 21px 0 0;
+  }
+</style>
