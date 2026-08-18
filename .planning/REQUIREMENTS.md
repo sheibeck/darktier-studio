@@ -12,9 +12,9 @@ Requirements for this milestone. Each maps to exactly one roadmap phase.
 ### In-Site App Hosting (APP)
 
 - [ ] **APP-01**: A visitor can open a companion app at its own in-site URL under The Armory (e.g. `/armory/fate-of-the-fellowship`) without leaving darktierstudios.com
-- [ ] **APP-02**: Each companion app runs full-screen inside the site's Nocturne nav/footer shell while keeping its own internal visual look (no restyle)
-- [ ] **APP-03**: A visitor's in-app progress persists in their own browser across reloads via `localStorage`, with no login required (MVP scope)
-- [ ] **APP-04**: Each app route is crawlable and share-optimized — it renders a real `<title>`/description and social-share preview in the initial HTML and is individually shareable, even though the app itself hydrates client-side
+- [x] **APP-02**: Each companion app runs full-screen inside the site's Nocturne nav/footer shell while keeping its own internal visual look (no restyle)
+- [x] **APP-03**: A visitor's in-app progress persists in their own browser across reloads via `localStorage`, with no login required (MVP scope)
+- [x] **APP-04**: Each app route is crawlable and share-optimized — it renders a real `<title>`/description and social-share preview in the initial HTML and is individually shareable, even though the app itself hydrates client-side
 - [ ] **APP-05**: Adding a new companion app is a documented drop-in — a new app requires only its component plus one registry entry plus one Armory tool record, with no per-app route hand-authoring; the pattern is captured as a short written guide
 - [ ] **APP-06**: Hosting the apps keeps the site fully static on the free Spark plan — no SSR adapter, no Cloud Functions, no new recurring cost — and the public marketing pages continue to ship ~0KB JS (app JS is code-split to its own route only)
 
@@ -26,7 +26,7 @@ Requirements for this milestone. Each maps to exactly one roadmap phase.
 
 ### Fate of the Fellowship (FOTF)
 
-- [ ] **FOTF-01**: The Fate of the Fellowship companion is playable live at `/armory/fate-of-the-fellowship`, preserving its existing behavior (game setup, step/objective tracking, hope/army trackers, and `localStorage` save + reset)
+- [x] **FOTF-01**: The Fate of the Fellowship companion is playable live at `/armory/fate-of-the-fellowship`, preserving its existing behavior (game setup, step/objective tracking, hope/army trackers, and `localStorage` save + reset)
 
 ### Burning Banners (BB)
 
@@ -65,10 +65,10 @@ Which phases cover which requirements. Populated during roadmap creation.
 | TOOL-03 | Phase 8 | Complete |
 | TOOL-04 | Phase 8 | Complete |
 | TOOL-05 | Phase 8 | Complete |
-| FOTF-01 | Phase 9 | Pending |
-| APP-02 | Phase 9 | Pending |
-| APP-03 | Phase 9 | Pending |
-| APP-04 | Phase 9 | Pending |
+| FOTF-01 | Phase 9 | Complete |
+| APP-02 | Phase 9 | Complete |
+| APP-03 | Phase 9 | Complete |
+| APP-04 | Phase 9 | Complete |
 | BB-01 | Phase 10 | Pending |
 | BB-02 | Phase 10 | Pending |
 | APP-01 | Phase 11 | Pending |

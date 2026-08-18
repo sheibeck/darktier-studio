@@ -65,9 +65,9 @@ Delivered: a fast, SEO/share-optimized public site (Home, The Vault, The Armory,
   4. Viewing page source on `/armory/fate-of-the-fellowship` shows a real per-app `<title>`, description, and OG/Twitter tags in the initial HTML (not the site defaults), even though the app body hydrates client-side.
   5. `npm run build` (not just `astro dev`) succeeds and produces `dist/armory/fate-of-the-fellowship.html` with static, crawlable content outside the island.
 
-**Plans**: 2 plans
+**Plans**: 1/2 plans executed
 
-- [ ] 09-01-PLAN.md — Establish the reusable app-hosting pattern (armoryApps registry + `[slug].astro` route + `client:only` island + per-app SEO); relocate, scope CSS under `.ff`, migrate to real localStorage, and wire Fate of the Fellowship so the build emits `dist/armory/fate-of-the-fellowship.html`
+- [x] 09-01-PLAN.md — Establish the reusable app-hosting pattern (armoryApps registry + `[slug].astro` route + `client:only` island + per-app SEO); relocate, scope CSS under `.ff`, migrate to real localStorage, and wire Fate of the Fellowship so the build emits `dist/armory/fate-of-the-fellowship.html`
 - [ ] 09-02-PLAN.md — Acceptance gates (build, per-app SEO head, fully-scoped CSS, sitemap crawlability, no marketing-page regression) + blocking human play-through (playable, shell intact, persistence + reset)
 
 **UI hint**: yes
@@ -115,7 +115,7 @@ Delivered: a fast, SEO/share-optimized public site (Home, The Vault, The Armory,
 | 6. Publish Pipeline & Deploy        | v1.0      | Complete    | 2026-08-17 |
 | 7. Launch & Cutover                 | v1.0      | Complete    | 2026-08-17 |
 | 8. Tool Data Model & Admin Wiring   | v1.1      | Complete    | 2026-08-18 |
-| 9. Fate of the Fellowship           | v1.1      | Not started | -          |
+| 9. Fate of the Fellowship           | v1.1      | In Progress|  |
 | 10. Burning Banners                 | v1.1      | Not started | -          |
 | 11. Go-Live & Pipeline Docs         | v1.1      | Not started | -          |
 

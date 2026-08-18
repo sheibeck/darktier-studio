@@ -2,18 +2,18 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: In-Site Companion Apps
-current_phase: 9
+current_phase: 09
 current_phase_name: Fate of the Fellowship
-status: planning
-stopped_at: Completed 08-01-PLAN.md
-last_updated: "2026-08-18T14:41:48.091Z"
+status: executing
+stopped_at: Completed 09-01-PLAN.md
+last_updated: "2026-08-18T15:23:03.610Z"
 last_activity: 2026-08-18
-last_activity_desc: Phase 08 complete, transitioned to Phase 9
+last_activity_desc: Phase 09 execution started
 progress:
   total_phases: 4
   completed_phases: 1
-  total_plans: 1
-  completed_plans: 1
+  total_plans: 3
+  completed_plans: 2
   percent: 25
 ---
 
@@ -24,16 +24,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-08-18)
 
 **Core value:** A fast, great-looking, search- and share-optimized public site that becomes the studio's canonical home — so links shared anywhere drive traffic here and every game is discoverable with its cover, blurb, and download/buy link.
-**Current focus:** Phase 08 — Tool Data Model & Admin Wiring
+**Current focus:** Phase 09 — Fate of the Fellowship
 
 ## Current Position
 
-Phase: 9 — Fate of the Fellowship
-Plan: Not started
-Status: Ready to plan
-Last activity: 2026-08-18 — Phase 08 complete, transitioned to Phase 9
+Phase: 09 (Fate of the Fellowship) — EXECUTING
+Plan: 2 of 2
+Status: Ready to execute
+Last activity: 2026-08-18 — Phase 09 execution started
 
-Progress: [██████████] 100%
+Progress: [███████░░░] 67%
 
 ## Performance Metrics
 
@@ -60,6 +60,7 @@ Progress: [██████████] 100%
 | Plan | Duration | Tasks | Files |
 |------|----------|-------|-------|
 | Phase 08 P01 | 6min | 3 tasks | 3 files |
+| Phase 09 P01 | 15min | 3 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -72,6 +73,7 @@ Recent decisions affecting current work:
 - [Research]: `Tool.kind?: "external"|"internal"` is additive-only; internal `href` is always derived as `/armory/${slug}` from `Tool.slug`, never hand-typed, so the Firestore doc and the `armoryApps.ts` registry can't drift apart.
 - [Research]: Burning Banners' Tailwind stylesheet is imported only from its own component (theme + utilities layers, preflight omitted) — never from `Layout.astro`/global CSS — to keep every Nocturne page untouched.
 - [Phase ?]: Two-branch conditional JSX (not attribute-spread) for the Launch anchor keeps literal target=/rel attributes for byte-identical external behavior and satisfies the plan's own grep-based verify step
+- [Phase ?]: Component dispatch in [slug].astro uses a direct per-slug conditional (not props-threading or a Record lookup) because Astro's client:only hydration requires a statically-analyzable local import binding in the JSX tag itself
 
 ### Pending Todos
 
@@ -94,8 +96,8 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-08-18T14:15:03.425Z
-Stopped at: Completed 08-01-PLAN.md
+Last session: 2026-08-18T15:23:03.526Z
+Stopped at: Completed 09-01-PLAN.md
 Resume file: None
 
 ## Operator Next Steps
