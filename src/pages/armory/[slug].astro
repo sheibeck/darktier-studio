@@ -14,7 +14,7 @@
 // + one line here mirroring this one — still a fixed, mechanical, ~3-line
 // cost per app, not a full new route/page.
 import Layout from "../../layouts/Layout.astro";
-import { armoryApps } from "../../lib/armoryApps";
+import { armoryApps, type ArmoryApp } from "../../lib/armoryApps";
 import FateOfTheFellowship from "../../components/armory/FateOfTheFellowship";
 
 // Every armoryApps entry MUST have a matching dispatch line in the JSX
@@ -34,6 +34,8 @@ if (missingDispatch.length) {
 export function getStaticPaths() {
   return armoryApps.map((app) => ({ params: { slug: app.slug }, props: app }));
 }
+
+interface Props extends ArmoryApp {}
 
 const { slug, name, title, description } = Astro.props;
 ---
