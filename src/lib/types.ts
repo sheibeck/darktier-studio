@@ -26,7 +26,7 @@ export interface Game {
   showcase?: boolean;
   /** Hidden from the public site. */
   hidden?: boolean;
-  /** Cover image site path, e.g. "/assets/covers/woe.png", or null. */
+  /** Cover image site path, e.g. "/assets/covers/woe.jpg", or null. */
   img?: string | null;
   synopsis: string;
   order: number;
