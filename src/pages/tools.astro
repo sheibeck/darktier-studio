@@ -1,14 +1,9 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { getTools } from "../lib/catalog";
+import ToolsLive from "../components/live/ToolsLive.tsx";
 
 const tools = await getTools();
-const numbered = tools.map((t, i) => ({
-  ...t,
-  num: String(i + 1).padStart(2, "0"),
-  isLive: t.status === "live",
-  kickerLine: (t.status === "live" ? "Live now · " : "") + (t.kicker || (t.status === "live" ? "Companion app" : "Docking soon")),
-}));
 ---
 <Layout
   title="The Armory"
@@ -27,25 +22,8 @@ const numbered = tools.map((t, i) => ({
       </p>
     </section>
 
-    <div class="armory">
-      {
-        numbered.map((t) => (
-          <div class:list={["tool-card", { "tool-card-live": t.isLive }]}>
-            <p class="tool-kicker" style={t.isLive ? "color:var(--color-accent)" : "color:color-mix(in srgb, var(--color-text) 55%, transparent)"}>
-              {t.num} / {t.kickerLine}
-            </p>
-            <p class="tool-name">{t.name}</p>
-            <p class="tool-desc">{t.description}</p>
-            {t.isLive && t.app && (
-              <div style="display:flex;gap:var(--space-3);margin-top:21px">
-                <a class="btn btn-primary" href={t.app} target="_blank" rel="noopener" style="text-decoration:none">Launch ▸</a>
-              </div>
-            )}
-            {!t.isLive && <p class="tool-reserved">Slot reserved</p>}
-          </div>
-        ))
-      }
-    </div>
+    <ToolsLive initial={tools} client:load />
+
 
     <p style="font-size:13px;line-height:21px;color:color-mix(in srgb, var(--color-text) 55%, transparent);max-width:60ch;margin:14px 0 0">
       Which apps land next is still being decided — check back here for new arrivals.
@@ -53,7 +31,7 @@ const numbered = tools.map((t, i) => ({
   </div>
 </Layout>
 
-<style>
+<style is:global>
   .armory {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));

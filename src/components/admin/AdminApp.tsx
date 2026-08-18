@@ -212,7 +212,8 @@ export default function AdminApp() {
     if (!window.confirm("Load the default catalog into Firestore? Items with the same slug will be overwritten.")) return;
     setSeedMsg("Loading…");
     try {
-      const strip = (o: object) => Object.fromEntries(Object.entries(o).filter(([, v]) => v !== undefined));
+      // `hidden: false` default so the public live-read query (where hidden==false) returns them.
+      const strip = (o: object) => Object.fromEntries(Object.entries({ hidden: false, ...o }).filter(([, v]) => v !== undefined));
       for (const g of seedGames) await setDoc(doc(db, "games", g.slug), strip(g));
       for (const t of seedTools) await setDoc(doc(db, "tools", t.slug), strip(t));
       for (const n of seedNews) await setDoc(doc(db, "news", n.slug), strip(n));

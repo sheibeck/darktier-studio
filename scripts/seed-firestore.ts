@@ -40,8 +40,10 @@ const db = getFirestore();
 async function seedCollection(name: string, items: Array<{ slug: string }>): Promise<void> {
   const batch = db.batch();
   for (const item of items) {
-    // Firestore rejects `undefined`; strip any undefined-valued keys.
-    const clean = Object.fromEntries(Object.entries(item).filter(([, v]) => v !== undefined));
+    // `hidden: false` default (public live-read query filters on it); strip undefined.
+    const clean = Object.fromEntries(
+      Object.entries({ hidden: false, ...item }).filter(([, v]) => v !== undefined),
+    );
     batch.set(db.collection(name).doc(item.slug), clean);
   }
   await batch.commit();

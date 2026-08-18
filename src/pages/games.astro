@@ -2,16 +2,9 @@
 import Layout from "../layouts/Layout.astro";
 import { site } from "../data/site";
 import { getGames } from "../lib/catalog";
-import { pubVaultLabel, pubTagClass, releasedLabel } from "../lib/display";
+import VaultLive from "../components/live/VaultLive.tsx";
 
 const games = await getGames();
-
-// The primary thing "clicking the game" should do: open the PDF, else the app,
-// else the shop (TGC) / website. Used to make the cover + title clickable.
-const rows = games.map((g) => ({
-  ...g,
-  primaryHref: g.pdf || g.app || (g.pub === "tgc" ? site.gameCrafter : g.site) || null,
-}));
 
 const gamesLd = {
   "@context": "https://schema.org",
@@ -53,59 +46,7 @@ const gamesLd = {
       <div style="margin-top:28px"><a class="btn btn-secondary" href={site.gameCrafter} target="_blank" rel="noopener" style="text-decoration:none">Shop at The Game Crafter</a></div>
     </section>
 
-    <div class="vault">
-      {
-        rows.map((g) => (
-          <article id={g.slug} class="vault-row">
-            <a class="vault-cover-link" href={g.primaryHref} target="_blank" rel="noopener" aria-label={`Open ${g.name}`}>
-              <div class="vault-cover">
-                {g.img ? (
-                  <img src={g.img} alt={`${g.name} cover art`} loading="lazy" decoding="async" />
-                ) : (
-                  <div class="vault-cover-empty" aria-hidden="true" />
-                )}
-              </div>
-            </a>
-            <div>
-              <p class="vault-type">{g.type}</p>
-              <div class="vault-title-row">
-                <h2 class="vault-name">
-                  <a class="vault-name-link" href={g.primaryHref} target="_blank" rel="noopener">{g.name}</a>
-                </h2>
-                {g.isNew && <span class="tag tag-accent">NEW</span>}
-                <span class={pubTagClass(g.pub)}>{pubVaultLabel(g.pub)}</span>
-                {g.ai && (
-                  <span class="tag tag-neutral" title="This game was made with AI-assisted generation">
-                    AI-assisted
-                  </span>
-                )}
-                {releasedLabel(g.released) && (
-                  <span class="vault-released">Released {releasedLabel(g.released)}</span>
-                )}
-              </div>
-              <p class="vault-synopsis">{g.synopsis}</p>
-              <div class="vault-actions">
-                {g.app && (
-                  <a class="btn btn-primary" href={g.app} target="_blank" rel="noopener">Launch the app ▸</a>
-                )}
-                {g.pub === "tgc" && (
-                  <a class="btn btn-primary" href={site.gameCrafter} target="_blank" rel="noopener">Shop at The Game Crafter ▸</a>
-                )}
-                {g.pdf && (
-                  <a class="btn btn-secondary" href={g.pdf} download>Download PDF ↓</a>
-                )}
-                {g.charSheet && (
-                  <a class="btn btn-ghost" href={g.charSheet} download>Character sheet ↓</a>
-                )}
-                {g.site && (
-                  <a class="btn btn-ghost" href={g.site} target="_blank" rel="noopener">Visit the website ▸</a>
-                )}
-              </div>
-            </div>
-          </article>
-        ))
-      }
-    </div>
+    <VaultLive initial={games} client:load />
 
     <p style="font-size:13px;line-height:21px;color:color-mix(in srgb, var(--color-text) 55%, transparent);max-width:60ch;margin:42px 0 0">
       Synopses are reconstructions from the archive — tell us what each game is really about and we'll set the record straight.
@@ -113,7 +54,7 @@ const gamesLd = {
   </div>
 </Layout>
 
-<style>
+<style is:global>
   .vault { display: flex; flex-direction: column; gap: 21px; }
   .vault-row {
     display: grid;

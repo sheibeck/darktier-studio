@@ -2,7 +2,8 @@
 import Layout from "../layouts/Layout.astro";
 import { site } from "../data/site";
 import { getFeaturedGames, getLatestNews } from "../lib/catalog";
-import { heroBlurb, newsDateLabel, newsTagClass } from "../lib/display";
+import FeaturedLive from "../components/live/FeaturedLive.tsx";
+import DispatchesLive from "../components/live/DispatchesLive.tsx";
 
 const featured = await getFeaturedGames(3);
 const dispatches = await getLatestNews(5);
@@ -53,28 +54,7 @@ const dispatches = await getLatestNews(5);
         <h2 style="font-size:clamp(32px,4vw,52px);line-height:1.1;letter-spacing:-0.015em;margin:0 0 0 -0.06em">The vault</h2>
         <span style="font-size:13px;letter-spacing:0.22em;text-transform:uppercase;color:var(--color-accent)">12 titles · print &amp; play · PDF</span>
       </div>
-      <div class="feat-grid">
-        {
-          featured.map((g) => (
-            <a href={`/games#${g.slug}`} class="feat-card">
-              <div class="feat-cover">
-                {g.img ? (
-                  <img src={g.img} alt={`${g.name} cover art`} loading="lazy" decoding="async" />
-                ) : (
-                  <div class="feat-cover-empty" aria-hidden="true" />
-                )}
-              </div>
-              <div class="feat-scrim" aria-hidden="true" />
-              {g.isNew && <span class="tag tag-accent feat-new">NEW</span>}
-              <div class="feat-body">
-                <p class="feat-type">{g.type}</p>
-                <p class="feat-name">{g.name}</p>
-                <p class="feat-blurb">{heroBlurb(g.synopsis)}</p>
-              </div>
-            </a>
-          ))
-        }
-      </div>
+      <FeaturedLive initial={featured} client:load />
       <div style="margin-top:35px"><a class="btn btn-secondary" href="/games" style="text-decoration:none">Open the full vault ▸</a></div>
     </section>
 
@@ -115,30 +95,12 @@ const dispatches = await getLatestNews(5);
     <!-- Dispatches — wired to the news collection in Phase 3 -->
     <section id="dispatches" style="padding:0 0 70px">
       <p style="font-size:13px;letter-spacing:0.22em;text-transform:uppercase;color:var(--color-accent);margin:0 0 28px">Dispatches</p>
-      <div class="dispatch-feed">
-        {
-          dispatches.map((n) => (
-            <article class="dispatch">
-              <div class="dispatch-meta">
-                <span class={newsTagClass(n.tag)}>{n.tag}</span>
-                <span class="dispatch-date">{newsDateLabel(n.date)}</span>
-              </div>
-              <h3 class="dispatch-title">{n.title}</h3>
-              <p class="dispatch-body">{n.body}</p>
-              {n.link && (
-                <div style="margin-top:14px">
-                  <a href={n.link} target="_blank" rel="noopener" style="font-size:14px">Read more ▸</a>
-                </div>
-              )}
-            </article>
-          ))
-        }
-      </div>
+      <DispatchesLive initial={dispatches} client:load />
     </section>
   </div>
 </Layout>
 
-<style>
+<style is:global>
   /* Featured vault cards */
   .feat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 21px; margin-top: 42px; }
   .feat-card {

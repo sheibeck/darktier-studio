@@ -18,8 +18,10 @@ service cloud.firestore {
     function isOwner() {
       return request.auth != null && request.auth.uid == '0z17c5sCiBZLdTKa3s08MDe7KFb2';
     }
+    // Visible docs are readable by anyone. Matches the public live-read query
+    // `where("hidden","==",false)` exactly, so the list is provably safe.
     function isPublic() {
-      return resource.data.hidden != true;
+      return resource.data.hidden == false;
     }
 
     match /games/{slug} { allow read: if isPublic() || isOwner(); allow write: if isOwner(); }

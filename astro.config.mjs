@@ -23,7 +23,7 @@ export default defineConfig({
         ph: ["*"],
       },
     }),
-    // React is used ONLY by the /admin island — public pages ship zero JS.
-    react({ include: ["**/admin/**"] }),
+    // React powers the /admin island and the live public catalog components.
+    react({ include: ["**/admin/**", "**/live/**"] }),
   ],
 });
