@@ -20,9 +20,9 @@ Requirements for this milestone. Each maps to exactly one roadmap phase.
 
 ### Armory Tool Integration (TOOL)
 
-- [ ] **TOOL-03**: The tools data model supports an in-site (internal-route) launch target in addition to external links, in a way that is backward-compatible with existing tool records (absent field = today's external behavior; no migration required)
-- [ ] **TOOL-04**: The owner can, in the admin CMS, add and edit an Armory tool that launches an in-site app — choosing internal vs external target — and reorder / show-hide it exactly like any other tool
-- [ ] **TOOL-05**: The Armory lists in-site apps as live tools whose "Launch" opens the app in the **same tab** (in-site navigation), while existing external tools continue to open as they do today
+- [x] **TOOL-03**: The tools data model supports an in-site (internal-route) launch target in addition to external links, in a way that is backward-compatible with existing tool records (absent field = today's external behavior; no migration required)
+- [x] **TOOL-04**: The owner can, in the admin CMS, add and edit an Armory tool that launches an in-site app — choosing internal vs external target — and reorder / show-hide it exactly like any other tool
+- [x] **TOOL-05**: The Armory lists in-site apps as live tools whose "Launch" opens the app in the **same tab** (in-site navigation), while existing external tools continue to open as they do today
 
 ### Fate of the Fellowship (FOTF)
 
@@ -62,9 +62,9 @@ Which phases cover which requirements. Populated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TOOL-03 | Phase 8 | Pending |
-| TOOL-04 | Phase 8 | Pending |
-| TOOL-05 | Phase 8 | Pending |
+| TOOL-03 | Phase 8 | Complete |
+| TOOL-04 | Phase 8 | Complete |
+| TOOL-05 | Phase 8 | Complete |
 | FOTF-01 | Phase 9 | Pending |
 | APP-02 | Phase 9 | Pending |
 | APP-03 | Phase 9 | Pending |
@@ -76,6 +76,7 @@ Which phases cover which requirements. Populated during roadmap creation.
 | APP-06 | Phase 11 | Pending |
 
 **Coverage:**
+
 - Milestone v1.1 requirements: 12 total
 - Mapped to phases: 12 (100%)
 - Unmapped: 0 ✓

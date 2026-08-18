@@ -2,15 +2,19 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: In-Site Companion Apps
-status: planning
-last_updated: "2026-08-18T15:30:00.000Z"
+current_phase: 08
+current_phase_name: Tool Data Model & Admin Wiring
+status: verifying
+stopped_at: Completed 08-01-PLAN.md
+last_updated: "2026-08-18T14:15:03.446Z"
 last_activity: 2026-08-18
+last_activity_desc: Phase 08 execution started
 progress:
   total_phases: 4
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 0
+  completed_phases: 1
+  total_plans: 1
+  completed_plans: 1
+  percent: 25
 ---
 
 # Project State
@@ -20,16 +24,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-08-18)
 
 **Core value:** A fast, great-looking, search- and share-optimized public site that becomes the studio's canonical home — so links shared anywhere drive traffic here and every game is discoverable with its cover, blurb, and download/buy link.
-**Current focus:** v1.1 In-Site Companion Apps — ROADMAP.md created (Phases 8-11, continuing numbering from v1.0's Phase 7). Ready to plan Phase 8.
+**Current focus:** Phase 08 — Tool Data Model & Admin Wiring
 
 ## Current Position
 
-Phase: 8 of 11 (Tool Data Model & Admin Wiring) — first phase of v1.1
-Plan: — (not yet planned)
-Status: Roadmap created; ready for `/gsd-plan-phase 8`
-Last activity: 2026-08-18 — v1.1 ROADMAP.md created; REQUIREMENTS.md traceability filled (12/12 mapped)
+Phase: 08 (Tool Data Model & Admin Wiring) — EXECUTING
+Plan: 1 of 1
+Status: Phase complete — ready for verification
+Last activity: 2026-08-18 — Phase 08 execution started
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -51,6 +55,11 @@ Progress: [░░░░░░░░░░] 0%
 - Trend: -
 
 *Updated after each plan completion*
+**Per-Plan Metrics:**
+
+| Plan | Duration | Tasks | Files |
+|------|----------|-------|-------|
+| Phase 08 P01 | 6min | 3 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -62,6 +71,7 @@ Recent decisions affecting current work:
 - [Roadmap v1.1]: 4 phases (8-11) derived from 12 v1.1 requirements, sequenced by risk — data model (8) → Fate of the Fellowship reference build (9) → Burning Banners Tailwind stress test (10) → go-live + pipeline docs + deploy (11).
 - [Research]: `Tool.kind?: "external"|"internal"` is additive-only; internal `href` is always derived as `/armory/${slug}` from `Tool.slug`, never hand-typed, so the Firestore doc and the `armoryApps.ts` registry can't drift apart.
 - [Research]: Burning Banners' Tailwind stylesheet is imported only from its own component (theme + utilities layers, preflight omitted) — never from `Layout.astro`/global CSS — to keep every Nocturne page untouched.
+- [Phase ?]: Two-branch conditional JSX (not attribute-spread) for the Launch anchor keeps literal target=/rel attributes for byte-identical external behavior and satisfies the plan's own grep-based verify step
 
 ### Pending Todos
 
@@ -84,8 +94,8 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-08-18
-Stopped at: v1.1 ROADMAP.md created (Phases 8-11); REQUIREMENTS.md traceability filled
+Last session: 2026-08-18T14:15:03.425Z
+Stopped at: Completed 08-01-PLAN.md
 Resume file: None
 
 ## Operator Next Steps
