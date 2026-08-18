@@ -6,11 +6,11 @@ name: Deploy
 #   latest Firestore edits from /admin go live
 # - repository_dispatch {publish}: optional hook for a future Publish button
 on:
-  push:
-    branches: [main]
+  # Manual only — deploy production explicitly (Actions → Deploy → Run workflow).
+  # Deliberately NOT triggered on push: commits (esp. GSD's) should never deploy.
+  # Requires the FIREBASE_SERVICE_ACCOUNT secret. Local `npm run deploy` is the
+  # primary path and needs no secret (uses serviceAccountKey.json).
   workflow_dispatch:
-  repository_dispatch:
-    types: [publish]
 
 permissions:
   contents: read

@@ -9,10 +9,13 @@
 // No client-side Firestore reads happen on public pages — this runs in Node at
 // build time only, satisfying the SEO/crawlability requirement.
 
+import { existsSync, readFileSync } from "node:fs";
 import { games as seedGames } from "../data/catalog/games";
 import { tools as seedTools } from "../data/catalog/tools";
 import { news as seedNews } from "../data/catalog/news";
 import type { Game, Tool, NewsPost } from "./types";
+
+const KEY_FILE = "serviceAccountKey.json";
 
 type Db = { collection: (name: string) => { get: () => Promise<{ docs: { data: () => unknown }[] }> } };
 
@@ -23,7 +26,8 @@ function firestoreConfigured(): boolean {
     process.env.FIRESTORE_EMULATOR_HOST ||
       process.env.FIREBASE_SERVICE_ACCOUNT ||
       process.env.GOOGLE_APPLICATION_CREDENTIALS ||
-      process.env.FIREBASE_PROJECT_ID,
+      process.env.FIREBASE_PROJECT_ID ||
+      existsSync(KEY_FILE),
   );
 }
 
@@ -42,6 +46,9 @@ async function getDb(): Promise<Db | null> {
           initializeApp({ credential: cert(JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)), projectId });
         } else if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
           initializeApp({ credential: applicationDefault(), projectId });
+        } else if (existsSync(KEY_FILE)) {
+          const sa = JSON.parse(readFileSync(KEY_FILE, "utf8"));
+          initializeApp({ credential: cert(sa), projectId: projectId ?? sa.project_id });
         } else {
           initializeApp({ projectId });
         }
