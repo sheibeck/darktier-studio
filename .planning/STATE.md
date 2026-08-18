@@ -31,7 +31,7 @@ See: .planning/PROJECT.md (updated 2026-08-18)
 Phase: Milestone v1.1 complete
 Plan: —
 Status: Awaiting next milestone
-Last activity: 2026-08-18 — Milestone v1.1 completed and archived
+Last activity: 2026-08-18 — Completed quick task 260818-nhc: mobile-friendly hamburger nav + admin modals
 
 ## Performance Metrics
 
@@ -103,6 +103,7 @@ None yet.
 | # | Description | Date | Commit | Directory |
 |---|-------------|------|--------|-----------|
 | 260818-l22 | FOTF main menu → sticky top bar (was fixed bottom over footer) | 2026-08-18 | 997986c | [260818-l22-make-fate-of-the-fellowship-main-menu-a-](./quick/260818-l22-make-fate-of-the-fellowship-main-menu-a-/) |
+| 260818-nhc | Mobile-friendly: hamburger nav + mobile-friendly admin modals | 2026-08-18 | 61caea7 | [260818-nhc-make-the-app-mobile-friendly-nav-becomes](./quick/260818-nhc-make-the-app-mobile-friendly-nav-becomes/) |
 
 ## Deferred Items
 
