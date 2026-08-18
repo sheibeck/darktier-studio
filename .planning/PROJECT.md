@@ -8,9 +8,11 @@ The public website for Darktier Studios, LLC — a one-person TTRPG and tabletop
 
 A fast, great-looking, search- and share-optimized public site that becomes the studio's canonical home — so links shared anywhere (formerly Facebook) drive traffic here and every game is discoverable with its cover, blurb, and download/buy link.
 
-## Current Milestone: v1.1 In-Site Companion Apps
+## Milestone v1.1 In-Site Companion Apps — Shipped ✓ (2026-08-18, live)
 
-**Goal:** Host self-contained React companion apps directly inside the Darktier Studios Firebase app — no separate domains or Firebase projects — and ship the first two (Fate of the Fellowship, Burning Banners) as live, admin-managed entries in The Armory.
+**Status:** Shipped and live on darktierstudios.com. Both companion apps are hosted in-site as Astro islands in The Armory (`/armory/fate-of-the-fellowship`, `/armory/burning-banners`), seeded as live internal tools, deployed, and confirmed. Full detail archived in `.planning/milestones/v1.1-*`. No milestone currently active — start the next with `/gsd-new-milestone`.
+
+**Goal (delivered):** Host self-contained React companion apps directly inside the Darktier Studios Firebase app — no separate domains or Firebase projects — and ship the first two (Fate of the Fellowship, Burning Banners) as live, admin-managed entries in The Armory.
 
 **Target features:**
 - A reusable in-site app-hosting pattern: a `.tsx` companion app becomes an Astro React island at an internal route (e.g. `/armory/<slug>`), built into the same `dist/` and served from existing Firebase Hosting — documented so future artifact apps drop in with minimal work.
@@ -45,11 +47,11 @@ A fast, great-looking, search- and share-optimized public site that becomes the 
 - ✓ SEO + social: per-page title/description, OG + Twitter cards, canonical URLs, sitemap, favicon, JSON-LD — v1.0
 - ✓ Deployed to Firebase Hosting on the custom domain darktierstudios.com over HTTPS — v1.0 (DNS cutover 2026-08-18)
 - ✓ Reuse the Nocturne design system stylesheet; dark, compact, accent-as-line aesthetic preserved — v1.0
+- ✓ In-site React companion apps hosted as Astro islands at internal Armory routes — reusable drop-in pattern + Fate of the Fellowship + Burning Banners, admin-managed (`Tool.kind:"internal"`), localStorage-only, Tailwind scoped to the BB route with zero marketing-page regression — v1.1 (live on darktierstudios.com)
 
 ### Active
 
 - [ ] Privacy-friendly web analytics — code shipped (Cloudflare Web Analytics); awaits owner's `PUBLIC_CF_ANALYTICS_TOKEN` to activate
-- [ ] **v1.1** — In-site React companion apps hosted as Astro islands at internal Armory routes (reusable pattern + Fate of the Fellowship + Burning Banners), admin-managed, localStorage-only for MVP — see REQUIREMENTS.md
 
 ### Out of Scope
 
@@ -122,4 +124,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-08-18 — v1.1 Phase 11 (Go-Live & Pipeline Docs) complete; all build/code phases done. Both companion apps seeded as live internal Armory tools, drop-in pipeline documented (docs/adding-a-companion-app.md), zero marketing-page regression verified (APP-01/05/06 validated). DEPLOY-READY — remaining items are owner actions in docs/go-live-v1.1.md: `npm run deploy`, seed live production Firestore tool docs, and browser play-throughs.*
+*Last updated: 2026-08-18 — v1.1 In-Site Companion Apps shipped and live on darktierstudios.com; milestone completed and archived. Both apps live in The Armory; catalog seed synced to production; FOTF menu made sticky (quick task). Next: `/gsd-new-milestone`.*

@@ -2,18 +2,18 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: In-Site Companion Apps
-current_phase: 11
-status: completed
+status: Awaiting next milestone
 stopped_at: Completed 11-02-PLAN.md
-last_updated: "2026-08-18T18:29:48.325Z"
+last_updated: "2026-08-18T19:23:12.909Z"
 last_activity: 2026-08-18
-last_activity_desc: Phase 11 complete
+last_activity_desc: Milestone v1.1 completed and archived
 progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 9
   completed_plans: 7
   percent: 50
+current_phase: 11
 current_phase_name: Go-Live & Pipeline Docs
 ---
 
@@ -28,12 +28,10 @@ See: .planning/PROJECT.md (updated 2026-08-18)
 
 ## Current Position
 
-Phase: 11
-Plan: Not started
-Status: All phases complete
-Last activity: 2026-08-18 — Phase 11 complete
-
-Progress: [████████░░] 78%
+Phase: Milestone v1.1 complete
+Plan: —
+Status: Awaiting next milestone
+Last activity: 2026-08-18 — Milestone v1.1 completed and archived
 
 ## Performance Metrics
 
@@ -123,4 +121,4 @@ Resume file: None
 
 ## Operator Next Steps
 
-- Approve the v1.1 roadmap, then run `/gsd-plan-phase 8` to start planning Phase 8: Tool Data Model & Admin Wiring.
+- Start the next milestone with /gsd-new-milestone
