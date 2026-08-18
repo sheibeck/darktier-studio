@@ -122,4 +122,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-08-18 — v1.1 Phase 10 (Burning Banners) complete; second app live at /armory/burning-banners with Tailwind v4 + lucide-react scoped (skip-preflight) to its own route, zero marketing-page regression (BB-01/BB-02 validated). Deferred: owner browser play-throughs (FOTF + BB). Note: scoped Tailwind is an intentional isolated exception to CLAUDE.md's project-wide "no Tailwind" rule — to be documented in Phase 11.*
+*Last updated: 2026-08-18 — v1.1 Phase 11 (Go-Live & Pipeline Docs) complete; all build/code phases done. Both companion apps seeded as live internal Armory tools, drop-in pipeline documented (docs/adding-a-companion-app.md), zero marketing-page regression verified (APP-01/05/06 validated). DEPLOY-READY — remaining items are owner actions in docs/go-live-v1.1.md: `npm run deploy`, seed live production Firestore tool docs, and browser play-throughs.*
