@@ -62,13 +62,24 @@ Which phases cover which requirements. Populated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| _(populated by roadmap)_ | — | Pending |
+| TOOL-03 | Phase 8 | Pending |
+| TOOL-04 | Phase 8 | Pending |
+| TOOL-05 | Phase 8 | Pending |
+| FOTF-01 | Phase 9 | Pending |
+| APP-02 | Phase 9 | Pending |
+| APP-03 | Phase 9 | Pending |
+| APP-04 | Phase 9 | Pending |
+| BB-01 | Phase 10 | Pending |
+| BB-02 | Phase 10 | Pending |
+| APP-01 | Phase 11 | Pending |
+| APP-05 | Phase 11 | Pending |
+| APP-06 | Phase 11 | Pending |
 
 **Coverage:**
-- Milestone v1.1 requirements: 11 total
-- Mapped to phases: 0 (pending roadmap)
-- Unmapped: 11 ⚠️
+- Milestone v1.1 requirements: 12 total
+- Mapped to phases: 12 (100%)
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-08-18*
-*Last updated: 2026-08-18 after initial v1.1 definition*
+*Last updated: 2026-08-18 after v1.1 ROADMAP.md created — 12/12 requirements mapped to Phases 8-11*
