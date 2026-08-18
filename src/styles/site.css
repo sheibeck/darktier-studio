@@ -29,6 +29,72 @@ a:hover { color: var(--color-accent); }
 
 .site-nav {
   padding-inline: max(clamp(20px, 5vw, 72px), calc((100% - 1240px) / 2 + clamp(20px, 5vw, 72px)));
+  position: relative;
+}
+
+/* Nav links live in a row on desktop; the hamburger toggle is hidden. */
+.nav-menu { display: flex; align-items: center; gap: var(--space-4); }
+
+.nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+}
+.nav-toggle:hover { border-color: color-mix(in srgb, var(--color-text) 30%, transparent); }
+
+/* Three-bar icon drawn with a span + two pseudo-elements; folds into an X when open. */
+.nav-toggle-bars,
+.nav-toggle-bars::before,
+.nav-toggle-bars::after {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 2px;
+  transition: transform 0.18s ease, opacity 0.18s ease;
+}
+.nav-toggle-bars { position: relative; }
+.nav-toggle-bars::before,
+.nav-toggle-bars::after {
+  content: "";
+  position: absolute;
+  left: 0;
+}
+.nav-toggle-bars::before { top: -6px; }
+.nav-toggle-bars::after { top: 6px; }
+.nav-toggle[aria-expanded="true"] .nav-toggle-bars { background: transparent; }
+.nav-toggle[aria-expanded="true"] .nav-toggle-bars::before { transform: translateY(6px) rotate(45deg); }
+.nav-toggle[aria-expanded="true"] .nav-toggle-bars::after { transform: translateY(-6px) rotate(-45deg); }
+
+/* Collapse the primary nav to a hamburger on small screens. */
+@media (max-width: 720px) {
+  .nav-toggle { display: inline-flex; }
+  .nav-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 90;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-2);
+    padding: var(--space-3) clamp(20px, 5vw, 72px);
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-divider);
+    box-shadow: var(--shadow-lg);
+  }
+  .nav-menu[data-open] { display: flex; }
+  .nav-menu a { padding: var(--space-1) 0; font-size: 15px; }
+  .nav-menu .btn-primary { align-self: flex-start; margin-top: var(--space-1); }
 }
 
 /* Eyebrow / kicker used across page headers */
@@ -65,8 +131,33 @@ a:hover { color: var(--color-accent); }
 .dialog-backdrop { z-index: 100; }
 .admin-modal { width: min(720px, 100%); max-height: 90vh; overflow-y: auto; }
 .admin-modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+
+/* Horizontal scroll fallback for the wide admin list table on narrow screens. */
+.admin-table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
 @media (max-width: 560px) {
   .admin-modal-grid { grid-template-columns: 1fr; }
+
+  /* Turn the centered dialog into a full-width bottom sheet on phones. */
+  .dialog-backdrop { padding: 0; place-items: end stretch; }
+  .admin-modal {
+    width: 100%;
+    max-height: 92dvh;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+
+  /* Keep Save/Cancel/Delete reachable without scrolling the long form. */
+  .admin-modal .dialog-actions {
+    position: sticky;
+    bottom: 0;
+    margin-top: var(--space-3);
+    padding-top: var(--space-3);
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-divider);
+  }
+
+  /* 16px inputs stop iOS from zooming the viewport on focus. */
+  .admin-modal .input { font-size: 16px; }
 }
 
 /* Respect reduced-motion for any future transitions */

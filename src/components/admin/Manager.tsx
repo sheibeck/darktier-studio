@@ -199,7 +199,8 @@ export function Manager<T extends Row>(props: ManagerProps<T>) {
       {loading ? (
         <p className="text-muted">Loading…</p>
       ) : (
-        <table className="table" style={{ width: "100%" }}>
+        <div className="admin-table-scroll">
+        <table className="table" style={{ width: "100%", minWidth: "520px" }}>
           <thead>
             <tr>
               <th style={{ width: "90px" }}>Order</th>
@@ -247,6 +248,7 @@ export function Manager<T extends Row>(props: ManagerProps<T>) {
             ))}
           </tbody>
         </table>
+        </div>
       )}
 
       {editing && draft && (

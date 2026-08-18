@@ -15,24 +15,61 @@ const { current } = Astro.props;
       style="height:24px;width:auto;display:block;filter:invert(0.91)"
     />
   </a>
-  {
-    navItems.map((item) => (
-      <a
-        href={item.href}
-        aria-current={current === item.href ? "page" : undefined}
-        style={current === item.href ? "color:var(--color-accent)" : undefined}
-      >
-        {item.label}
-      </a>
-    ))
-  }
-  <a
-    class="btn btn-primary"
-    href={site.gameCrafter}
-    target="_blank"
-    rel="noopener"
-    style="text-decoration:none"
+  <button
+    type="button"
+    class="nav-toggle"
+    id="nav-toggle"
+    aria-label="Menu"
+    aria-expanded="false"
+    aria-controls="nav-menu"
   >
-    Shop our games
-  </a>
+    <span class="nav-toggle-bars" aria-hidden="true"></span>
+  </button>
+  <div class="nav-menu" id="nav-menu">
+    {
+      navItems.map((item) => (
+        <a
+          href={item.href}
+          aria-current={current === item.href ? "page" : undefined}
+          style={current === item.href ? "color:var(--color-accent)" : undefined}
+        >
+          {item.label}
+        </a>
+      ))
+    }
+    <a
+      class="btn btn-primary"
+      href={site.gameCrafter}
+      target="_blank"
+      rel="noopener"
+      style="text-decoration:none"
+    >
+      Shop our games
+    </a>
+  </div>
 </nav>
+<script is:inline>
+  (() => {
+    const btn = document.getElementById("nav-toggle");
+    const menu = document.getElementById("nav-menu");
+    if (!btn || !menu) return;
+    const close = () => {
+      btn.setAttribute("aria-expanded", "false");
+      menu.removeAttribute("data-open");
+    };
+    const open = () => {
+      btn.setAttribute("aria-expanded", "true");
+      menu.setAttribute("data-open", "");
+    };
+    btn.addEventListener("click", () => {
+      btn.getAttribute("aria-expanded") === "true" ? close() : open();
+    });
+    menu.querySelectorAll("a").forEach((a) => a.addEventListener("click", close));
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") close();
+    });
+    window.addEventListener("resize", () => {
+      if (window.innerWidth > 720) close();
+    });
+  })();
+</script>
