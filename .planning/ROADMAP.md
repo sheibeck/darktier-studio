@@ -45,7 +45,8 @@ Delivered: a fast, SEO/share-optimized public site (Home, The Vault, The Armory,
   3. Existing live tools that predate the `kind` field (Charlie Mike TOC, "docking soon" placeholders) render and behave identically to before the change — no code path assumes `kind` is present.
   4. The owner can reorder and show/hide an internal-kind tool exactly like any other tool in the admin CMS.
   5. `npm run build` and `npm run test:rules` both pass with the schema change in place.
-**Plans**: TBD
+**Plans**: 1 plan
+- [ ] 08-01-PLAN.md — Additive Tool.kind field: type + Armory same-tab/new-tab Launch branch, admin "Link type" select, backward-compat + build/rules gate
 
 ### Phase 9: Fate of the Fellowship
 **Goal**: The reusable in-site app-hosting pattern (dynamic route + registry + `client:only` React island + per-app SEO + SSR-safe localStorage) is established and proven end-to-end by shipping Fate of the Fellowship live as the reference "clean drop-in" case.
