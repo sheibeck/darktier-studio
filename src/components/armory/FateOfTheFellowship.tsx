@@ -240,10 +240,10 @@ const CSS = `
 .ff :focus-visible{outline:2px solid var(--link);outline-offset:2px;border-radius:4px;}
 
 .ff .amb{position:fixed;inset:0 0 auto;height:280px;pointer-events:none;z-index:0;transition:opacity .5s;}
-.ff .body{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:0 16px 108px;}
+.ff .body{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:0 16px 24px;}
 
 /* ---- status bar ---- */
-.ff .status{position:sticky;top:0;z-index:20;margin:0 -16px;padding:0 16px;
+.ff .status{position:sticky;top:58px;z-index:20;margin:0 -16px;padding:0 16px;
   background:rgba(11,14,20,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
 .ff .statusbtn{display:flex;align-items:center;gap:0;width:100%;background:none;border:none;
   padding:10px 0;cursor:pointer;color:inherit;text-align:left;}
@@ -380,10 +380,10 @@ const CSS = `
 .ff .warnbox b{font-family:'Fraunces',serif;font-size:17px;color:var(--peril);}
 .ff .warnbox p{margin:5px 0 0;font-size:14.5px;}
 
-/* ---- bottom nav ---- */
-.ff .nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;
-  background:rgba(11,14,20,.97);backdrop-filter:blur(10px);border-top:1px solid var(--line);
-  padding-bottom:env(safe-area-inset-bottom);}
+/* ---- top nav ---- */
+.ff .nav{position:sticky;top:0;z-index:30;display:flex;
+  margin:0 -16px;padding:0 16px;
+  background:rgba(11,14,20,.97);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
 .ff .nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 0 10px;
   background:none;border:none;color:var(--dim);cursor:pointer;font-size:11px;letter-spacing:.02em;}
 .ff .nb.on{color:var(--hope);}
@@ -951,6 +951,15 @@ export default function FateOfTheFellowship() {
       <div className="amb" style={amb} />
 
       <div className="body">
+        <nav className="nav">
+          {NAV.map(([id, label]) => (
+            <button key={id} className={`nb ${tab === id ? "on" : ""}`} onClick={() => setTab(id)} aria-current={tab === id}>
+              {ICONS[id]}
+              {label}
+            </button>
+          ))}
+        </nav>
+
         <div className="status">
           <button className="statusbtn" onClick={() => setOpen(!open)} aria-expanded={open}>
             <span className="rdg"><span className="rdgk">Hope</span><span className={`rdgv hope ${hope <= 2 ? "low" : ""}`}>{hope}</span></span>
@@ -1009,15 +1018,6 @@ export default function FateOfTheFellowship() {
         {tab === "dice" && <DiceView hope={hope} />}
         {tab === "rules" && <RulesView />}
       </div>
-
-      <nav className="nav">
-        {NAV.map(([id, label]) => (
-          <button key={id} className={`nb ${tab === id ? "on" : ""}`} onClick={() => setTab(id)} aria-current={tab === id}>
-            {ICONS[id]}
-            {label}
-          </button>
-        ))}
-      </nav>
     </div>
   );
 }
