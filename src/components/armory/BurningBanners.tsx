@@ -2512,13 +2512,11 @@ export default function App() {
   const mode = game ? game.mode : freeMode;
 
   useEffect(() => {
-    let cancelled = false;
     try {
       const raw = window.localStorage.getItem("bb:campaign");
-      if (!cancelled && raw) { setGame(JSON.parse(raw)); setView("turn"); }
+      if (raw) { setGame(JSON.parse(raw)); setView("turn"); }
     } catch (e) { /* nothing saved — start fresh */ }
-    if (!cancelled) setLoaded(true);
-    return () => { cancelled = true; };
+    setLoaded(true);
   }, []);
 
   useEffect(() => {
