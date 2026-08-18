@@ -100,6 +100,12 @@ None yet.
 - [OPEN — owner, v1.0] ANALYTICS-01: add `PUBLIC_CF_ANALYTICS_TOKEN` to activate Cloudflare Web Analytics.
 - [Phase 10 — Burning Banners]: Milestone's primary risk — Tailwind v4's global preflight could leak into Nocturne pages if imported from a shared stylesheet; must diff `dist/*.html` script/link tags and visually check Home/Games/Tools before considering the phase done (PITFALLS.md Pitfall 1).
 
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 260818-l22 | FOTF main menu → sticky top bar (was fixed bottom over footer) | 2026-08-18 | 997986c | [260818-l22-make-fate-of-the-fellowship-main-menu-a-](./quick/260818-l22-make-fate-of-the-fellowship-main-menu-a-/) |
+
 ## Deferred Items
 
 Items acknowledged and carried forward from previous milestone close:
