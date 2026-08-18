@@ -1,127 +1,153 @@
-# Stack Research
+# Stack Research — v1.1 In-Site Companion Apps
 
-**Domain:** Static/prerendered marketing site + single-admin Firestore-backed CMS, deployed to Firebase Hosting on a custom domain
-**Researched:** 2026-08-17
-**Confidence:** HIGH (Firebase/npm versions verified directly against npm registry; architectural pattern choices MEDIUM — synthesized from current docs/community practice, no single authoritative source dictates the exact "auto-rebuild" wiring)
+**Domain:** Hosting two prebuilt, single-file React "artifact" apps (Fate of the Fellowship, Burning Banners) as Astro islands at internal `/armory/<slug>` routes inside an existing static Astro 7 + Firebase Hosting site, without touching the Nocturne marketing pages.
+**Researched:** 2026-08-18
+**Confidence:** HIGH (all versions verified live against the npm registry 2026-08-18; Tailwind v4/Astro integration guidance cross-checked against Astro's own docs/blog and Tailwind's docs)
 
-## Recommended Stack
+**Scope note:** This file covers ONLY the *new* packages/config this milestone needs. The existing v1.0 stack (Astro 7.2.2, `@astrojs/react` 6.0.2, React 19.2.8, Firebase 12.17.1/firebase-admin 14.2.0, astro-icon 1.1.5 + `@iconify-json/ph`, Firebase Hosting free Spark plan) is fixed and unchanged — see `.claude/CLAUDE.md` → Technology Stack for that baseline. Nothing below replaces it.
+
+## Recommended Stack Additions
 
 ### Core Technologies
 
 | Technology | Version | Purpose | Why Recommended |
 |------------|---------|---------|-----------------|
-| **Astro** | 7.2.2 | Static site generator / build tool for all public pages | Ships **zero JS by default** and outputs plain, fully-formed HTML per route — exactly what "prerendered multipage HTML that reuses a plain `styles.css`" needs. No virtual DOM, no hydration tax for pages that are just content (Home, Vault, Armory). It is the current (2026) default choice for content-first sites specifically because of this HTML-first model. It reads a global CSS file with zero opinion (`import "../styles/nocturne.css"` in a shared `Layout.astro`) — nothing rewrites or scopes your classes unless you opt into `<style>` blocks, so the approved Nocturne `styles.css` can be dropped in verbatim. Verified current version via npm registry (2026-08-17). |
-| **Firebase Hosting** | firebase-tools 15.27.0 (CLI) | Static hosting + CDN + custom domain (darktierstudios.com) | Already the owner's platform (Charlie Mike app); serving Astro's static `dist/` output requires **no extra configuration** — it's a plain static-file host. Firebase App Hosting (the newer SSR-oriented product) is unnecessary here since nothing needs to render per-request. |
-| **Firebase JS SDK (modular)** | firebase 12.17.1 | Firestore reads (admin editor + build-time data loader), Auth (Google sign-in), optional Storage | Verified current version directly against the npm registry. Use the **modular v9+ API only** (`import { getFirestore } from "firebase/firestore"`) — it tree-shakes, so the admin bundle only pulls in what it uses. Never use the legacy namespaced/compat `firebase/compat/*` API for new code. |
-| **firebase-admin** | 14.2.0 | Server-side Firestore reads during the Astro build (the build-time content loader) and in any Cloud Function used for the publish/rebuild trigger | The client SDK is for browsers; the *build process* (Node, trusted environment) should read Firestore with the Admin SDK, which bypasses security rules and is the correct tool for a trusted build-time script. |
-| **Node.js** | 22.x LTS | Runtime for Astro build, Firebase CLI, and any Cloud Functions | Firebase Functions Gen 2 and Astro 7 both target current Node LTS; pin `engines.node` in `package.json` and the Functions runtime to match. |
+| **lucide-react** | 1.32.0 | Icon set consumed by `bb-companion.tsx` (`Swords, Coins, Flame, Crown, Landmark, ChevronRight, …` — 29 named imports) | Verified directly against the npm registry (2026-08-18; latest published same day). Peer range `react: "^16.5.1 \|\| ^17.0.0 \|\| ^18.0.0 \|\| ^19.0.0"` — explicitly compatible with the project's React 19.2.8. Ships as per-icon ESM modules; named imports (`import { Swords } from "lucide-react"`) are what `bb-companion.tsx` already uses, so Vite/Rollup tree-shakes to only the ~29 icons actually referenced — the other 1000+ icons in the package never enter the island's JS bundle. This is a **separate, island-only dependency** — see "What NOT to Use" below for why it does not replace or integrate with `astro-icon`/Phosphor. |
+| **tailwindcss** | 4.3.3 | Utility-class engine for `bb-companion.tsx`'s ~231 Tailwind classes (`flex`, `grid`, `gap-*`, `rounded-*`, `px-*`/`py-*`, `uppercase`, `font-mono`, etc.) | Verified against npm registry (2026-08-18; latest published 2026-07-16). v4's CSS-first engine (no `tailwind.config.js` needed) and its layer-based `@import` model are what make **route-scoping without global pollution** possible (see Q2 decision below). Sampled the file's actual classes (`px-2.5`, `py-1`, `gap-1.5`, etc.) — all are Tailwind's *default* spacing-scale tokens (0.5-increment values like 2.5/3.5 are built into Tailwind's default theme), so **no custom `tailwind.config` theme extension is needed**. |
+| **@tailwindcss/vite** | 4.3.3 | Vite plugin that compiles Tailwind CSS during `astro build` | This — **not** `@astrojs/tailwind` — is the current, Tailwind-Labs-maintained way to use Tailwind v4 in Astro. Confirmed via Astro's own Tailwind integration docs and the `@astrojs/tailwind` changelog: `@astrojs/tailwind` is now legacy/deprecated, targets Tailwind v3's PostCSS-config model only, and using it against `tailwindcss@4` either fails or silently misbehaves. Peer range `vite: "^5.2.0 \|\| ^6 \|\| ^7 \|\| ^8"` — Astro 7.2.2's bundled Vite major is inside this range. |
 
-### Supporting Libraries
+### Supporting Libraries / Approach (no new package)
+
+| Item | Purpose | When to Use |
+|------|---------|-------------|
+| Tailwind v4 CSS-first `@layer`/`@import` skip-preflight pattern (built into `tailwindcss@4.3.3`, zero extra dependency) | Loads Tailwind's theme tokens + utility classes for the Burning Banners island **without** loading `preflight.css` (Tailwind's global browser-reset layer) | Always, for this milestone — see "Stack Patterns by Variant" below. This is the mechanism that keeps Tailwind's reset from ever touching the Nocturne Nav/Footer. |
+| `@source` directive (Tailwind v4 core feature, no package) | Explicitly registers `apps/bb-companion.tsx` as a class-name scan source | Belt-and-suspenders: v4's automatic content detection should already find `apps/` (it's inside the repo, not gitignored), but `apps/` sits outside `src/` (Astro's conventional scan root), so declare it explicitly to guarantee the ~231 classes are found and nothing more is scanned. |
+
+### Optional Fallback (only if QA finds a gap)
 
 | Library | Version | Purpose | When to Use |
 |---------|---------|---------|-------------|
-| `@astrojs/sitemap` | 3.7.3 | Auto-generates `sitemap.xml` at build time from your routes | Always — one line in `astro.config.mjs`, directly serves the SEO requirement. |
-| `@astrojs/check` | 0.9.10 | Type-checking `astro check` CLI | Dev-time only; run in CI before deploy to catch template errors before they ship. |
-| `astro-icon` | 1.1.5 | Renders SVG icon sets as inline, zero-JS `<Icon>` components | Use with `@iconify-json/ph` (below) to consume Phosphor icons the Nocturne design already specifies — avoids shipping Phosphor's JS web-component runtime. |
-| `@iconify-json/ph` | 1.2.2 | Phosphor icon SVG data for `astro-icon` | Matches the design system's existing icon choice without a JS dependency. |
-| `sharp` | 0.35.3 | Image optimization for Astro's built-in `<Image />`/`astro:assets` | Use for game cover PNGs so the Vault/Armory pages ship responsive, compressed images automatically; Astro uses `sharp` as its default image service. |
-| `@astrojs/react` | 6.0.2 | React island integration, scoped to `/admin` only | See "Stack Patterns by Variant" below — do **not** apply this globally. |
-| `react` / `react-dom` | 19.2.8 | Admin editor UI only | The source Design project's "DC" prototypes are React; reusing React *only* for the authenticated, non-indexed `/admin` route lets you carry over interaction patterns from those prototypes without shipping React (or the DC runtime) to any public/crawled page. |
-| `firebase` (client SDK, Firestore/Auth modules) | 12.17.1 | Admin editor CRUD + Google sign-in, loaded only on `/admin` | Public pages never import `firebase/*` client code — they get data from the build-time Firestore fetch (see Q2 pattern below), keeping public-page JS at ~0KB. |
-
-### Development Tools
-
-| Tool | Purpose | Notes |
-|------|---------|-------|
-| Firebase CLI (`firebase-tools`) 15.27.0 | `firebase emulators:start`, `firebase deploy`, `firebase init` | Install as a devDependency (`npm i -D firebase-tools`) rather than only globally, so CI uses the same pinned version as local dev. |
-| Firebase Local Emulator Suite | Local Firestore + Auth + Hosting emulation | Requires a local JDK. Run `firebase init emulators` selecting **Firestore, Auth, Hosting**; point the admin editor and the build-time loader at `localhost:8080`/`localhost:9099` via `connectFirestoreEmulator`/`connectAuthEmulator` when `import.meta.env.DEV`. Lets you test security rules and the Google sign-in flow with zero production risk or billing impact. |
-| GitHub Actions | CI: type-check, build, deploy on push to `main`; also the "publish" rebuild hook (see Q2) | Use `FirebaseExtended/action-hosting-deploy@v0.11.0` (well past the very stale `@v0` cached in most tutorials — pin the specific tag). |
-| npm | Package manager | See rationale below — no reason to add pnpm/yarn/bun overhead for a solo, single-package repo. |
+| `tailwindcss-scoped-preflight` | 4.0.6 | Scopes Tailwind's preflight reset to a CSS selector instead of the whole document | **Do not install by default.** Only reach for this if manual QA on the live `/armory/burning-banners` page shows unstyled native browser chrome (e.g., a default button border/background bleeding through) that the skip-preflight approach leaves visible. Peer deps `postcss: "^8"`, `tailwindcss: "^4"` — compatible with the recommended `tailwindcss@4.3.3`. Third-party (not Tailwind Labs), so it's a real dependency-maintenance cost for a one-person site — prefer a handful of explicit override rules scoped under a `.bb-app` wrapper class first. |
 
 ## Installation
 
 ```bash
-# Core
-npm create astro@latest darktier-studio -- --template minimal --no-install
-cd darktier-studio
-npm install astro@7.2.2 firebase@12.17.1
+# Island-only icon set (Burning Banners)
+npm install lucide-react
 
-# Supporting (public build)
-npm install @astrojs/sitemap@3.7.3 astro-icon@1.1.5 @iconify-json/ph@1.2.2 sharp@0.35.3
-
-# Admin-only island
-npm install @astrojs/react@6.0.2 react@19.2.8 react-dom@19.2.8
-
-# Build-time Firestore loader / Cloud Functions
-npm install firebase-admin@14.2.0
-
-# Dev dependencies
-npm install -D firebase-tools@15.27.0 @astrojs/check@0.9.10 typescript
+# Tailwind v4, used ONLY by the Burning Banners route's own stylesheet
+npm install -D tailwindcss @tailwindcss/vite
 ```
 
-## Alternatives Considered
+Nothing else changes in `package.json`. Fate of the Fellowship needs **no new dependency at all** — it imports only `react` (already installed) and injects its own CSS via a `const CSS = \`...\`` template string, so it drops in as a plain React island with zero stack additions.
 
-| Recommended | Alternative | When to Use Alternative |
-|-------------|-------------|--------------------------|
-| Astro (SSG, static output) | Plain hand-written multipage HTML, zero build | Only if the catalog were truly hardcoded and never changed. It fails the moment Firestore-driven content and a shared Nocturne layout/partial (nav, footer, OG meta) need to be reused across pages without copy-pasting — Astro's component/layout model buys you DRY templating for the cost of `npm run build`, which is trivial for a solo dev already comfortable with `npm` from the Charlie Mike app. |
-| Astro (SSG, static output) | Client-rendered SPA (React + Vite) with a prerender step (e.g. `vite-plugin-prerender`, Puppeteer-based prerendering) | Never for this project. Prerender-bolted-onto-SPA approaches are fragile (headless-browser build steps, JS-dependent hydration mismatches, larger bundles) and solve a problem Astro solves natively. The source "DC" React prototypes are explicitly *not* to ship — an SPA approach re-introduces exactly the runtime the project constraints say to remove. |
-| Astro (SSG, static output) | Next.js / SvelteKit with SSG export | Valid alternatives with similar zero-JS-by-default potential (Next `output: 'export'`), but both carry more framework surface area (routing conventions, RSC concepts in Next's case) than a mostly-static marketing site needs. Astro is the narrower, purpose-built tool for this job. |
-| Firebase Hosting serving static Astro `dist/` | Firebase App Hosting / Cloud Functions SSR (`@astrojs/node` adapter) | Only if a page genuinely needs per-request personalization or real-time data newer than "last rebuild." Nothing in this project's requirements needs that — Firebase App Hosting's Astro support is also still an experimental, best-effort community adapter, not a GA Google product, which is the wrong foundation for a solo maintainer's only production site. |
-| Explicit "Publish" rebuild hook (GitHub Actions `repository_dispatch`) | Cloud Function `onWrite` trigger firing a rebuild on every single Firestore write | Fine as a variant, but auto-triggering on every keystroke-adjacent write (e.g. a debounced autosave) risks rebuild storms/cost while the admin is mid-edit. An explicit "Publish" action in the admin UI gives the single admin an obvious, debounced, intentional moment to go live — closer to how they'd expect a CMS to behave. |
-| Plausible Analytics (hosted) | Cloudflare Web Analytics | If the ongoing ~$9/mo Plausible cost is unwanted, Cloudflare Web Analytics is free, cookieless, and adequate for basic pageview/referrer counts — but its reporting is thinner (weaker campaign/referrer-source breakdown), which matters here because "measure Facebook→site migration" is a named success metric that leans on referrer data. |
-| npm | pnpm | If this becomes a multi-package/monorepo project (e.g. sharing code with the Charlie Mike app) or CI minutes/disk become a real cost, pnpm's content-addressable store pays off. For one solo-maintained single-package repo, that benefit doesn't materialize and adds a small tooling-consistency cost across the owner's projects. |
+## Q1 — lucide-react: is it a drop-in for astro-icon/Phosphor?
+
+**No — and it shouldn't be.** They solve different problems for different rendering models:
+
+- `astro-icon` + `@iconify-json/ph` render **zero-JS, build-time SVG** as native Astro components (`<Icon name="ph:sword" />`) — correct for the Nocturne marketing pages, which ship no JS.
+- `lucide-react` renders **React components at runtime** inside a hydrated island — `bb-companion.tsx` already imports icons this way (`import { Swords, Coins, … } from "lucide-react"`), because it's a self-contained artifact written against lucide's API and icon set (Phosphor's icon shapes/names don't match lucide's 1:1, so swapping would mean re-touching ~29 call sites in a 2649-line file for no benefit).
+
+Keep them as two independent, non-overlapping dependencies: `astro-icon`/Phosphor stays scoped to the zero-JS marketing pages (unchanged), `lucide-react` is added purely as a dependency of the Burning Banners island. Because `@astrojs/react` code-splits per entry point, `/admin` and the marketing pages' JS bundles never pull in `lucide-react` at all — it only ships to visitors of `/armory/burning-banners`.
+
+## Q2 — Tailwind scoping: comparison and recommendation
+
+**The core risk this milestone introduces.** Tailwind's `@import "tailwindcss"` shorthand pulls in three layers: `theme.css` (design tokens), `preflight.css` (a global CSS reset — `*, ::before, ::after { margin: 0; box-sizing: border-box; }`, normalizes headings/buttons/forms, etc.), and `utilities.css` (the class generator). Preflight is a **document-wide reset**, not something CSS scoping (nesting, `<style>` blocks, Shadow DOM) can contain after the fact — it has to simply not load where you don't want it.
+
+| Approach | Versions | How it works | Risk to Nocturne | Verdict |
+|----------|----------|---------------|-------------------|---------|
+| **`@astrojs/tailwind` (Astro integration)** | 6.0.2 (npm current, but flagged legacy) | PostCSS-config-driven, wraps `tailwindcss@3` semantics | N/A — **wrong tool.** Confirmed via Astro's docs/blog and the package's own changelog: it's deprecated, targets Tailwind v3, and silently misbehaves or fails against `tailwindcss@4`. | ❌ Rejected |
+| **`@tailwindcss/vite` + global `@import "tailwindcss"` in a site-wide stylesheet** | tailwindcss 4.3.3, @tailwindcss/vite 4.3.3 | Standard "just add Tailwind" setup, imported from `Layout.astro`/`site.css` | Preflight resets margin/box-sizing/typography on **every** Nocturne page immediately — breaks the hand-authored `styles.css` component classes site-wide. | ❌ Rejected — this is the "polluting the marketing pages" failure mode the milestone explicitly rules out |
+| **`@tailwindcss/vite` + page-scoped CSS import, full `@import "tailwindcss"` (preflight included)** | same | Tailwind entry stylesheet imported only from `src/pages/armory/burning-banners.astro`'s frontmatter, not `Layout.astro` | Astro's per-page static output means this CSS chunk is emitted only into that one page's `<head>` — other pages are unaffected. **But** the shared `Layout.astro` Nav/Footer render *inside that same page*, so preflight still resets their box-model/typography on the Burning Banners page itself. | ⚠️ Partial fix — solves cross-page leakage, not same-page leakage |
+| **`@tailwindcss/vite` + page-scoped CSS import + CSS-first "skip preflight" (`@import "tailwindcss/theme.css" layer(theme); @import "tailwindcss/utilities.css" layer(utilities);`)** | same, zero extra dependency | Same page-scoped import, but the entry stylesheet never imports `preflight.css` at all — only theme tokens + utility classes generate | Preflight literally never exists anywhere in the build. Zero possibility of leaking into Nav/Footer on that page or any other. Nocturne's own CSS is completely undisturbed. | ✅ **Recommended** |
+| **`tailwindcss-scoped-preflight` plugin, preflight scoped to `.bb-app`** | tailwindcss-scoped-preflight 4.0.6 (peers `postcss@^8`, `tailwindcss@^4`) | CSS-first `@plugin` that rewrites preflight's selectors to be prefixed under a chosen wrapper class | Full Tailwind parity (incl. reset) but genuinely contained to the wrapped subtree — safe for Nav/Footer even on the same page. Adds a third-party dependency + one more moving part in the build. | ✅ Solid fallback if QA needs true preflight behavior |
+| **Prebuilt CLI stylesheet (`@tailwindcss/cli` compiled once into a static `.css`, linked only on that page)** | @tailwindcss/cli 4.3.3 | A small prebuild script (`npx @tailwindcss/cli -i apps/bb-companion.entry.css -o src/styles/armory-bb.generated.css --minify`) run outside the Vite/Astro pipeline entirely, wired into the existing `prebuild` npm script alongside `scripts/stamp-build.mjs` | Maximum isolation — `@tailwindcss/vite` is never registered as a Vite plugin at all, so there's zero chance of it touching any other build output. Costs an extra generated-file step and no Vite HMR for Tailwind classes during `astro dev` (acceptable since `bb-companion.tsx` is a frozen drop-in artifact, not actively iterated). | ✅ Viable low-risk alternative if you'd rather avoid a Vite plugin touching `astro.config.mjs` at all |
+
+**Recommendation:** Use `@tailwindcss/vite` + the CSS-first **skip-preflight** pattern, imported only from the Burning Banners page. It is the least risky option that ships as an official, zero-extra-dependency Tailwind v4 pattern (no third-party scoping plugin, no bespoke build script) while making cross-page AND same-page pollution structurally impossible — preflight simply never exists in the build, so there is nothing to leak.
+
+Concretely, `src/styles/armory-bb-tailwind.css`:
+
+```css
+@layer theme, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+@source "../../apps/bb-companion.tsx";
+```
+
+...imported only in `src/pages/armory/burning-banners.astro`'s frontmatter (`import "../../styles/armory-bb-tailwind.css";`) — never in `Layout.astro`, `nocturne.css`, or `site.css`.
+
+**Why skipping preflight is safe here, not just convenient:** sampling `bb-companion.tsx`'s actual `className` usage shows it's overwhelmingly layout/spacing/typography-scale utilities (`flex`, `gap-*`, `rounded-sm`, `px-*`/`py-*`, `uppercase`, `font-mono`) composed with an explicit inline-style color/border system (the `C` token object + `style={{ background: C.panel, border: \`1px solid ${C.line}\` }}` on primitives like `Card`) — the component already carries its own visual "reset" for the things preflight would otherwise provide (border, background, box-sizing intent is implicit in the fixed pixel values used throughout). The one residual risk is default browser chrome on bare `<button>` elements that don't set an explicit `style` (a few exist, e.g. line 1052's icon-row button) — flag this for a quick visual QA pass on the live route; if native button styling shows through, fix it with 2–3 explicit CSS rules scoped under a `.bb-app` wrapper class rather than reaching for the scoped-preflight plugin.
+
+**Fate of the Fellowship needs none of this** — it has zero Tailwind classes and ships its own complete CSS via the `const CSS` template string already in the file, injected as a `<style>` tag at render time. No Tailwind, no lucide-react, no new stack surface for that route at all.
+
+## Q3 — Astro/Vite config: widening the react() island include
+
+Current `astro.config.mjs`:
+
+```js
+react({ include: ["**/admin/**", "**/live/**"] }),
+```
+
+`@astrojs/react`'s `include`/`exclude` is a **compiler scope** (which files are allowed to contain JSX/be treated as React components), not a hydration directive — widening it does not hydrate anything by itself. Hydration is controlled per-usage by `client:*` directives on each component invocation, so adding new matched paths cannot "hydrate the whole site."
+
+The two companion `.tsx` files live at `apps/` (repo root, outside `src/`), and the milestone's routes are `/armory/<slug>` — the actual JSX files need to be reachable from thin Astro page wrappers under `src/pages/armory/`. Add both patterns so the glob matches regardless of whether the JSX lives in `apps/` or gets referenced through a `src/components/armory/` wrapper:
+
+```js
+react({ include: ["**/admin/**", "**/live/**", "**/apps/**", "**/armory/**"] }),
+```
+
+Pattern:
+- `src/pages/armory/fate-of-the-fellowship.astro` and `src/pages/armory/burning-banners.astro` each import their companion's default export from `../../../apps/{fotf,bb}-companion` and render it with `client:load` (or `client:visible` if you want to defer hydration until the island scrolls into view — reasonable here since these are single, full-page tools with no above-the-fold competing content).
+- With `build.format: "file"` already set, these routes emit as `dist/armory/fate-of-the-fellowship.html` / `dist/armory/burning-banners.html` — no additional build config needed.
+- No `astro.config.mjs` changes are needed beyond the one `include` array edit above. No new Vite plugin registration is required for `@astrojs/react` itself (only for `@tailwindcss/vite`, per Q2).
+
+## Q4 — Cloud Functions / Blaze / static-output confirmation
+
+Confirmed clean: everything above is either (a) a client-side JS dependency bundled into a static island's output (`lucide-react`), or (b) a build-time CSS compiler that runs during `astro build` on the developer's/CI's machine (`@tailwindcss/vite` / `@tailwindcss/cli`), producing plain `.css`/`.js` files under `dist/`. None of it requires an SSR adapter (`@astrojs/node`), a server runtime, or Cloud Functions — `astro build` still emits a fully static site, deployed exactly as today via `npm run deploy` → `firebase deploy --only hosting` on the free Spark plan. No new Firebase products, no Blaze upgrade, no change to the deploy command.
 
 ## What NOT to Use
 
 | Avoid | Why | Use Instead |
 |-------|-----|--------------|
-| The prototype's "DC" client React runtime + `support.js` + localStorage data modules | Explicitly out of scope per project constraints; it's a design-prototyping format, not SEO-crawlable, and has no real datastore | Astro static templates for public pages; a small React island (or plain vanilla JS/TS) for `/admin` backed by real Firestore |
-| Firebase namespaced/compat SDK (`firebase/compat/*`, or `firebase@8` patterns) | Deprecated API shape, no tree-shaking, larger bundles, and Google's own docs push all new code to the modular API | Modular v9+ imports (`firebase/app`, `firebase/firestore`, `firebase/auth`) on `firebase@12.17.1` |
-| Client-side-only Firestore fetch on public pages with no prerendering (a plain React/Vue SPA calling `getDocs()` in the browser and rendering into an empty `<div id="root">`) | Most crawlers execute JS today, but link-preview/OG scrapers (Facebook, Slack, Discord, iMessage, X) generally do **not** — they read static `<meta>` tags from the initial HTML response. An empty-shell SPA produces broken/generic share previews, which directly undermines the "good-looking shared links" goal that is the whole reason for this migration off Facebook | Build-time Firestore fetch baked into static HTML (see Q2 pattern) so every page's `<title>`, description, and OG/Twitter tags are present in the raw HTML Firebase Hosting serves |
-| Google Analytics 4 as the primary/only analytics | Sets cookies and typically requires a consent banner in the EU; an independent comparison study found GA4 captured only ~55% of real traffic on a comparable site due to consent declines — bad fit for a small studio site whose owner wants a simple, honest traffic signal without a cookie-consent UI cluttering the approved Nocturne design | Plausible (primary) or Cloudflare Web Analytics (free fallback) |
-| A general-purpose CSS framework (Tailwind, Bootstrap) or CSS-in-JS layered on top of Nocturne | The design is already approved as a single hand-authored `styles.css` of CSS custom properties + component classes; layering a utility framework on top invites token/spec drift and fights the "reuse verbatim" constraint | Import `styles.css` as-is as a global stylesheet in Astro's base layout; add page-specific `<style>` blocks (scoped, Astro-native) only for truly one-off layout needs, using existing CSS variables |
-| Self-hosted Plausible / Umami (running your own analytics server) | Adds a second service for a solo maintainer to patch, monitor, and pay hosting for — not worth it below meaningful traffic volume | Plausible Cloud (hosted) — the $9/mo tier is cheap relative to the ops burden it removes |
-| `pnpm`/`yarn`/`bun` chosen "because it's 2026" | Switching package managers has near-zero performance benefit at this project's size and adds a small but real consistency cost against the owner's other npm-based Firebase project | Plain `npm` |
+| `@astrojs/tailwind` | Deprecated/legacy; built for Tailwind v3's PostCSS-config model; fails or silently misbehaves against `tailwindcss@4` | `@tailwindcss/vite` (registered directly in `vite.plugins`) |
+| A global `@import "tailwindcss"` in `nocturne.css`, `site.css`, or `Layout.astro` | Loads preflight's document-wide reset onto every marketing page, breaking the hand-authored Nocturne component classes — exactly the "polluting the marketing pages" outcome this milestone rules out | A dedicated, page-scoped stylesheet imported only from `burning-banners.astro`, using the skip-preflight CSS-first pattern |
+| Swapping `bb-companion.tsx`'s `lucide-react` icons for Phosphor (`astro-icon`) to "unify" the icon story | Different rendering models (build-time zero-JS SVG vs. runtime React components); Phosphor's icon set/props don't map 1:1 to lucide's, so this would mean re-touching ~29 call sites in a 2649-line file for no functional gain | Keep `lucide-react` as a separate, island-only dependency; leave `astro-icon`+Phosphor untouched for the marketing pages |
+| Installing `tailwindcss-scoped-preflight` (or any preflight-scoping plugin) up front, "just in case" | Third-party dependency-maintenance cost for a one-person, low-maintenance site, for a problem (native-element chrome) that may not even manifest given the component's existing inline-style system | Skip preflight entirely first; add scoped-preflight (or a few explicit override rules) only if live QA shows a real gap |
+| Widening `react({ include: [...] })` to something broad like `"**/*"` or `"src/**"` | Would allow JSX anywhere in the project and is unnecessary — only `apps/` (companion source) and `armory` (route wrappers) need it | The two explicit, narrow glob additions in Q3 |
+| Adding a `tailwind.config.js` / `tailwind.config.ts` (v3-style JS config) | Tailwind v4 is CSS-first; a JS config file is optional legacy compatibility surface, not needed here since no custom theme values are required (all of `bb-companion.tsx`'s classes use Tailwind's default spacing/scale tokens) | The `@source`/`@import`/`@layer` directives directly in `armory-bb-tailwind.css` |
 
 ## Stack Patterns by Variant
 
-**Resolving the "SEO-static vs. live-Firestore-editing" tension (this is the central architectural decision for this stack):**
+**If QA finds unstyled native `<button>`/`<input>` chrome on the live Burning Banners route:**
+- Add 2–3 explicit CSS rules scoped under a `.bb-app` wrapper class (e.g. `.bb-app button { border: 0; background: transparent; font: inherit; }`) in that page's own `<style>` block, rather than reintroducing global preflight.
+- If the gaps are numerous enough that hand-patching becomes tedious, install `tailwindcss-scoped-preflight@4.0.6` and scope preflight to `.bb-app` — still zero risk to the rest of the site since it's a selector-prefixed reset, not a document-wide one.
 
-The project wants both (a) fully static, crawlable HTML for SEO/OG, and (b) admin edits that go live "without redeploys." A pure build-time-only SSG and a pure client-fetch SPA each satisfy only one side. The 2026 standard resolution — the same pattern JAMstack CMSs (Netlify/Vercel "build hooks") use — is:
+**If a future third companion app needs Tailwind too:**
+- Repeat the Q2 pattern with its own page-scoped stylesheet (e.g. `armory-<slug>-tailwind.css`) and its own `@source` line — do not consolidate multiple companion apps' Tailwind classes into one shared global stylesheet, or you reintroduce the cross-page-leak risk this research avoided.
 
-1. **Public pages (`/`, `/vault`, `/armory`) are 100% static Astro output**, generated by a **custom build-time content loader** (Astro content-collections loader, or a simple top-level `await` in each page/layout) that calls **`firebase-admin`** to pull `games`, `tools`, and `news` collections from Firestore during `astro build`. This produces plain HTML with real `<title>`/OG/Twitter tags per game/tool — fully crawlable, zero client JS needed to see content.
-2. **The admin editor (`/admin`) is a small authenticated React island** (`@astrojs/react`, `client:only="react"`) that talks to Firestore live via the **client-side modular SDK** — full CRUD, reordering, show/hide, exactly like the "DC" prototype's interactions, just against real Firestore instead of localStorage.
-3. **"Live without redeploy" is delivered as a one-click "Publish" action**, not literal real-time propagation to public pages: after saving changes, the admin clicks Publish, which calls a small Cloud Function (or directly hits the GitHub API) to fire a `repository_dispatch` event that runs the existing GitHub Actions build+deploy workflow. Public HTML is regenerated and live within roughly a minute — no manual `firebase deploy` from a terminal, no waiting for a scheduled rebuild. This is the right trade for a solo admin who edits in occasional sessions (not a live blog needing instant propagation), and it keeps every public page 100% static for SEO.
-
-*(Confidence: MEDIUM — this is a synthesized best-practice pattern rather than a single documented Firebase/Astro tutorial; flag the exact Cloud Function↔GitHub Actions wiring for phase-specific research when the admin/publish phase is planned.)*
-
-**If future requirements demand true real-time public content** (e.g., a live event ticker) — add a narrowly-scoped Cloud Functions/Cloud Run SSR route via a Firebase Hosting rewrite for *just* that one dynamic fragment, while everything else stays static. Do not convert the whole site to SSR for one dynamic widget.
-
-**If PDF/cover assets ever need to be uploaded from the admin UI** (not just the current one-time migration from the archived site) — add **Firebase Storage** with security rules restricted to the admin UID for writes and public read, and reference download URLs from Firestore docs. For v1, since all PDFs/covers are a known, one-time migrated set, it is simpler to commit them into the Astro `public/` directory and let Firebase Hosting serve them directly as static files — no Storage bucket, no extra security rules to write, one less service to reason about. *(Confidence: MEDIUM — a project-specific judgment call given the "single admin, low-volume, static assets" framing, not a universal rule.)*
+**If a future companion app is React-only with self-contained CSS (like Fate of the Fellowship):**
+- No Tailwind, no lucide-react — just a thin Astro page wrapper matched by the widened `react()` include glob and a `client:load`/`client:visible` directive. This is the "minimal drop-in" path the milestone's reusable-pattern goal is aiming for.
 
 ## Version Compatibility
 
 | Package A | Compatible With | Notes |
 |-----------|------------------|-------|
-| `astro@7.2.2` | `@astrojs/react@6.0.2`, `react@19.2.8` | Astro 7's integration API targets React 19; do not pin an older React 18 alongside Astro 7 — the integration expects React 19's root APIs. |
-| `firebase@12.17.1` (client) | `firebase-admin@14.2.0` (server/build) | These are separate packages with independent version lines by design (client vs. Admin SDK) — do not try to align their version numbers; just keep both current. |
-| `firebase-tools@15.27.0` | `firebase@12.17.1` | Current CLI major (15.x) targets current SDK majors; if you ever pin an older `firebase-tools`, check its emulator support matches your SDK's Firestore/Auth features before assuming emulator parity. |
-| `astro-icon@1.1.5` | `@iconify-json/ph@1.2.2` | `astro-icon` consumes any `@iconify-json/*` icon-set package; Phosphor's is the one matching the Nocturne design's stated icon choice. |
-| Node 22.x LTS | `astro@7.2.2`, `firebase-tools@15.27.0`, Cloud Functions Gen 2 | Keep local dev, CI, and the Cloud Functions runtime on the same Node major to avoid subtle build/runtime discrepancies. |
+| `lucide-react@1.32.0` | `react@19.2.8`, `react-dom@19.2.8` | Peer range `^16.5.1 \|\| ^17.0.0 \|\| ^18.0.0 \|\| ^19.0.0` explicitly covers React 19. |
+| `@tailwindcss/vite@4.3.3` | `tailwindcss@4.3.3` (must match), `astro@7.2.2` | Peer range `vite: "^5.2.0 \|\| ^6 \|\| ^7 \|\| ^8"`; Astro 7.2.2's bundled Vite major falls inside this range. Keep `tailwindcss` and `@tailwindcss/vite` on the same version — Tailwind ships them as a matched pair (both `4.3.3` at time of writing). |
+| `tailwindcss-scoped-preflight@4.0.6` (fallback only) | `tailwindcss@^4`, `postcss@^8` | Only install if the Q2 fallback is triggered; not needed for the recommended path. |
+| `@astrojs/react@6.0.2` `include` glob widening | Existing `admin`/`live` islands | Purely additive — widening the glob array does not change behavior for files that already matched `**/admin/**`/`**/live/**`; it only makes `apps/` and `armory` paths eligible to contain JSX. No React version change needed. |
 
 ## Sources
 
-- npm registry (`registry.npmjs.org`), queried directly 2026-08-17 — `astro@7.2.2`, `firebase@12.17.1`, `firebase-tools@15.27.0`, `astro-icon@1.1.5`, `@iconify-json/ph@1.2.2`, `sharp@0.35.3`, `firebase-admin@14.2.0`, `@astrojs/react@6.0.2`, `react@19.2.8`, `@astrojs/sitemap@3.7.3` (published ~3 months prior), `@astrojs/check@0.9.10`. Confidence: HIGH (primary source, direct registry lookup).
-- [Astro Blog — "What's new in Astro" (June 2026)](https://astro.build/blog/whats-new-june-2026/) and 2026 static-site-generator roundups (naturaily.com, talos.tools, thesoftwarescout.com) — Astro's zero-JS/islands positioning and 2026 market-default status. Confidence: MEDIUM.
-- [Astro Docs — Deploy to Firebase](https://docs.astro.build/en/guides/deploy/firebase/) and [firebase-tools/src/frameworks/docs/astro.md](https://github.com/firebase/firebase-tools/blob/main/src/frameworks/docs/astro.md) — static Astro needs no extra Firebase Hosting config; SSR needs `@astrojs/node`; Firebase App Hosting's Astro adapter is an experimental community project. Confidence: MEDIUM.
-- [Firebase — Upgrade to the modular JS SDK](https://firebase.google.com/docs/web/modular-upgrade), [Firebase JS SDK release notes](https://firebase.google.com/support/release-notes/js) — modular v9+ API recommendation over namespaced/compat. Confidence: MEDIUM–HIGH (official Google docs, confirmed via search snippet rather than direct fetch).
-- [Firebase — Authenticate using Google with JavaScript](https://firebase.google.com/docs/auth/web/google-signin), [Best practices for signInWithRedirect](https://firebase.google.com/docs/auth/web/redirect-best-practices) — popup vs redirect trade-offs for Google sign-in. Confidence: MEDIUM.
-- [Firebase Local Emulator Suite docs](https://firebase.google.com/docs/emulator-suite), [Connect to Auth emulator](https://firebase.google.com/docs/emulator-suite/connect_auth) — emulator setup for Firestore/Auth/Hosting. Confidence: MEDIUM.
-- [Astro Docs — Content collections](https://docs.astro.build/en/guides/content-collections/), [Astro — Live Content Collections deep dive](https://astro.build/blog/live-content-collections-deep-dive/) — custom build-time loaders for remote/DB data, and the build-time-vs-live-collection split in current Astro. Confidence: MEDIUM.
-- [Plausible — Privacy-focused web analytics](https://plausible.io/privacy-focused-web-analytics), [Humblytics — Cookie-Free Website Analytics 2026](https://humblytics.com/blog/website-analytics-without-cookies-complete-guide-for-2025) — GA4 vs. cookieless analytics comparison, including the ~55% GA4 undercount data point. Confidence: MEDIUM (secondary aggregator sources; directionally consistent across multiple independent write-ups).
-- [FirebaseExtended/action-hosting-deploy](https://github.com/FirebaseExtended/action-hosting-deploy) — GitHub Actions Firebase Hosting deploy action, current tag `v0.11.0`. Confidence: MEDIUM.
-- General 2026 package-manager comparison roundups (reintech.io, nareshit.com, hirenodejs.com) — npm vs. pnpm trade-offs at small-project scale. Confidence: LOW–MEDIUM (opinion/aggregator content; used only for a low-stakes tooling call, cross-checked across multiple sources).
+- npm registry (`registry.npmjs.org`), queried directly 2026-08-18 — `lucide-react@1.32.0` (peer deps, published 2026-08-18), `tailwindcss@4.3.3` (published 2026-07-16), `@tailwindcss/vite@4.3.3` (peer deps), `@tailwindcss/postcss@4.3.3`, `@tailwindcss/cli@4.3.3`, `@astrojs/tailwind@6.0.2` (not flagged `deprecated` in registry metadata, but confirmed legacy via docs below), `tailwindcss-scoped-preflight@4.0.6` (peer deps). Confidence: HIGH (primary source, direct registry lookup, dated same day as this research).
+- [Astro Docs — @astrojs/tailwind integration guide](https://docs.astro.build/en/guides/integrations-guide/tailwind/) and [Install Tailwind CSS with Astro (tailwindcss.com)](https://tailwindcss.com/docs/installation/framework-guides/astro) — confirms `@tailwindcss/vite` as the current recommended Astro+Tailwind v4 setup (`vite.plugins`, not the `integrations` array) and that `@astrojs/tailwind` targets Tailwind v3 and is now legacy. Confidence: HIGH.
+- [Astro Blog — Astro 5.2](https://astro.build/blog/astro-520/) — context on the Tailwind v4/Astro integration transition. Confidence: MEDIUM.
+- [Tailwind CSS — Functions and directives](https://tailwindcss.com/docs/functions-and-directives) and [Detecting classes in source files](https://tailwindcss.com/docs/detecting-classes-in-source-files) — confirms the `@layer`/`@import "tailwindcss/theme.css" layer(theme)` / `@import "tailwindcss/utilities.css" layer(utilities)` skip-preflight pattern, and the `@source` directive's role/syntax for explicit content-source registration beyond automatic (gitignore-aware) detection. Confidence: HIGH (official docs, corroborated across multiple independent write-ups).
+- [tailwindcss-scoped-preflight — npm](https://www.npmjs.com/package/tailwindcss-scoped-preflight) — v4-compatible selector-scoped preflight plugin, used here only as a documented fallback. Confidence: MEDIUM.
+- Direct inspection of `apps/bb-companion.tsx` (imports, `className` usage sample, `C` inline-style token object, `<button>` usage) and `apps/fotf-companion.tsx` (imports, `const CSS` template-string pattern) in this repo — grounds the "which classes/tokens are actually used" and "does it need preflight" analysis in the real source files rather than assumption. Confidence: HIGH (primary source, the actual code being shipped).
+- Existing project stack baseline: `astro.config.mjs`, `package.json`, `.claude/CLAUDE.md` Technology Stack section — confirms current `react({ include: [...] })` glob, Astro 7.2.2 / React 19.2.8 / `@astrojs/react@6.0.2` versions this research builds on top of. Confidence: HIGH (primary source, repo state as of 2026-08-18).
 
 ---
-*Stack research for: Firebase-hosted static marketing site + single-admin Firestore CMS (Darktier Studios)*
-*Researched: 2026-08-17*
+*Stack research for: Astro island hosting of two prebuilt React companion apps (v1.1 In-Site Companion Apps milestone)*
+*Researched: 2026-08-18*

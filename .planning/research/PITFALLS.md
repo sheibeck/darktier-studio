@@ -1,325 +1,314 @@
-# Pitfalls Research
+# Pitfalls Research — In-Site React Companion Apps (v1.1)
 
-**Domain:** Firebase-hosted marketing site + single-admin CMS (solo game studio, design-system reuse, SEO-first)
-**Researched:** 2026-08-17
-**Confidence:** MEDIUM-HIGH (Firebase/Firestore/Hosting mechanics are well-documented and cross-checked against official docs; project-specific content risks are inferred from PROJECT.md)
+**Domain:** Adding prebuilt single-file React apps (localStorage-only, no login) as Astro islands at internal `/armory/<slug>` routes inside an existing Astro 7 SSG + Firebase Hosting (free Spark) marketing/SEO site that has zero Tailwind today and React scoped only to `/admin` and `/live`.
+**Researched:** 2026-08-18
+**Confidence:** MEDIUM (codebase facts read directly = HIGH; external technical claims verified against npm registry and cross-checked web search = MEDIUM; a few claims LOW — flagged inline)
+
+This file is scoped to **integration** pitfalls — mistakes specific to grafting these two apps onto *this* system. Generic React/Tailwind advice is omitted unless it changes behavior in this codebase.
+
+---
 
 ## Critical Pitfalls
 
-### Pitfall 1: Client-rendered SPA is invisible to social share scrapers (OG tags never seen)
+### Pitfall 1: Tailwind's global preflight/reset silently restyles Nocturne
 
 **What goes wrong:**
-The site is built as a JS-rendered SPA (React/whatever) with a single `index.html` and client-side routing. Facebook's, Twitter/X's, Discord's, and Slack's link-preview scrapers do **not** execute JavaScript. They fetch the raw HTML once and read whatever `<meta property="og:*">` tags are already in the document `<head>`. If those tags are set by a JS `useEffect`/router-change after mount, every shared link — `/games/aige`, `/games/barony`, the homepage — shows the same generic (or blank) title/image, or nothing at all. This directly defeats the project's stated core goal: driving traffic off Facebook via good-looking shared links.
+Installing Tailwind for `bb-companion.tsx` and importing it the default way (`@import "tailwindcss";` in one global CSS file, loaded from `Layout.astro` or any file that ends up in the site-wide bundle) ships Tailwind's **preflight** — a CSS reset applied to bare selectors (`*`, `html`, `body`, `button`, `h1`–`h6`, `a`, `p`, borders, margins). Nocturne's `nocturne.css`/`site.css` also style those same bare elements (`.btn`, headings, borders, 8px radii, `#9184d9` accent). Preflight loads after or alongside Nocturne and wins on specificity/order, stripping button padding/backgrounds, resetting heading margins/font sizes, and killing default borders across **every page on the site**, not just the two Armory routes.
 
 **Why it happens:**
-Standard SPA architecture assumes browsers, not bots, are the only client. Meta tags get set via `react-helmet`-style client code because that's the natural pattern for a React app, and it works fine when testing in a real browser (which does run JS) — so the bug is invisible during normal development and only shows up when someone actually pastes a link into Facebook/Discord.
+The natural/easy path — `npx tailwindcss init`, one `@import "tailwindcss"` in a stylesheet the Astro build bundles globally, or adding a `tailwind.config` with no `content`/scope restriction — is exactly what every Tailwind quick-start recommends, and it is correct *only* for sites that are 100% Tailwind. This site is 0% Tailwind everywhere except one component. Astro also happily merges all imported CSS into shared chunks unless you deliberately keep the Tailwind stylesheet's import graph isolated to the `bb-companion` island.
 
 **How to avoid:**
-Per-route OG/Twitter tags must be present in the **initial HTML response**, before any JS runs. For this project's scale (13 games + tools + news, low write volume), the pragmatic options in order of simplicity:
-1. **Static Site Generation (SSG) at build time** — since Firestore content changes infrequently (single admin, manual edits), generate static HTML per route (home, each game, each tool, news list) at build/deploy time with the correct meta tags baked in. This is the simplest option that fully sidesteps the crawler problem and keeps hosting 100% static (cheap, fast, no cold starts).
-2. **Cloud Function/Cloud Run rewrite with bot detection** — if true SSR/live data is wanted, add a `firebase.json` rewrite that routes requests to a Cloud Function, which detects the User-Agent (Facebook/Twitter/Discord/Slack/Googlebot patterns) and injects per-route meta tags server-side into `index.html`, serving the plain SPA shell to real browsers. More moving parts, cold-start latency, added cost — only worth it if content must be live-fresh in previews within seconds of an admin edit.
-Given "no rebuild-on-content-change" is explicitly a named risk in this same domain (see Pitfall 7), prefer SSG **triggered by a rebuild on every admin save** (webhook/Cloud Function calls a rebuild+redeploy, or the admin write directly regenerates the static HTML for that one route) rather than a per-request SSR function — it's cheaper to run and operate for a single admin's edit cadence.
+1. **Never** put a bare `@import "tailwindcss";` in any file `Layout.astro`, `Nav.astro`, `Footer.astro`, or any `/games`, `/tools`, `/` page imports, directly or transitively.
+2. Import Tailwind's CSS **only** from a stylesheet that is itself only ever imported by `bb-companion.tsx` (or a wrapper Astro page that renders *only* that island) — never from `Layout.astro`.
+3. Skip preflight entirely: use Tailwind's granular entry points instead of the bundled one — `@import "tailwindcss/theme";` + `@import "tailwindcss/utilities";` (no `@import "tailwindcss/preflight";`). This gives you the ~231 utility classes bb-companion needs with **no reset at all**, which is the simplest fix and removes the entire risk class in one move. (MEDIUM confidence — verified via Tailwind v4 docs/community threads; confirm exact import path against the Tailwind version actually installed.)
+4. If any base-layer normalization is still wanted for the island itself, scope it with the `tailwindcss-scoped-preflight` plugin (Tailwind v4-compatible, CSS-first `@plugin` API) constrained to a wrapper class (e.g. `.tw-scope`), not applied document-wide. (LOW confidence — third-party plugin, verify current maintenance status before adopting.)
+5. Confirm Tailwind's `content`/scan glob only includes `apps/bb-companion.tsx` (or its dedicated island directory) — an overly broad glob won't leak CSS by itself, but keeping it narrow avoids Tailwind classes accidentally matching text in unrelated `.astro` files and bloating the generated utility set.
 
 **Warning signs:**
-- Pasting a game's URL into the Facebook Sharing Debugger, Twitter Card Validator, or `curl -A "facebookexternalhit"` shows generic/missing title, description, or image.
-- View-source (not DevTools "Elements" — that shows the post-JS DOM) shows no per-page `<meta property="og:*">` tags in the raw response.
-- All shared links produce the identical preview regardless of which game/page was shared.
+- After adding Tailwind, `npm run build` output CSS file(s) for pages *other than* `/armory/burning-banners` grow or change hash.
+- Visually: Nocturne buttons on Home/Games/Tools lose their filled background/border-radius, or headings lose their accent underline/spacing — check `/`, `/games`, `/tools` in a preview build immediately after adding Tailwind, before touching anything else.
+- `grep -r "tailwindcss" dist/**/*.html` (or inspect network tab) shows the Tailwind-generated stylesheet `<link>` on pages that never render `bb-companion`.
+- Browser DevTools "Computed" panel on a Nocturne `.btn` shows `all: revert` or reset margin/padding values with a Tailwind-preflight-looking source.
 
 **Phase to address:**
-Foundational rendering-strategy phase (before any content/page-building work) — the SSG-vs-SPA decision determines the entire frontend architecture and cannot be retrofitted cheaply later. Verify with Facebook Sharing Debugger + `curl` as part of that phase's acceptance criteria, and again in a final pre-launch SEO/social QA phase across every game/tool page.
+The phase that first introduces the in-site app-hosting pattern / infra (before Burning Banners specifically, since Fate of the Fellowship needs no Tailwind and can validate the hosting pattern in isolation first). Decide and lock the Tailwind isolation strategy (granular imports, no preflight) as an explicit acceptance check on the Burning Banners phase, with a "visually diff the three existing pages before/after" verification step.
 
 ---
 
-### Pitfall 2: Firestore security rules default-open or admin-check done wrong
+### Pitfall 2: `client:load` on a localStorage-reading island throws at hydration or during SSR
 
 **What goes wrong:**
-Two common failure modes: (a) rules left in test-mode defaults (`allow read, write: if true`) after prototyping, making the entire catalog world-writable — anyone can deface game listings, delete news, or run up read/write costs; (b) admin check implemented against `request.auth.token.email == 'sterling@...'` instead of UID. Email-based checks are riskier: Google account email can theoretically change, email string comparison is easy to get wrong (case sensitivity, verified-email flag not checked), and if a second Google Workspace/alias account is ever added, the rule silently fails or silently over-grants.
+Both companion apps read `localStorage` (`"fotf:v2"`, and bb's own key) to initialize state. Astro's `client:load`/`client:idle`/`client:visible` directives still **server-render the component once during `astro build`** (Node context, no `window`/`localStorage`) to produce the initial static HTML, then hydrate it in the browser. Any `localStorage` access that happens at module top-level, in the function body during initial render (e.g. `useState(() => JSON.parse(localStorage.getItem(...)))`), or outside a `useEffect`, throws `ReferenceError: localStorage is not defined` and **fails `astro build`** entirely — not a runtime warning, a hard build break. Even if it's guarded enough to survive the build, mismatched server-rendered (empty/default state) vs. client-hydrated (localStorage-populated) markup produces a React hydration-mismatch warning/flash on every page load.
 
 **Why it happens:**
-Firebase's "Start in test mode" default is deliberately permissive to unblock prototyping, and it's easy to ship it un-hardened, especially on a solo project with no code review. Email-based rules feel more "readable" than a UID string, so they get chosen without realizing UID is the actually-stable identifier bound to the Google sign-in.
+Both source apps were written as standalone client-only React apps (no SSR-awareness) — this is exactly the "clean drop-in" assumption the PROJECT.md flags as risky for `bb`. Reading `localStorage` synchronously during render is idiomatic in a Vite/CRA SPA and invisible as a problem until it meets Astro's static-build prerender step.
 
 **How to avoid:**
-- Ship rules that default-deny: `allow write: if false;` at the top, with an explicit exception `allow write: if request.auth != null && request.auth.uid == '<owner's Google UID>';` scoped to the admin-editable collections (`games`, `tools`, `news`).
-- Public reads of catalog collections can be `allow read: if true` (content is meant to be public), **except** any `draft`/`hidden`/`published: false` documents — those need `allow read: if resource.data.published == true || (request.auth != null && request.auth.uid == '<UID>')` so hidden/draft content isn't readable by unauthenticated scraping of Firestore directly (Firestore is queryable client-side; "hide" in the UI is not "hide" in the database unless rules enforce it).
-- Hardcode the UID as a rules constant (not the email) since this is a genuine single-admin app — get the UID once from the Firebase Auth console after first sign-in, not from `request.auth.token.email`.
-- Never confuse Firestore security rules with authorization in application code — rules are the actual security boundary; anything the client can see, an attacker can read directly via the Firestore REST/SDK regardless of what the UI hides.
+- Initialize all state with static/default values only (no `localStorage` read) during first render; move every `localStorage.getItem`/`setItem` call inside `useEffect(() => { ... }, [])` so it only runs post-mount, client-side.
+- Guard any remaining direct browser-API access with `typeof window !== "undefined"` as a second line of defense, but prefer restructuring over guard-littering — a `useEffect`-only pattern is cleaner for a ~2600-line app than sprinkling guards through it.
+- Accept one client-side re-render after mount that swaps in the localStorage-restored state (brief flash of default/empty state) — this is the standard, correct tradeoff for `client:load`, not a bug to "fix away."
+- Do **not** reach for `client:only="react"` just to dodge this — see Pitfall 2b below; it trades a build error for an SEO/no-JS regression.
 
 **Warning signs:**
-- `firestore.rules` still contains `if true` anywhere after leaving Firebase's default test-mode template.
-- Rules reference `request.auth.token.email` for privileged writes.
-- Draft/hidden content collections don't have a `published`/`visible` field gated in rules — only filtered client-side in a query.
-- Firebase console shows the "insecure rules" warning banner.
+- `npm run build` fails with `ReferenceError: localStorage is not defined` (or `window is not defined`) pointing into `apps/fotf-companion.tsx` / `apps/bb-companion.tsx`.
+- Browser console shows React hydration warnings ("Text content did not match", "Hydration failed") on `/armory/*` pages even when the build succeeds.
+- Visible flash: saved character/roster data briefly shows empty/default before populating on load.
 
 **Phase to address:**
-Datastore/backend setup phase, before any admin CMS UI is built. Verify with the Firebase Emulator Suite's rules unit tests (simulate unauthenticated write attempt, non-admin UID write attempt, draft-doc read attempt) — write these as an actual test file, not manual console checks, so they run every deploy.
+Fate of the Fellowship phase (first app onboarded, React-only) — this is where the SSR/localStorage boundary pattern should be established and documented once, then reused unchanged for Burning Banners.
 
 ---
 
-### Pitfall 3: No open sign-up path accidentally left reachable
+### Pitfall 2b: `client:only` blanks the page for crawlers and no-JS/slow-JS visitors
 
 **What goes wrong:**
-Firebase Authentication has no native "allow sign-in, deny sign-up" toggle — any Google account that completes the OAuth flow via the Firebase SDK/FirebaseUI is a valid authenticated user by default. If the admin login button/route is reachable by anyone (e.g., `/admin` is a public route with a "Sign in with Google" button and no further check), any random Google account can sign in and, if Firestore rules aren't airtight (Pitfall 2), start reading/writing admin-only data or at minimum landing inside the admin UI shell.
+Using `client:only="react"` (the tempting quick fix for Pitfall 2, since it skips server rendering entirely) means Astro emits **no markup at all** for that island in the built HTML — just an empty mount `<div>`. Any visitor or bot that doesn't execute JS (or fails to execute it) sees a blank page body. Modern search-engine crawlers mostly do execute JS on a second pass, but **link-preview/OG scrapers largely do not** — and per this project's `Layout.astro`, every page already emits a full OG/Twitter meta block, so the page-level share preview is fine, but the in-page content itself is invisible to anything that doesn't run JS (accessibility tools, text-only readers, slow/failed script loads).
 
 **Why it happens:**
-Developers assume "Google sign-in" implies "only pre-approved users can get in," conflating *authentication* (proving who you are) with *authorization* (being allowed to do something). Firebase only handles the former out of the box.
+`client:only` looks like the "safe" choice because it sidesteps the whole SSR/localStorage class of errors (Pitfall 2) — it's a real fix for that problem, but it silently reintroduces a different one this project explicitly cares about (crawlable, share-optimized routes per PROJECT.md's "Fate of the Fellowship companion live at its own crawlable, share-optimized route").
 
 **How to avoid:**
-- Treat every successful Firebase Auth sign-in as untrusted until checked against the single allowed UID.
-- After sign-in, immediately compare `auth.currentUser.uid` to the hardcoded owner UID; if it doesn't match, sign the user out and show "not authorized" — do this in the admin route guard, not just by hiding a nav link.
-- This is a UX nicety only — the real boundary is Firestore rules (Pitfall 2), which must independently reject non-owner UIDs regardless of what the client does.
-- In the Firebase Console, restrict the Google sign-in provider's **Authorized Domains** to just `darktierstudios.com` (+ the `*.web.app`/`*.firebaseapp.com` default and `localhost` for dev) so the OAuth consent screen can't be triggered from an unexpected origin.
-- Do not use FirebaseUI's default "create account" flows meant for email/password multi-user apps; Google-provider-only sign-in doesn't have a separate "sign-up" step to disable, but keep the surface minimal (one button, one provider).
+- Prefer `client:load` (or `client:visible` if the island isn't in the initial viewport) with the SSR-safe pattern from Pitfall 2, so real HTML (headings, static UI chrome, at minimum the app's title/instructions) renders in the initial response.
+- If `client:only` is used anywhere (e.g. as an interim shortcut), make sure the **page shell** (Astro-rendered heading, short description paragraph, `<title>`/meta) carries enough real content outside the island for the route to not be a blank page to a non-JS visitor — the OG/title meta already covers share cards; the concern is the visible page body and basic crawlability of what the tool *is*.
 
 **Warning signs:**
-- `/admin` (or wherever the CMS lives) renders any UI at all before the UID check resolves, even briefly (flash of admin content).
-- No explicit "not you" / sign-out-and-reject path exists for a non-owner Google account that completes sign-in.
-- Authorized Domains list in Firebase Console still has extra/unused entries.
+- `curl` (or "view source") on `/armory/<slug>` shows an essentially empty `<body>` apart from `<script>` tags and one empty `<div id="root">`.
+- Lighthouse/axe accessibility or SEO audit flags "no content without JavaScript" on the route.
 
 **Phase to address:**
-Auth/admin-shell phase. Verify by manually signing in with a second, non-owner Google account during that phase's acceptance testing and confirming it's rejected both in the UI and (via emulator rules test) at the data layer.
+Same phase as Pitfall 2 (Fate of the Fellowship) — decide the directive (`client:load`, SSR-safe) once as the standard pattern documented for future artifact apps, per PROJECT.md's stated goal of a reusable pattern.
 
 ---
 
-### Pitfall 4: Stale content after admin edits if using a rebuild-based (SSG) approach
+### Pitfall 3: Unscoped CSS-in-JS `<style>` block leaks into the shared Layout/other app
 
 **What goes wrong:**
-If Pitfall 1 is solved via SSG (recommended), there's a new failure mode: the admin edits a game's synopsis or adds a news post in Firestore, but the publicly served static HTML doesn't change until the next build+deploy runs. For a solo maintainer without CI/CD wired to Firestore writes, this means "I updated it and it's still showing the old text" — a confusing, easy-to-ship gap, especially since the *admin preview* (if it reads live Firestore) will look correct while the *public* site doesn't.
+`fotf-companion.tsx`'s `const CSS` string is injected as a plain, unscoped `<style>` block (e.g. via `dangerouslySetInnerHTML` or a rendered `<style>{CSS}</style>`) containing bare selectors like `button`, `.pad`. Because the companion renders inside the shared `Layout.astro` (same `<body>` as `Nav`/`Footer`), and because `<style>` tags injected into the DOM are **global to the document**, not scoped to the component — these selectors apply document-wide: Nocturne's nav buttons, footer links, or any element the site happens to also use `.pad` on get restyled. Worse, if a future page ever renders *both* companion apps' shells near each other (unlikely per-route here, but shared layout classes like `.pad` are a common generic name), bb's and fotf's styles can collide with each other too.
 
 **Why it happens:**
-SSG's whole performance/SEO benefit comes from pre-baking HTML, which inherently decouples "data changed" from "page changed." Solo projects often don't invest in a rebuild pipeline because it feels like "just a website," and the gap only becomes visible after the first real content edit post-launch.
+This is exactly how the source app worked standalone (its own `index.html`, nothing else on the page to collide with) — the CSS-in-JS block was never designed to coexist with a host page's chrome. Porting it verbatim into an Astro page that also renders `Nav`/`Footer` inside the same document is the "clean drop-in" assumption that breaks first.
 
 **How to avoid:**
-- Wire content mutation to rebuild automatically: either (a) a Cloud Function Firestore trigger (`onWrite` on `games`/`tools`/`news`) that calls a rebuild+redeploy (e.g., triggers a Cloud Build/GitHub Actions workflow via a repository-dispatch or a deploy webhook), or (b) skip SSG-at-build-time for content pages and instead statically regenerate *only the affected route's* HTML file and re-upload it to Hosting directly from the Cloud Function (cheaper than a full rebuild for a 13-game catalog).
-- At minimum, make the rebuild trigger a one-click "Publish" button in the admin UI that the owner presses after edits, with a visible "last published: [timestamp]" indicator, rather than assuming edits go live invisibly. Given single-admin, solo-maintainer, "no rebuild-on-content-change" is explicitly a known risk — an explicit, visible publish step is more honest than trying to fully automate a trigger pipeline the owner won't monitor.
-- If full automation is chosen, add a status indicator in the admin UI (last successful deploy time) so a failed rebuild doesn't silently leave content stale with no signal.
+- Wrap the companion's root render in a single, unique container class (e.g. `.fotf-companion-root`) and rewrite the `CSS` template string's selectors to be prefixed/scoped under it (`.fotf-companion-root button { ... }`, `.fotf-companion-root .pad { ... }`) — a one-time mechanical find-replace on the `const CSS` string, not a rewrite of the app's logic.
+- Alternative with less manual rewriting: render the companion inside a **Shadow DOM** host (a small wrapper component that attaches a `shadowRoot` and injects the `<style>` + app tree inside it) — CSS-in-JS then can't leak out or be leaked into, by construction. Heavier to set up but zero risk of missing a selector during a manual scoping pass; worth it if `CSS` is large/hard to safely prefix mechanically.
+- Do the same scoping for Burning Banners' inline-style color object where relevant, and keep both apps' root wrapper class names distinct so a future page that (accidentally or intentionally) renders both doesn't collide.
+- Verify the Nocturne `Nav`/`Footer` do **not** use bare `button` or a class named exactly `.pad` today (quick grep) — if they already do, the prefixing is non-negotiable, not just best practice.
 
 **Warning signs:**
-- Editing content in the admin panel and refreshing the public page shows old data.
-- No deploy/build log or timestamp visible anywhere in the admin UI.
-- The only way to "know" a rebuild happened is checking the Firebase Hosting console manually.
+- After deploying `/armory/fate-of-the-fellowship`, the site Nav/Footer buttons elsewhere on that same page render subtly differently than the same components on `/`, `/games`, `/tools`.
+- Grep the source `CSS` string for bare-tag or short/generic class selectors (`button`, `.pad`, `.card`, `.row`) before porting — any of these are leak candidates without scoping.
 
 **Phase to address:**
-Same phase that decides the SSG rendering strategy (Pitfall 1) — the publish/rebuild mechanism is part of that architectural decision, not an afterthought. Should be explicitly designed alongside the admin CMS write-path phase.
+Fate of the Fellowship phase (owns the CSS-in-JS port). Document the scoping convention there so the Burning Banners phase reuses the same wrapper-prefix pattern for its own inline styles/Tailwind scope.
 
 ---
 
-### Pitfall 5: Custom domain cutover breaks inbound links and stalls indexing
+### Pitfall 4: lucide-react barrel import bloats the bundle (and check the installed version's React 19 support)
 
 **What goes wrong:**
-Moving from the old .NET archived site to `darktierstudios.com` on Firebase Hosting, without mapping old URL paths to new ones, means every inbound link (search results, forum posts, old Facebook shares, bookmarks) that pointed at the old site's paths (e.g., `/Games/AIGE`, `/Content/...`, whatever the old .NET routing used) now 404s. Search engines see a wave of 404s and demote/deindex those pages; real users hit dead ends and bounce, which is the opposite of the project's stated goal (recapturing traffic).
+Importing the whole icon set (`import * as Icons from "lucide-react"` or any pattern that doesn't tree-shake) pulls hundreds of unused icon components into the Burning Banners island's JS bundle. Separately, **older lucide-react versions pinned a peer-dependency range that excluded React 19** (`react@^16.5.1 || ^17.0.0 || ^18.0.0`), which — combined with this project's `react@19.2.8` — would produce an `npm install` `ERESOLVE` peer-conflict error.
 
 **Why it happens:**
-"Rebuild the site" projects naturally focus on the new site's structure and treat the old one as dead/archived, forgetting that any existing backlinks, bookmarks, and search index entries still point at old paths that need to keep resolving.
+Barrel-style `import * as X` or copy-pasting icon usage from docs/examples that don't emphasize named imports is common; the React-19-peer-range issue is a version-pinning problem that resolves itself once you install current lucide-react but bites if a lockfile/cached install pulls an older version.
 
 **How to avoid:**
-- Before cutover, catalog every meaningfully-indexed old URL path (check Google Search Console on the old property if accessible, or crawl the archived `github.com/sheibeck/darktierstudios` site structure) and add a `redirects` array in `firebase.json` mapping old paths → new equivalent paths with `"type": 301`.
-- Decide apex vs `www` up front and pick one canonical form (`darktierstudios.com` is more likely the "brand" choice); use Firebase Hosting's built-in redirect checkbox when connecting the second domain so the non-canonical form 301s to the canonical one, rather than serving duplicate content on both.
-- Use Firebase Hosting's Advanced Setup flow for the domain connection specifically because the old site may still be receiving DNS traffic during cutover — Advanced Setup is built for zero-downtime migration (establishes SSL/ownership before flipping DNS), avoiding an SSL-provisioning gap that would otherwise show visitors a broken/insecure-site warning mid-migration.
-- After cutover, submit the updated sitemap in Google Search Console and use the URL Removal / Change of Address tooling if the property is verified, to accelerate reindexing under the new domain.
+- Install current `lucide-react` (verified via npm registry 2026-08-18: **v1.32.0**, `peerDependencies.react: "^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0"` — React 19 is supported; no peer conflict expected at this version). Confidence: HIGH (direct registry lookup).
+- Always import icons individually and by name: `import { Sword, Shield } from "lucide-react";` — never a namespace/barrel import. Vite's tree-shaking (which Astro uses) then only bundles the icons actually referenced.
+- After the first build with lucide-react wired in, spot-check the built JS chunk for the Burning Banners route size — a reasonable icon set (a few dozen icons) should add only tens of KB, not hundreds.
 
 **Warning signs:**
-- No inventory exists of old site URLs before DNS is flipped.
-- `firebase.json` has no `redirects` section at launch.
-- Search Console (if set up) shows a spike in 404/"not found" crawl errors post-launch.
-- SSL certificate shows "provisioning" or a browser warning right after the domain is first connected (sign the Quick Setup path was used on a domain still serving live traffic).
+- `npm install` reports an `ERESOLVE` peer dependency conflict mentioning `react` and `lucide-react` — sign the installed lucide-react version is stale; bump it.
+- Bundle/route-size inspection (`astro build` output or a bundle-analyzer) shows the Burning Banners JS chunk far larger than "app logic + ~30-50 small icon components" would suggest.
 
 **Phase to address:**
-A dedicated launch/cutover phase, late in the roadmap, gated on the SEO phase being complete (sitemap, canonical URLs must exist before this matters). Old-URL inventory should be pulled during initial research/content-migration work, not invented at cutover time.
+Burning Banners phase (the only app using lucide-react). Pin/verify the lucide-react version during initial dependency setup, before writing the icon-heavy UI.
 
 ---
 
-### Pitfall 6: Missing or malformed OG image requirements break the actual preview render
+### Pitfall 5: Marketing pages silently gain JS/CSS weight from the new islands
 
 **What goes wrong:**
-Even when OG tags are present (Pitfall 1 solved), previews still fail to render correctly if: the `og:image` URL is relative instead of absolute (crawlers require a fully-qualified `https://darktierstudios.com/...` URL — relative paths are silently dropped by Facebook's scraper); the image is below Facebook's practical minimum (recommended ~1200×630, and images under ~200×200 are rejected entirely for the large-preview format); the image is served with an incorrect/missing `Content-Type`; or the cover art PNGs pulled from the old archived site are the wrong aspect ratio (game cover art is typically portrait, e.g., ~2:3 for a rulebook cover — very wrong for an OG image, which wants landscape ~1.91:1) and get stretched/cropped badly in the share preview.
+The project's `astro.config.mjs` currently scopes the React integration to `include: ["**/admin/**", "**/live/**"]`. Companion-app island component files placed anywhere else (e.g. `src/components/armory/*.tsx` or `apps/*.tsx` used directly as an Astro component) **will not be picked up by the React integration's JSX/compile step** unless that glob is widened — and widening it carelessly (e.g. to `**/*`) risks Astro trying to process `.tsx` files it shouldn't, or, more relevantly, risks a shared bundle/chunk being generated that Home/Games/Tools accidentally reference. Separately, even with correct scoping, if the Tailwind stylesheet (Pitfall 1) or the CSS-in-JS `<style>` (Pitfall 3) end up in a shared Astro CSS chunk instead of a route-specific one, marketing pages pay a byte cost for zero benefit — directly undermining the "fast, great-looking" Core Value and the project's established "public pages ship ~0KB JS" pattern (per `.claude/CLAUDE.md`: "Public pages never import `firebase/*` client code... keeping public-page JS at ~0KB").
 
 **Why it happens:**
-The existing 12 game cover PNGs were designed for use as small in-page thumbnails/cards (per the Nocturne design, `.lighten`-wrapped cover art on game cards), not as social preview images — nobody generated a dedicated 1200×630 OG image per game as part of the original asset set. It's tempting to just reuse the cover PNG directly in `og:image` since "we already have an image."
+Astro's per-route code-splitting is automatic and correctly isolates island JS to the routes that render it *as long as the import graph is actually route-scoped* — the risk is entirely self-inflicted by importing the companion app (or its CSS) from a shared file like `Layout.astro`, `Nav.astro`, or a barrel `index.ts` that other pages also import from.
 
 **How to avoid:**
-- Generate a dedicated OG image per game/page (1200×630, landscape) — a templated composite of the cover art on a branded dark background using Nocturne's palette/wordmark is cheap to script (e.g., a small script using the cover PNGs + logo, or even a manually-produced batch of 13 images) rather than trying to force portrait cover art into a landscape OG slot.
-- Always emit `og:image` (and `twitter:image`) as absolute URLs (`https://darktierstudios.com/og/aige.png`), never `/og/aige.png`.
-- Set explicit `og:image:width` / `og:image:height` tags matching the actual file dimensions — Facebook uses these to pre-allocate the preview layout and skips images where the declared/actual size mismatches badly.
-- Verify every page's final render (not just presence of tags) with Facebook's Sharing Debugger and Twitter's Card Validator, per page type (home, one game, one tool, one news post) — not just spot-checked once.
+- Widen `astrojs/react`'s `include` glob only as far as necessary — e.g. `**/armory/**` alongside the existing `**/admin/**`, `**/live/**` — and keep the companion `.tsx` files under a dedicated directory that glob matches, not scattered.
+- Render each companion app from its **own** `/armory/<slug>.astro` page, importing the island directly in that page only — never through `Layout.astro`, `Nav.astro`, or any component all pages share.
+- After adding both apps, run `npm run build` and diff the generated `dist/_astro/*.js` / `*.css` file list + the `<script>`/`<link>` tags emitted in `dist/index.html`, `dist/games.html`, `dist/tools.html` against a pre-change build — those three should show **zero new script/style tags**.
 
 **Warning signs:**
-- `og:image` value starts with `/` instead of `https://`.
-- OG image files are literally the same file as the in-page cover-art PNG (portrait aspect ratio).
-- Sharing Debugger shows "image could not be downloaded" or a badly cropped preview.
+- View-source on `/`, `/games`, or `/tools` shows a new `<script type="module" src="/_astro/....js">` or `<link rel="stylesheet">` that wasn't there before adding the companion apps.
+- Total transferred bytes for the homepage (DevTools Network tab, or a Lighthouse run) increases after this milestone ships, even though nothing on the homepage changed functionally.
 
 **Phase to address:**
-SEO/social phase, after page templates exist but before launch — needs a small asset-generation task (produce 13+ OG images) that should be scoped as its own checklist item, not assumed to fall out of "add meta tags."
+Both app phases individually (verify no regression each time an app ships) plus a final milestone-level QA pass explicitly diffing marketing-page bundle output before/after, per the project's existing "no regression to Nocturne" constraint.
 
 ---
 
-### Pitfall 7: PDF hosting choices hurt both cost/bandwidth and the download UX
+### Pitfall 6: SEO regression — either the new routes are invisible to search, or they pollute the sitemap/robots story for the rest of the site
 
 **What goes wrong:**
-Rulebook PDFs (AIGE, Barony, Cardomancer, Impact, Amaranthine, Baneful, Dark, Mazeworld — several with companion character-sheet PDFs) are meaningful-sized static files. Two common mistakes: (a) serving them from Firebase Hosting without cache headers, so every download re-transfers the full file and every repeat visitor re-downloads instead of hitting browser/CDN cache, needlessly running up Hosting bandwidth (billed) for a free/no-revenue download; (b) not setting `Content-Disposition` deliberately, so PDFs either force-download when a user would rather preview in-browser, or open inline when the intent was "download the rulebook" — inconsistent behavior across the 8+ PDFs if some were uploaded via Hosting (which serves as static-with-default-headers) and others via Storage (different default behavior/URL signing).
+Two opposite failure modes:
+1. **New routes under-optimized:** `/armory/<slug>` ships with generic/missing `title`/`description`/OG image (falls back to `site.ogImage`/`site.description` defaults from `Layout.astro`), making shared links to the companion apps look identical to every other page and defeating the "share-optimized route" goal explicitly named in PROJECT.md for Fate of the Fellowship.
+2. **Existing pages regress:** the sitemap filter in `astro.config.mjs` (`filter: (page) => !page.includes("/admin")`) only excludes `/admin` — it does **not** exclude anything else by default, so if a companion-app route is meant to be excluded from search (unlikely here, since PROJECT.md wants it crawlable) it would need its own filter addition; conversely, forgetting to give the new routes a `<canonical>` or reusing another page's canonical (e.g. copy-pasting `/tools.astro`'s frontmatter without updating `title`/`current`) could produce duplicate-content or wrong-canonical signals that confuse indexing of the *existing* `/tools` page.
 
 **Why it happens:**
-PDFs get treated as an afterthought — "just drop them in the public folder" — without configuring `firebase.json` `headers` rules for cache-control, and without deciding up front whether the studio wants "view in browser" (better for casual browsing, keeps users on-domain longer) or "force download" (clearer intent, matches "Download PDF" button copy) behavior.
+The two new routes are genuinely new page types (interactive tool UI, not catalog-listing content) — it's easy to either forget to give them proper per-page SEO props (since `Layout.astro`'s defaults silently paper over a missing `title`/`description`), or to accidentally set `noindex`/wrong `current` nav-highlight by copy-pasting an existing page's frontmatter without adjusting it.
 
 **How to avoid:**
-- Add explicit `headers` entries in `firebase.json` for the PDF path(s) (or Storage metadata if using Cloud Storage) setting long `Cache-Control: public, max-age=31536000, immutable` (safe because rulebook PDFs are rarely revised in place — if one is updated, ship it as a new filename/version rather than overwriting, to avoid stale-cache issues).
-- Pick one consistent behavior across all PDFs: recommend inline-viewable (`Content-Disposition: inline`, default browser PDF viewer) with a separate explicit "Download" affordance if desired, since letting people preview a rulebook before committing to download is friendlier and keeps them on-site longer — but whichever is chosen, apply it uniformly to all 8+ PDFs, not per-file inconsistently.
-- Serving from Firebase Hosting (not Storage) is fine and simpler for this project's scale (low volume, no need for per-user signed URLs) — Hosting's global CDN caching plus the explicit cache headers above handles bandwidth/cost fine at solo-studio traffic levels; Storage would only be worth the added complexity if per-download access control or signed URLs mattered, which they don't (PDFs are meant to be freely downloadable).
+- Give each `/armory/<slug>.astro` page explicit `title`, `description`, and a **dedicated OG image** (even a simple static per-app share graphic) passed to `Layout` — do not rely on the site-wide default `site.ogImage`, since generic/duplicate OG images across pages weakens the "good-looking shared links" goal.
+- Set `current="/tools"` (or whatever nav key matches how these routes should highlight in `Nav.astro`) so the site nav state is consistent, but keep the page's own `title`/canonical unique to the route (Astro's `Layout.astro` already derives `canonical` from `Astro.url.pathname`, so this is automatic as long as `noindex` is left `false`/default — verify it is NOT accidentally set `true` on these routes, since that IS wanted for `/admin` but NOT for `/armory/*`).
+- Confirm the sitemap: since the filter only excludes `/admin`, `/armory/<slug>` routes will be included automatically — verify this is the desired outcome (per PROJECT.md, yes) by checking `dist/sitemap-index.xml`/`dist/sitemap-0.xml` after build contains the new routes.
+- For "thin crawlable content" concern: because these are interactive local-state tools, make sure the **static, server-rendered** portion of the page (title, one-paragraph description of what the tool does, maybe a static screenshot) gives crawlers/scrapers real indexable text even before/without the island hydrating — this doubles as the Pitfall 2b mitigation.
 
 **Warning signs:**
-- `firebase.json` has no `headers` section covering `**/*.pdf`.
-- Network tab shows PDFs re-downloading in full on repeat visits within the cache window.
-- Some PDFs open inline in-browser and others trigger a download dialog with no evident reason why.
+- View-source on an `/armory/<slug>` page shows the generic site description/OG image instead of app-specific copy.
+- `dist/sitemap-0.xml` (post-build) is missing the new routes, or unexpectedly includes something under `/admin`.
+- Google Search Console (once available) or a manual `robots.txt`/meta-robots check shows `noindex` on an armory route that should be indexed.
 
 **Phase to address:**
-Asset/content-migration phase (when PDFs are pulled from the archived repo and placed into the new site), verified again in a pre-launch performance pass.
+Each app's own phase (per-app SEO props are part of "done" for that app), with the app-hosting-pattern phase establishing the reusable page template (props for title/description/OG image) so it isn't reinvented per app.
 
 ---
 
-### Pitfall 8: Reusing Nocturne's `styles.css` incorrectly — hardcoded values instead of tokens
+### Pitfall 7: Tools data-model change breaks existing `ToolsLive` rendering or the public Firestore read filter
 
 **What goes wrong:**
-Nocturne is a CSS-custom-property-driven design system (dark blue-grey ground, `#9184d9` accent-as-line/glow, 8px radii, `.lighten` image wrapper). Two failure modes when converting the design prototype (which ran on a client-side "DC" React runtime) into production markup/components: (a) developers eyeball the rendered prototype and hardcode literal hex/px values into new component CSS/inline styles instead of referencing the existing CSS variables, so the site visually matches at launch but silently drifts the moment any token is adjusted (spacing, accent color, radius) — defeating the entire point of reusing a design system; (b) the `.lighten` treatment (a specific image-wrapper effect used for cover art) gets dropped or reimplemented slightly differently when game cards are rebuilt as real components, because it's easy to miss "just a wrapper class" when translating a prototype's DOM structure into a new component tree.
+`Tool.app` (in `src/lib/types.ts`) is currently typed `app?: string | null` and `ToolsLive.tsx` renders it unconditionally as an **external** link: `<a ... href={t.app} target="_blank" rel="noopener">Launch ▸</a>`. Making these two new companion apps "editable Armory Tools" per PROJECT.md requires the admin to set an internal route (`/armory/fate-of-the-fellowship`) as this same field's value — which technically "works" (it's just a URL string, `target="_blank"` on an internal route still functions, just opens a new tab unnecessarily for an in-site page) but is semantically wrong and forecloses future per-tool behavior differences (e.g. wanting internal links to open in the same tab, or wanting different styling/icon for "in-site" vs "external" tools). If a schema change *is* made (e.g. adding a new field like `internal?: boolean` or an `appType: "internal" | "external"`), it must be additive and optional — existing `Tool` docs in Firestore (the "docking soon" slots, Charlie Mike TOC's external `app` entry) have no such field and must continue to render exactly as before with no code path requiring the new field to be present.
+Separately, **Firestore security rules and the public read filter are unaffected by this field addition** — `isPublic()` checks `resource.data.hidden == false` only, so adding a new optional field to some `tools/{slug}` docs doesn't touch security; the risk is purely in application code assuming the field exists.
 
 **Why it happens:**
-Converting a design-prototype (localStorage/DC-runtime demo) into a real app naturally involves rewriting every component from scratch; it's much faster during that rewrite to copy a computed pixel value or observed hex from DevTools than to trace back which CSS variable governs it, especially under time pressure as a solo developer.
+It's tempting to reuse `app` as-is (zero schema change, ships faster) without noticing the semantic mismatch (`target="_blank"` on same-origin internal routes, no "Launch" vs. "Open" distinction), or, in the other direction, to make a schema change without auditing every existing `Tool`-typed render path (`ToolsLive.tsx`, and the admin `Manager.tsx`/`AdminApp.tsx` editor forms) for whether they assume the new field's presence.
 
 **How to avoid:**
-- Import `styles.css` verbatim, unmodified, as the single source of design tokens — treat it as a dependency, not a starting point to fork.
-- When building new components, grep the design prototype's markup for every class name used on a given element (card, button, nav) and reuse those exact classes rather than reinventing equivalent-looking CSS; only write new CSS for genuinely new structural needs, and when doing so, reference `var(--token-name)` exclusively for color/spacing/radius — never a literal hex or px copied from the rendered prototype.
-- Explicitly preserve the `.lighten` wrapper class on every cover-art `<img>` in the new game-card components; add this to the phase's acceptance checklist by name since it's a small, easy-to-drop detail (not a red flag that shows up in casual visual review — it's a subtle brightness/treatment effect, not a big enough loss to be obviously "broken").
-- Audit dark-theme contrast (WCAG AA, 4.5:1 body text / 3:1 large text/UI) specifically where the design uses low-opacity or muted-tone text on the dark-blue-grey ground — dark themes commonly under-shoot contrast on secondary/meta text (synopsis snippets, publication-status labels, timestamps) even when the primary text passes, and this is invisible unless explicitly checked with a contrast tool.
-- Verify visible `:focus` states exist on every interactive element (nav links, admin form fields, "Download PDF" / "Shop at The Game Crafter" buttons) — dark, accent-as-line aesthetics often rely on subtle border/glow effects for hover that don't automatically produce a keyboard-visible focus ring; this needs an explicit check, not an assumption that "hover style = focus style."
+- Prefer the additive approach: add an optional field (e.g. `internal?: boolean`, defaulting falsy/undefined = current external behavior) to the `Tool` interface in `src/lib/types.ts`, and branch on it in `ToolsLive.tsx` only for `target`/`rel` (internal → no `target="_blank"`, or keep it if new-tab is actually desired — confirm with the owner) — do not remove or repurpose the existing `app` field's meaning for old rows.
+- Grep every place `Tool` is read/written (`ToolsLive.tsx`, `src/components/admin/*.tsx`, the seed script, `firestore.rules` comments) before changing the type, to confirm nothing destructures `t.app` assuming it's always an external absolute URL.
+- Since Firestore has no schema enforcement, manually verify (via the admin UI or emulator) that existing `tools` docs (Charlie Mike TOC, "docking soon" placeholders) still render correctly with the new optional field simply absent — this is a real regression risk given Firestore's schemaless nature, not just a type-level concern.
+- No `firestore.rules` change is needed for an additive optional field — confirm this explicitly (i.e., don't "just in case" touch `firestore.rules`, since that's a separate deploy step (`npm run deploy:rules`) with its own risk).
 
 **Warning signs:**
-- New component CSS/inline styles contain literal `#` hex colors or raw `px` values instead of `var(--...)`.
-- Cover-art images in the rebuilt game cards look flatter/more saturated than the original design prototype (missing `.lighten`).
-- Tabbing through the site with keyboard-only navigation shows no visible focus indicator on links/buttons.
-- Running a contrast checker against the dark theme's secondary/muted text colors shows failures.
+- After the schema change, existing non-companion tool cards in `/tools` render a broken/missing "Launch" button, or throw a runtime error reading `t.internal` on old docs that predate the field.
+- Admin editor form for tools doesn't save/round-trip the new field correctly (check Firestore console after an edit).
 
 **Phase to address:**
-The page-building/component phase where the design prototype is converted to production markup; verify with a side-by-side visual diff against the original design prototype and a keyboard-navigation/contrast pass before that phase is marked done, plus a final pre-launch accessibility spot-check.
+The phase that wires "each app is an editable Armory Tool" (likely the same phase or a dedicated small phase after both apps' routes exist) — explicitly listed in PROJECT.md as "a small tools data-model addition." Should be its own reviewable unit since it touches shared/production data (existing live tools).
 
 ---
 
-### Pitfall 9: Archive-reconstructed content is presented as fact without a correction path
+### Pitfall 8: Free-Spark and static-build traps — accidental SSR adapter, Cloud Function, or build-breaking browser-API access
 
 **What goes wrong:**
-Per PROJECT.md, several game synopses are reconstructed from the archived old site and may not be fully accurate (details lost or garbled in migration from the old .NET CMS). If this content ships as authoritative catalog copy with no easy way to flag/fix it, wrong game descriptions go live and stay live indefinitely (nobody but the owner would ever notice a factual error in his own game's description, and he has no workflow reminder to double check). Related: PDF↔game mapping mistakes are easy to make silently — e.g., `banefulsigns_corerules.pdf` mapped to the wrong catalog entry, or a companion character-sheet PDF (`Aigechar.pdf`, `Impchar.pdf`, `darkchar.pdf`, `banefulsigns_char.pdf`) accidentally presented as *the* rulebook instead of a supplement — and print-and-play vs. hosted-PDF classification errors (a boxed/Game-Crafter title like EXFIL or Woe incorrectly given a direct PDF download link on-site instead of routing to the Game Crafter store, or vice versa for an archive title).
+Several ways this milestone could silently violate the project's hard `$0`/no-Blaze/no-Cloud-Functions/static-only constraints:
+- Adding a UI library, icon package, or "just to preview" a dev server integration that pulls in `@astrojs/node` or any Astro **SSR adapter** — Astro's `output` mode would need to stay `static` (the default, and what's implied by the current all-static config with no `output`/`adapter` key). Some npm install flows (a copy-pasted "getting started" doc for a framework feature) can suggest adding an adapter without the developer realizing it changes the build/deploy model. This project's `firebase.json` hosting config (`"public": "dist"`, no `functions`/rewrites) assumes a fully static `dist/`; any SSR adapter breaks that assumption and would require Cloud Functions (paid Blaze) to actually serve.
+- Top-level or render-time `localStorage`/`window` access (Pitfall 2) breaking `astro build` outright — this is the most likely and most immediate "free-tier trap" in practice, since it's a **build failure**, not a runtime cost issue, but it blocks the manual `npm run deploy` pipeline entirely.
+- Introducing any dependency that assumes a Node server process at runtime (rather than at build time) — e.g. a library that wants to open a persistent connection, read env vars only available server-side, or expects an API route — none of which exist in this static-hosting setup.
 
 **Why it happens:**
-Content migration from a legacy archive is treated as a mechanical copy/seed task rather than a content-review task; with 13 games and 8+ PDF files (several with a paired character-sheet variant), it's easy to seed the Firestore catalog from a script/spreadsheet without a human re-reading each synopsis against the actual archived rulebook, and pairing/classification mistakes don't produce any error — the page just renders with wrong-but-plausible content.
+Companion apps ported from a different hosting context (their own standalone dev setup) may carry incidental dependencies or config assumptions (a `vite.config` plugin, a server-only import) that don't match this project's static-Astro/Firebase-Hosting-only model. Framework docs also default to showing SSR-capable setups since that's the more commonly demonstrated Astro use case in 2026 tutorials.
 
 **How to avoid:**
-- Treat initial content seeding as a review task, not a data-migration task: for each of the 13 games, have the owner (who's the actual domain authority) explicitly confirm/edit the synopsis before the seed data is finalized, rather than trusting the archive text as-is; flag archive-derived synopses in the admin UI (e.g., a "needs review" badge) until the owner has touched each one.
-- Build an explicit game→PDF(s) mapping table as part of content prep (game slug → rulebook PDF filename → optional character-sheet PDF filename) and cross-check it against the archived repo's actual file list (`AIGE.pdf`+`Aigechar.pdf`, `Barony.pdf`, `Cardomancer.pdf`, `Impact.pdf`+`Impchar.pdf`, `amaranth.pdf`, `banefulsigns_corerules.pdf`+`banefulsigns_char.pdf`, `dark.pdf`+`darkchar.pdf`, `mazeworld.pdf`) before wiring any download links, rather than inferring mapping from filename similarity alone (several filenames don't obviously match their game's display name — `amaranth.pdf`→Amaranthine, `dark.pdf`→likely "Dark" but confirm it isn't a different title, `banefulsigns_corerules.pdf`→likely "Baneful").
-- Classify each of the 13 catalog entries explicitly as either "archive/PDF download" or "boxed/print-and-play (Game Crafter link)" in the seed data itself (an enum field, not inferred at render time), matching PROJECT.md's stated split (AIGE, Barony, Cardomancer, Impact, Amaranthine, Baneful, Dark, Mazeworld = PDF; EXFIL, Woe, Fate of Wæteria, Euangelion = Game Crafter; Charlie Mike = in-dev/TOC-app-linked), so a future admin edit can't accidentally mix the two link types for the same title without an explicit field change.
+- Do not add `@astrojs/node`, `@astrojs/vercel`, `@astrojs/cloudflare`, or any `output: "server"`/`output: "hybrid"` config to `astro.config.mjs` — verify after each dependency addition that `astro.config.mjs` still has no `output`/`adapter` key (i.e., stays implicitly `static`).
+- After wiring each companion app, run a full `npm run build` locally (not just `astro dev`) before considering the phase done — `astro dev` runs in a browser-like dev server context and can mask build-time-only errors (like `localStorage is not defined`) that only surface in the actual static prerender step. This is the single most effective, cheap verification gate for both Pitfall 2 and this pitfall.
+- Keep `firebase.json`'s hosting config unchanged (`public: dist`, no `functions` section) as an implicit assertion that nothing in this milestone requires a Cloud Function — if a future need arises (e.g. server-side state sync), that's explicitly out of scope for v1.1 per PROJECT.md ("cross-device sync deferred").
+- Audit any new dependency's own dependency tree once (`npm ls` / lockfile diff) for anything unexpected pulling in a server runtime package (e.g. `express`, an adapter package) — unlikely for these two apps (React + lucide-react + Tailwind are all client/build-time-safe) but cheap to check once.
 
 **Warning signs:**
-- Seed data / initial Firestore import was generated by an automated script against the archive with no human sign-off step logged anywhere.
-- No explicit game→PDF mapping document/table exists separate from "whatever the seeding script guessed."
-- A game's detail page shows both a PDF download link and a Game Crafter link, or neither, when it should show exactly one per its classification.
+- `astro.config.mjs` gains an `output` or `adapter` key you didn't intend to add (diff review on any PR touching this file).
+- `npm run build` succeeds but `firebase deploy --only hosting` behaves unexpectedly, or the Firebase console shows a "Functions" section appearing that wasn't there before.
+- `astro dev` works fine but `npm run build` fails — a strong signal of a dev-vs-build-time environment mismatch (usually the `localStorage` issue).
 
 **Phase to address:**
-Content-migration/seeding phase, explicitly scoped as including an owner content-review pass (not just data transformation) — should be a checklist gate before that phase is marked complete, and the "needs review" flag mechanism should ship as part of the admin CMS so any remaining review debt is visible post-launch, not just at seed time.
+Cross-cutting — enforce via a build-verification step (`npm run build` must pass locally, not just `astro dev`) as an explicit acceptance criterion on **every** phase in this milestone, not a single dedicated phase. Worth calling out once in the app-hosting-pattern phase's documentation as "the one command that must pass before any companion-app phase is considered done."
 
 ---
 
 ## Technical Debt Patterns
 
 | Shortcut | Immediate Benefit | Long-term Cost | When Acceptable |
-|----------|-------------------|-----------------|------------------|
-| Hardcoding admin UID directly in Firestore rules instead of a `users/{uid}.admin` doc | Simpler rules, one less collection | Rules edit + redeploy needed if admin account ever changes | Acceptable indefinitely for a genuinely single, permanent admin — this project's stated model |
-| SSG with manual "Publish" trigger instead of full Firestore-onWrite auto-rebuild pipeline | Much less infra to build/maintain solo | Owner must remember to click Publish after edits | Acceptable for solo/low-frequency content changes; revisit only if edit frequency grows |
-| Serving PDFs from Hosting's public dir instead of Cloud Storage | No extra service, simpler URLs, free tier friendly at this volume | No access control, no per-file analytics, manual cache-header config required | Never acceptable to skip the cache-header config; Storage migration only needed if access control is ever required (not planned) |
-| Reusing archived cover-art PNGs as OG images directly (skip generating dedicated OG images) | Saves an asset-production step | Broken/ugly share previews (wrong aspect ratio) — directly undermines the project's core goal | Never acceptable — this is the one shortcut most directly opposed to the stated priority (share-driven traffic) |
-| Client-only admin gating (hide nav link) without matching Firestore rules | Faster to build the admin shell | Full data-layer vulnerability — any signed-in Google account could write/delete catalog data | Never acceptable, even temporarily in a dev branch that could be deployed accidentally |
+|----------|--------------------|-----------------|------------------|
+| Reusing `Tool.app` as-is for internal routes (no schema change) | Ships faster, zero type/rule changes | Wrong `target="_blank"` semantics on same-origin routes; no future room for internal-vs-external behavior differences | Acceptable only as a throwaway spike/preview; not for the shipped admin-managed entry — do the additive field (Pitfall 7) for the real thing |
+| Porting `fotf`'s CSS-in-JS without scoping, "just to see it render" locally | Fast first look at the app in-site | Real leakage risk into Nocturne the moment it's checked into a page rendered inside `Layout.astro` (Pitfall 3) | Only in an isolated local scratch page never merged/deployed |
+| Using `client:only` to sidestep SSR/localStorage errors quickly | Unblocks development immediately | Silent SEO/crawlability regression that's easy to forget to revisit (Pitfall 2b) | Never for the shipped route; fine as a 5-minute local dev check, must be swapped before merge |
+| Skipping the `npm run build` check and only using `astro dev` during development | Faster iteration loop | Masks build-breaking `localStorage`/SSR errors until deploy time (Pitfall 8) | Never right before considering a phase "done"; fine minute-to-minute during active editing |
 
 ## Integration Gotchas
 
 | Integration | Common Mistake | Correct Approach |
-|-------------|-----------------|-------------------|
-| Firebase Hosting + custom domain | Using Quick Setup on a domain that's still serving live traffic on the old host, causing an SSL-provisioning gap/downtime | Use Advanced Setup for the darktierstudios.com cutover so DNS flips only after SSL/ownership is already established |
-| Facebook/Twitter link scrapers | Assuming "it looks right in Chrome DevTools" means it works — DevTools shows the post-JS DOM, not what crawlers see | Always verify with Facebook Sharing Debugger + `curl -A "facebookexternalhit/1.1"` against the raw response, per page type |
-| Firestore + Firebase Auth | Assuming Firebase Auth's Google sign-in has a "restrict to this user" setting somewhere in the console | There is no native allowlist for sign-in; authorization must be enforced explicitly in Firestore rules (UID check) and app logic |
-| Firebase Hosting `firebase.json` redirects | Adding new-site routing (`rewrites`) but forgetting old-site path `redirects` entirely at cutover | Inventory old site paths before cutover and add explicit 301 `redirects` entries for anything indexed/linked |
-| Google Search Console | Not verifying the new domain in Search Console until after launch, delaying reindexing signal and sitemap submission | Verify darktierstudios.com in Search Console and submit sitemap.xml as part of the launch phase, same day as DNS cutover |
+|-------------|------------------|--------------------|
+| `@astrojs/react` `include` glob | Widening it to `**/*` "to be safe" instead of a narrow `**/armory/**` addition | Add only the specific directory glob the companion apps live under, alongside the existing `**/admin/**`, `**/live/**` |
+| Tailwind v4 install | Default `@import "tailwindcss"` in a globally-loaded stylesheet | Granular `@import "tailwindcss/theme"` + `@import "tailwindcss/utilities"` (no preflight) scoped to the bb-companion's own CSS file only |
+| Firestore `tools` collection | Changing/removing the `app` field's meaning for existing docs | Additive optional field only; verify old docs still render via emulator/admin UI before shipping |
+| Firebase Hosting (`firebase.json`) | Assuming a schema/rewrite change is needed for new static routes | New Astro static pages need zero `firebase.json` changes — `public: dist`, cleanUrls already handles new `.html` output automatically |
 
 ## Performance Traps
 
 | Trap | Symptoms | Prevention | When It Breaks |
 |------|----------|------------|-----------------|
-| No cache headers on PDFs/images | Repeat visitors re-download full assets every visit; Hosting bandwidth usage climbs | Set `Cache-Control` headers in `firebase.json` for `/pdfs/**`, `/images/**` with long max-age | Noticeable on Firebase's free/Spark tier bandwidth cap first; not a real risk at this project's expected low traffic but cheap to fix upfront |
-| Cover-art PNGs served at original/archive resolution instead of web-optimized sizes | Slow first paint on Games page (13 cover images), poor Lighthouse score, worse SEO ranking signal (Core Web Vitals) | Re-export/compress cover art (WebP with PNG fallback or just optimized PNG) and serve appropriately sized images for card vs. detail-page use, not one large master file everywhere | Immediately noticeable even at low traffic — this is a UX/SEO issue from day one, not a scale issue |
-| SSR/Cloud Function-per-request approach (if chosen over SSG) for bot-tag injection | Added cold-start latency on first crawler hit after idle; added per-invocation cost | Prefer build-time SSG per Pitfall 1's recommendation; only use a live function if content freshness truly requires per-request rendering | Cost/latency becomes relevant only if traffic/crawl frequency grows significantly beyond a solo-studio site's expected volume |
+| Tailwind/CSS-in-JS leaking into a shared chunk | Home/Games/Tools grow new `<script>`/`<link>` tags after this milestone | Route-scoped imports only (Pitfall 5); diff `dist/*.html` before/after | Immediately on first build with the leak present — not a "scale" issue, a correctness issue |
+| lucide-react barrel import | Burning Banners route JS chunk far larger than expected | Named imports only, verify current lucide-react version (Pitfall 4) | Immediately, proportional to icon-set size (hundreds of KB if the whole set is pulled in) |
+| Shipping the full ~2600-line app to a route unconditionally | Slightly slower `/armory/<slug>` route load than a pure-content page — expected and acceptable | Per-route code-splitting (already Astro's default per route/page) keeps this cost isolated to the two Armory routes only, not the marketing pages | Not a real "break" point at this project's scale (two tools, low traffic); would matter if dozens of heavy apps were added to one route |
 
 ## Security Mistakes
 
 | Mistake | Risk | Prevention |
 |---------|------|------------|
-| Leaving Firestore in "test mode" rules past initial prototyping | Public catalog data fully writable/deletable by anyone with the project's client config (which is not secret — it's embedded in every page load) | Ship locked-down rules (default-deny + explicit admin-UID exception) before first production deploy, not "later" |
-| Treating the Firebase client config (apiKey, projectId, etc.) as a secret to hide | Wasted effort trying to keep it out of the client bundle; it's meant to be public — real security is rules + auth, not config secrecy | Don't add `.env`-style hiding for Firebase client config; instead focus effort entirely on Firestore/Storage security rules |
-| Any Storage bucket rules left at default-open if PDFs/covers move to Cloud Storage instead of Hosting | Public write access to overwrite/delete official rulebook PDFs or replace cover art | If Storage is used for any asset, mirror the same default-deny + admin-UID-write pattern as Firestore rules |
-| No rate-limiting/validation on Firestore writes from the admin client | A buggy admin-UI save (e.g., an infinite retry loop) could spam writes and inflate Firestore billing | Add basic write-count sanity (debounce saves in the admin UI) — low risk at solo-admin scale, but cheap insurance |
+| Assuming client-side `localStorage` state needs Firestore security rules considerations | None — wasted effort touching `firestore.rules` for a feature with no Firestore writes | Confirm state is 100% `localStorage`/no Firestore calls in both companion apps' code before considering rules; leave `firestore.rules` untouched by this milestone unless the `tools` schema change (Pitfall 7) is made |
+| Adding an internal-route field to `tools` docs without checking `isPublic()` still gates correctly | Low — the rule already only depends on `hidden`, unaffected by new fields, but worth a one-time confirmation | Re-run `scripts/rules.test.ts` (`npm run test:rules`) after any `Tool` schema change, even though the rule text itself isn't touched |
 
 ## UX Pitfalls
 
 | Pitfall | User Impact | Better Approach |
-|---------|-------------|-------------------|
-| Inconsistent PDF open-vs-download behavior across the 8+ rulebook files | Confusing/inconsistent experience per game, erodes trust in the site's polish | Standardize `Content-Disposition` behavior across all PDFs (see Pitfall 7) |
-| "NEW" flag / news feed with no dates or stale entries after launch settles | Visitors can't tell how active the studio still is; a static-looking "news" feed undercuts the "canonical home" positioning | Timestamp every news entry visibly; consider auto-expiring the "NEW" flag on games after a set window |
-| Broken/missing focus states on dark theme (see Pitfall 8) | Keyboard/screen-reader users can't navigate the admin panel or public nav reliably | Explicit focus-state QA pass as part of the design-system-reuse phase |
-| Admin edits with no "last published" / no confirmation of what's actually live | Owner second-guesses whether an edit succeeded, especially in an SSG model with a publish step | Visible "last published" timestamp + save confirmation in the admin UI |
+|---------|--------------|-------------------|
+| Companion app's own internal look visually clashes with the Nocturne shell around it (nav/footer) | Feels like two different products stapled together, undermining "own internal look — no restyle" *and* site cohesion | Accept the intentional contrast (per PROJECT.md, the app keeps its own look) but make sure the Nocturne chrome (nav/footer) is unmistakably still present and un-broken (Pitfalls 1 & 3 are what actually break this) |
+| "Launch ▸" button opens an internal `/armory/<slug>` route in a new tab (`target="_blank"`) via unmodified `ToolsLive.tsx` | Confusing/wasteful new-tab for an in-site page a visitor could just navigate to | Branch `target`/`rel` on the new internal-vs-external distinction (Pitfall 7) |
+| First paint of the companion app shows default/empty state before localStorage restores saved data | Brief flash may look like data was lost | Acceptable and expected per Pitfall 2's SSR-safe pattern; keep the flash brief (restore in the first `useEffect`, not gated behind other async work) |
 
 ## "Looks Done But Isn't" Checklist
 
-- [ ] **OG/social tags:** Present in DevTools ≠ present in raw HTML response — verify with `curl` or Sharing Debugger, not just browser inspection.
-- [ ] **Sitemap.xml:** Exists ≠ correct — verify it lists every actual public route (13 game pages, tools, news, home) and excludes the admin route; verify it's referenced in `robots.txt`.
-- [ ] **Admin locked down:** Login screen exists and rejects the wrong UID in the UI ≠ actually secure — verify Firestore rules independently reject a non-owner UID write attempt via the emulator, since UI gating alone is bypassable.
-- [ ] **Custom domain live:** DNS resolves to darktierstudios.com ≠ fully cut over — verify SSL certificate is valid (not "provisioning"), both apex and www resolve as intended, and old-URL redirects actually 301 (not 404).
-- [ ] **PDF downloads work:** Link exists and file opens ≠ correctly mapped — verify each of the 13 games' PDF (and character-sheet, where applicable) link points at the *correct* file, not just *a* file.
-- [ ] **Design system reused:** Site visually resembles the Nocturne mockup ≠ actually reusing tokens — verify no hardcoded hex/px values exist in new component CSS, and `.lighten` is applied to every cover-art image.
-- [ ] **Content accuracy:** Catalog seeded from archive ≠ content verified — verify the owner has reviewed/confirmed each synopsis, not just that data exists in Firestore.
-- [ ] **Analytics wired:** Analytics script is loaded ≠ privacy-friendly and non-blocking — verify it doesn't set third-party cookies, doesn't block/delay page render, and is disclosed if any privacy policy/footer text references data collection.
+- [ ] **Tailwind added for Burning Banners:** Often missing a check that the *other* three existing pages (Home/Games/Tools) are visually unchanged — verify by diffing `dist/*.html` `<link>`/`<script>` tags and eyeballing a preview build of all three before merging.
+- [ ] **Companion app "works locally":** Often only verified via `astro dev`, never a real `npm run build` — verify the static build succeeds and `dist/armory/<slug>.html` contains real server-rendered content (not an empty shell), per Pitfall 8.
+- [ ] **CSS-in-JS ported:** Often missing a check for whether its selectors are scoped — verify by grepping the ported `CSS` string for bare/generic selectors and confirming each is prefixed under a unique wrapper class.
+- [ ] **Tool marked `status: live` with an internal route:** Often missing a check that *existing* live tools (Charlie Mike TOC, "docking soon" placeholders) still render identically in `/tools` after the schema change — verify in the admin UI/emulator, not just the new entry.
+- [ ] **New `/armory/<slug>` route "looks right":** Often missing per-page OG/title (falls back to generic site defaults silently) — verify by viewing page source, not just the rendered page, and check `dist/sitemap-0.xml` includes the route.
+- [ ] **lucide-react wired in:** Often not checked for peer-dependency warnings on `npm install` — verify a clean install with no `ERESOLVE` warnings, and confirm the installed version's `peerDependencies.react` range.
 
 ## Recovery Strategies
 
 | Pitfall | Recovery Cost | Recovery Steps |
-|---------|-----------------|-----------------|
-| Shipped without per-page OG tags (Pitfall 1) | MEDIUM | Add SSG or Cloud Function bot-injection retroactively; re-scrape every previously-shared URL via Sharing Debugger's "Scrape Again" to bust Facebook's cached preview |
-| Firestore rules shipped too open (Pitfall 2) | LOW | Rules are redeployed instantly (`firebase deploy --only firestore:rules`); audit Firestore data for any unauthorized writes/deletions since launch and restore from a backup/export if needed |
-| Old URLs 404ing post-cutover (Pitfall 5) | LOW–MEDIUM | Add `redirects` entries retroactively for any 404s surfaced in Search Console's Coverage report; resubmit sitemap; recovery time depends on reindexing lag (days–weeks) |
-| Wrong PDF↔game mapping discovered post-launch (Pitfall 9) | LOW | Fix the mapping field in Firestore via the admin UI directly; no redeploy needed since this is data, not code (assuming SSG rebuild-on-publish is wired, per Pitfall 4) |
-| Contrast/focus-state accessibility gaps found late (Pitfall 8) | LOW–MEDIUM | Targeted CSS fixes referencing existing tokens; low cost if caught before launch, higher (reputational) cost if a visitor/reviewer flags it publicly first |
+|---------|-----------------|------------------|
+| Tailwind preflight leaked into Nocturne pages (Pitfall 1) — discovered post-deploy | LOW–MEDIUM | Switch the Tailwind import to the granular no-preflight entry points (or add scoped-preflight plugin), rebuild, redeploy via `npm run deploy` — no data/schema involved, purely a CSS fix, safe to ship immediately once corrected |
+| CSS-in-JS leaked selectors (Pitfall 3) — discovered post-deploy | LOW | Prefix the `CSS` string's selectors under the wrapper class, rebuild, redeploy — same low-risk profile as Pitfall 1's fix |
+| `astro build` breaks on `localStorage` access mid-development (Pitfall 2) | LOW | Not a production incident (build never shipped) — restructure the offending code into `useEffect`, rebuild locally before ever attempting deploy |
+| Tools schema change broke an existing live tool's card (Pitfall 7) — discovered post-deploy | MEDIUM | Revert the `ToolsLive.tsx`/type change via git, redeploy the last-known-good `dist/`, or hot-fix the branch guard in `ToolsLive.tsx` to tolerate the missing/present field correctly, then redeploy — no Firestore data is lost since the underlying docs are untouched by a code-only bug |
+| Accidental SSR adapter added (Pitfall 8) — caught before deploy | LOW | Remove the `output`/`adapter` config from `astro.config.mjs`, remove the adapter package, rebuild — caught at build-verification time, never reaches Firebase |
 
 ## Pitfall-to-Phase Mapping
 
 | Pitfall | Prevention Phase | Verification |
-|---------|-------------------|----------------|
-| SPA invisible to social crawlers (no OG in raw HTML) | Rendering-strategy/foundation phase (SSG decision) | `curl -A "facebookexternalhit/1.1"` + Facebook Sharing Debugger on every page type |
-| Firestore rules default-open / wrong admin check | Datastore/backend setup phase | Emulator Suite rules unit tests: unauthenticated write, non-admin UID write, draft-doc read all denied |
-| Open sign-up / unauthorized UID reaches admin UI | Auth/admin-shell phase | Manual sign-in attempt with a second, non-owner Google account; confirm UI rejection + rules rejection |
-| Stale content after admin edits (SSG rebuild gap) | Same phase as SSG decision + admin write-path phase | Edit content in admin, confirm public page updates only after intended publish action, with a visible timestamp |
-| Custom domain cutover breaks old links | Launch/cutover phase (near end of roadmap) | Old-URL inventory checked against `firebase.json` `redirects`; Search Console Coverage report clean post-launch |
-| OG images wrong format/aspect/relative URL | SEO/social phase | Facebook Sharing Debugger + Twitter Card Validator render check per page type, not just tag presence |
-| PDF caching/Content-Disposition inconsistency | Asset/content-migration phase | Network tab cache-hit check on repeat visit; consistent open/download behavior across all 8+ PDFs |
-| Design tokens hardcoded / `.lighten` dropped / focus states missing | Page-building/component-conversion phase | Side-by-side visual diff vs. design prototype; keyboard-only nav pass; contrast checker on dark-theme secondary text |
-| Archive-reconstructed content wrong / PDF↔game mismap / P&P vs PDF misclassification | Content-migration/seeding phase | Owner sign-off checklist per game; explicit game→PDF mapping table cross-checked against archived repo file list |
+|---------|--------------------|----------------|
+| 1. Tailwind global preflight leakage | Burning Banners phase (decision: no-preflight granular import, locked in app-hosting-pattern phase's documented convention) | Diff `dist/index.html`, `dist/games.html`, `dist/tools.html` `<link>`/`<script>` tags before/after; visual check of the three pages in a preview build |
+| 2. SSR/localStorage build break | Fate of the Fellowship phase (establishes the `useEffect`-gated pattern first) | `npm run build` succeeds locally; no hydration warnings in browser console on `/armory/<slug>` |
+| 2b. `client:only` blanking content | Fate of the Fellowship phase | View-source on `/armory/<slug>` shows real static markup, not an empty mount div |
+| 3. CSS-in-JS selector leakage | Fate of the Fellowship phase (pattern reused by Burning Banners) | Grep ported `CSS` string for unscoped selectors; visual diff of Nav/Footer rendering on the armory route vs. other routes |
+| 4. lucide-react bloat/peer mismatch | Burning Banners phase | Clean `npm install` with no `ERESOLVE`; named-import-only grep; bundle size sanity check on the built route chunk |
+| 5. Marketing-page bundle regression | Every app phase + a milestone-level final QA pass | `dist/*.html` diff on Home/Games/Tools shows zero new script/style tags after each app ships |
+| 6. SEO regression (new routes under-optimized or existing routes affected) | Each app phase (per-page SEO props) + app-hosting-pattern phase (reusable template) | View-source per-page title/description/OG on each armory route; `sitemap-0.xml` contains new routes and nothing unwanted |
+| 7. Tools data-model change risk | Dedicated small phase wiring "editable Armory Tool" status for both apps | `npm run test:rules` passes; admin UI round-trips the new field; existing live tools render unchanged in `/tools` |
+| 8. Free-Spark/static-build traps | Cross-cutting acceptance criterion on every phase (`npm run build` must pass, not just `astro dev`) | `astro.config.mjs` diff shows no `output`/`adapter` key added; `firebase.json` unchanged; local `npm run build` passes before any deploy |
 
 ## Sources
 
-- [Facebook Open Graph, Share Button, and Prerendering (firebase-talk)](https://groups.google.com/g/firebase-talk/c/8zg6ePs8CKI) — MEDIUM confidence (community, cross-checked pattern)
-- [Dynamic meta tags for bots and crawlers using Firebase (Medium)](https://richard-0094.medium.com/dynamic-meta-tags-for-bots-and-crawlers-using-firebase-and-cloudflare-workers-b351cd7045db) — MEDIUM confidence
-- [meta-seo-helper — Firebase Cloud Functions SEO meta tag helper (GitHub)](https://github.com/itsTeknas/meta-seo-helper) — MEDIUM confidence
-- [Firebase: Basic Security Rules (official docs)](https://firebase.google.com/docs/rules/basics) — HIGH confidence (official)
-- [Firebase: Security Rules and Firebase Authentication (official docs)](https://firebase.google.com/docs/rules/rules-and-auth) — HIGH confidence (official)
-- [Firebase: Secure data access for users and groups / role-based access (official docs)](https://firebase.google.com/docs/firestore/solutions/role-based-access) — HIGH confidence (official)
-- [Firebase: Connect a custom domain (Hosting, official docs)](https://firebase.google.com/docs/hosting/custom-domain) — HIGH confidence (official)
-- [Firebase: Configure Hosting behavior — redirects/rewrites (official docs)](https://firebase.google.com/docs/hosting/full-config) — HIGH confidence (official)
-- [Setting up redirects on Firebase Hosting (DEV Community)](https://dev.to/iggredible/setting-up-redirect-on-firebase-5cfj) — MEDIUM confidence
-- [Firebase Authorization control, block signup based on rules (firebase-talk)](https://groups.google.com/g/firebase-talk/c/vmAhNeMj_VU) — MEDIUM confidence
-- [Restrict Google Auth to specific users (firebase-talk)](https://groups.google.com/g/firebase-talk/c/rRLWoWXJuEY) — MEDIUM confidence
-- Project-specific content risks (archive-reconstructed synopses, PDF filenames, catalog classification) — sourced directly from `.planning/PROJECT.md`, HIGH confidence as project facts
+- Direct codebase reads (HIGH confidence): `astro.config.mjs`, `src/layouts/Layout.astro`, `src/lib/types.ts`, `src/components/live/ToolsLive.tsx`, `src/lib/firebase.read.ts`, `firestore.rules`, `firebase.json`, `package.json`, `.planning/PROJECT.md`, `.claude/CLAUDE.md`.
+- npm registry direct lookup, `lucide-react@1.32.0` `peerDependencies` (2026-08-18) — HIGH confidence.
+- Web search (LOW–MEDIUM confidence, cross-checked against multiple results but not a primary/official source for every claim):
+  - Tailwind v4 preflight scoping — [tailwindcss-scoped-preflight (npm)](https://www.npmjs.com/package/tailwindcss-scoped-preflight), [Tailwind v4 global reset discussion #16597](https://github.com/tailwindlabs/tailwindcss/discussions/16597), [Scoping Normalized Preflight CSS (DEV)](https://dev.to/ajscommunications/scoping-normalized-preflight-css-c29), [How to Scope Tailwind CSS Styles](https://ryanschiang.com/how-to-scope-tailwind-css-styles).
+  - Astro `client:only` crawlability — [Astro Docs: Islands architecture](https://docs.astro.build/en/concepts/islands/), [Astro SEO Guide 2026](https://nodeascend.com/blog/astro-js-seo-guide-2026/).
+  - lucide-react React 19 peer-dep history — [lucide-icons/lucide #2951](https://github.com/lucide-icons/lucide/issues/2951), [#2134](https://github.com/lucide-icons/lucide/issues/2134), [#2216](https://github.com/lucide-icons/lucide/issues/2216), [Lucide for React docs](https://lucide.dev/guide/packages/lucide-react).
+  - `localStorage is not defined` during SSR prerender — general React/Next.js SSR pattern discussions ([Rollbar](https://rollbar.com/blog/how-to-handle-localstorage-is-not-defined-error-javascript/), [Sentry](https://sentry.io/answers/referenceerror-localstorage-is-not-defined-in-next-js/)) — the underlying SSR-boundary mechanism is framework-agnostic and applies equally to Astro's prerender step.
 
 ---
-*Pitfalls research for: Firebase-hosted marketing site + single-admin CMS (Darktier Studios)*
-*Researched: 2026-08-17*
+*Pitfalls research for: In-site React companion apps (Astro islands) on an existing Astro/Firebase marketing site*
+*Researched: 2026-08-18*
