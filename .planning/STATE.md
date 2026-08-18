@@ -1,18 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: Public Launch
-status: shipped
-stopped_at: v1.0 Public Launch archived; site live on darktierstudios.com
-last_updated: "2026-08-18T01:10:00.000Z"
+milestone: v1.1
+milestone_name: In-Site Companion Apps
+status: planning
+last_updated: "2026-08-18T13:15:50.176Z"
 last_activity: 2026-08-18
-last_activity_desc: v1.0 Public Launch milestone completed and archived; custom domain live
 progress:
-  total_phases: 7
-  completed_phases: 7
+  total_phases: 0
+  completed_phases: 0
   total_plans: 0
   completed_plans: 0
-  percent: 100
+  percent: 0
 ---
 
 # Project State
@@ -26,10 +24,10 @@ See: .planning/PROJECT.md (updated 2026-08-18)
 
 ## Current Position
 
-Phase: Milestone v1.0 (Public Launch) complete — live on darktierstudios.com
+Phase: Not started (defining requirements)
 Plan: —
-Status: Shipped; awaiting next milestone
-Last activity: 2026-08-18 — v1.0 archived; custom domain cutover verified (valid SSL/HSTS, no mixed content)
+Status: Defining requirements
+Last activity: 2026-08-18 — Milestone v1.1 started
 
 ## Quick Tasks Completed
 

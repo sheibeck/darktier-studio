@@ -8,6 +8,19 @@ The public website for Darktier Studios, LLC — a one-person TTRPG and tabletop
 
 A fast, great-looking, search- and share-optimized public site that becomes the studio's canonical home — so links shared anywhere (formerly Facebook) drive traffic here and every game is discoverable with its cover, blurb, and download/buy link.
 
+## Current Milestone: v1.1 In-Site Companion Apps
+
+**Goal:** Host self-contained React companion apps directly inside the Darktier Studios Firebase app — no separate domains or Firebase projects — and ship the first two (Fate of the Fellowship, Burning Banners) as live, admin-managed entries in The Armory.
+
+**Target features:**
+- A reusable in-site app-hosting pattern: a `.tsx` companion app becomes an Astro React island at an internal route (e.g. `/armory/<slug>`), built into the same `dist/` and served from existing Firebase Hosting — documented so future artifact apps drop in with minimal work.
+- Fate of the Fellowship companion live at its own crawlable, share-optimized route (React-only, self-contained CSS, localStorage — clean drop-in).
+- Burning Banners companion live at its own route (adds `lucide-react` + a scoped Tailwind/styling path for its ~231 utility classes — heavier lift).
+- Each app runs inside a Nocturne page shell (nav/footer) while keeping its own internal look — no restyle.
+- Each app is an editable Armory Tool in the existing admin CMS — `status: live` with an internal-route target (small tools data-model addition), reorderable/hideable like the others.
+
+**Key context:** State is local-only for MVP (browser `localStorage`, no login, no Firestore for game state; cross-device sync deferred). All v1.0 constraints hold — free Spark plan, $0/month, no Cloud Functions, manual `npm run deploy`. These are companions for third-party board games, presented as Armory tools rather than Darktier catalog games. Phase numbering continues from v1.0 (last phase 7 → v1.1 starts at Phase 8).
+
 ## Business Context
 
 - **Customer**: Tabletop/TTRPG players and fans of Darktier Studios; the owner (Sterling) as sole admin/publisher.
@@ -36,6 +49,7 @@ A fast, great-looking, search- and share-optimized public site that becomes the 
 ### Active
 
 - [ ] Privacy-friendly web analytics — code shipped (Cloudflare Web Analytics); awaits owner's `PUBLIC_CF_ANALYTICS_TOKEN` to activate
+- [ ] **v1.1** — In-site React companion apps hosted as Astro islands at internal Armory routes (reusable pattern + Fate of the Fellowship + Burning Banners), admin-managed, localStorage-only for MVP — see REQUIREMENTS.md
 
 ### Out of Scope
 
@@ -108,4 +122,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-08-18 after v1.0 Public Launch milestone (live on darktierstudios.com)*
+*Last updated: 2026-08-18 — started milestone v1.1 In-Site Companion Apps*
