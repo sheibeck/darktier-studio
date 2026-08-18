@@ -30,7 +30,7 @@ const STATUS_OPTS = [
   { value: "live", label: "Live (Launch button)" },
   { value: "soon", label: "Docking soon (slot reserved)" },
 ];
-const TOOL_KIND_OPTS = [
+const TOOL_KIND_OPTS: { value: NonNullable<Tool["kind"]>; label: string }[] = [
   { value: "external", label: "External URL" },
   { value: "internal", label: "Internal route (Armory app)" },
 ];
