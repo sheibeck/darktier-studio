@@ -122,4 +122,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-08-18 — v1.1 Phase 8 (Tool Data Model & Admin Wiring) complete; Armory tools now support internal-route apps (TOOL-03/04/05 validated)*
+*Last updated: 2026-08-18 — v1.1 Phase 9 (Fate of the Fellowship) complete; reusable in-site app-hosting pattern (armory route + registry + client:only island + build-time parity guard) established and FOTF live at /armory/fate-of-the-fellowship (FOTF-01, APP-02/03/04 validated). Deferred: owner browser play-through.*
