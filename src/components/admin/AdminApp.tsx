@@ -1,6 +1,6 @@
 import { type CSSProperties, useEffect, useState } from "react";
 import { onAuthStateChanged, signInWithPopup, signOut, type User } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { collection, doc, onSnapshot, setDoc } from "firebase/firestore";
 import {
   ADMIN_UID,
   auth,
@@ -131,6 +131,7 @@ export default function AdminApp() {
   const [authErr, setAuthErr] = useState<string | null>(null);
   const [builtAt, setBuiltAt] = useState<string | null>(null);
   const [seedMsg, setSeedMsg] = useState("");
+  const [catalogEmpty, setCatalogEmpty] = useState<boolean | null>(null);
 
   useEffect(() => {
     if (!firebaseConfigured) return;
@@ -146,6 +147,25 @@ export default function AdminApp() {
       .then((d) => d?.builtAt && setBuiltAt(d.builtAt))
       .catch(() => {});
   }, []);
+
+  // Track whether the whole catalog is empty (live) — the "Load starter catalog"
+  // helper only shows on a fresh, empty project and disappears once seeded.
+  useEffect(() => {
+    if (!firebaseConfigured || !user) return;
+    const names = ["games", "tools", "news"] as const;
+    const sizes: Record<string, number> = {};
+    const unsubs = names.map((n) =>
+      onSnapshot(
+        collection(db, n),
+        (snap) => {
+          sizes[n] = snap.size;
+          if (names.every((x) => x in sizes)) setCatalogEmpty(names.every((x) => sizes[x] === 0));
+        },
+        () => setCatalogEmpty(false),
+      ),
+    );
+    return () => unsubs.forEach((u) => u());
+  }, [user]);
 
   if (!firebaseConfigured) {
     return (
@@ -237,12 +257,17 @@ export default function AdminApp() {
         Edits save to Firestore immediately. They reach the public site on the next <strong>Publish</strong> — trigger a rebuild from
         the repo's GitHub Actions ("Deploy" → "Run workflow"), or run <code>npm run deploy</code> locally.
       </p>
-      <div style={{ display: "flex", gap: "var(--space-3)", alignItems: "center", flexWrap: "wrap", marginTop: "4px" }}>
-        <button type="button" className="btn btn-secondary" onClick={seedAll}>Load starter catalog</button>
-        {seedMsg && (
-          <span style={{ fontSize: "13px", color: "color-mix(in srgb, var(--color-text) 60%, transparent)" }}>{seedMsg}</span>
-        )}
-      </div>
+      {catalogEmpty === true && (
+        <div style={{ display: "flex", gap: "var(--space-3)", alignItems: "center", flexWrap: "wrap", marginTop: "4px" }}>
+          <span style={{ fontSize: "13px", color: "color-mix(in srgb, var(--color-text) 70%, transparent)" }}>
+            Your catalog is empty.
+          </span>
+          <button type="button" className="btn btn-secondary" onClick={seedAll}>Load starter catalog</button>
+          {seedMsg && (
+            <span style={{ fontSize: "13px", color: "color-mix(in srgb, var(--color-text) 60%, transparent)" }}>{seedMsg}</span>
+          )}
+        </div>
+      )}
 
       <Manager<Game>
         name="games"

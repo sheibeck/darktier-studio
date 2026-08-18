@@ -34,6 +34,7 @@ Progress: [██████████] 100% built · deployed to staging
 |------|------|------|
 | 2026-08-17 | Admin edit forms → centered modals (click-outside/Escape/scroll-lock) | admin-edit-modals |
 | 2026-08-17 | Confirm step before deleting items in admin | delete-confirm |
+| 2026-08-17 | Hide "Load starter catalog" unless catalog is empty | load-starter-visibility |
 
 ## Performance Metrics
 
