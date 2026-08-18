@@ -105,7 +105,7 @@ Explicitly excluded to prevent scope creep.
 | Rebuilding companion apps (Charlie Mike TOC, etc.) | They stay as separate Firebase apps, linked not absorbed |
 | Migrating the old .NET/archived CMS or blog engine | Only assets and content are carried forward |
 | Shipping the design prototype's DC React runtime / localStorage admin | Replaced by Astro SSG + Firestore + Firebase Auth |
-| Client-side runtime Firestore reads on public pages | Breaks SEO/social previews — public data is fetched at build time |
+| Client-side runtime Firestore reads on public pages (SPA-style, no static HTML) | Breaks SEO — REPLACED by a *hybrid*: pages SSR the catalog at build (SEO/OG intact) then live-refresh from Firestore in the browser, so edits reach customers with no deploy (2026-08-17) |
 | Firebase Storage for assets | Fixed public asset set; Hosting `public/` is simpler and sufficient |
 | Firebase Blaze plan / Cloud Functions | Personal site must stay $0 on the free Spark plan; publish uses GitHub Actions or a manual action instead |
 | Paid analytics (Plausible ~$9/mo) | Free Cloudflare Web Analytics covers the need at $0 |

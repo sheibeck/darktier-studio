@@ -86,6 +86,9 @@ A fast, great-looking, search- and share-optimized public site that becomes the 
 | Deploy manually (`npm run deploy`) + GitHub Actions; first ship to the `*.web.app` staging URL before the custom domain | Free, no Cloud Functions; verify before DNS cutover | ✓ Done |
 | Client-side "Load starter catalog" button seeds Firestore as the owner | Avoids a service-account key for initial content | ✓ Done |
 | Owner UID hardcoded in `firestore.rules` (not abstracted) | A UID is an identifier, not a credential; rules enforced server-side — safe. Owner chose simplicity | ✓ Done |
+| **Hybrid live catalog**: public pages SSR from build-time data (SEO) AND live-read Firestore in the browser | Owner wants /admin edits visible to customers with NO deploy, while keeping SEO/OG. Reverses the earlier build-time-only decision | ✓ Done |
+| Deploy is MANUAL only (no deploy on push); content is live via Firestore | GSD commits frequently — commits must not deploy. Code/design ships when the owner chooses (`npm run deploy`) | ✓ Done |
+| Public read rule = `hidden == false`; live query filters on it | Keeps drafts/in-dev games private while allowing the public visible-list read | ✓ Done |
 
 ## Evolution
 

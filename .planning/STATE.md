@@ -22,7 +22,7 @@ See: .planning/PROJECT.md (updated 2026-08-17)
 
 Phase: 7 of 7 — **deployed & live on staging**
 Status: Site LIVE at https://darktierstudios-b846f.web.app (Firebase project darktierstudios-b846f, free Spark). Hosting + Firestore rules (owner-UID) deployed. Admin configured (config + owner UID inlined); "Load starter catalog" button added to seed Firestore client-side. Firestore rules emulator-tested 8/8 with the real UID.
-Last activity: 2026-08-17 — deployed to Firebase Hosting + rules; fixed project id, env var names, client-init crash guard; hardcoded owner UID; added client-side seed
+Last activity: 2026-08-17 — live catalog shipped (admin edits reach customers with no deploy; SEO preserved via SSR); deploy is manual-only
 
 Remaining (owner steps, LAUNCH.md): enable Google sign-in provider · sign in + click "Load starter catalog" · custom domain darktierstudios.com DNS · Cloudflare analytics token · service-account secret for CI build-time Firestore read (so admin edits publish live)
 
