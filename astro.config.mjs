@@ -23,7 +23,8 @@ export default defineConfig({
         ph: ["*"],
       },
     }),
-    // React powers the /admin island and the live public catalog components.
-    react({ include: ["**/admin/**", "**/live/**"] }),
+    // React powers the /admin island, the live public catalog components,
+    // and the /armory in-site companion apps.
+    react({ include: ["**/admin/**", "**/live/**", "**/components/armory/**"] }),
   ],
 });
