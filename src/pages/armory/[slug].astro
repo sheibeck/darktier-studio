@@ -1,0 +1,40 @@
+---
+// Generic dynamic route for every "Armory" in-site companion app. The
+// routing/registry plumbing has zero app-specific logic — it is entirely
+// driven by src/lib/armoryApps.ts.
+//
+// Note: Astro's client:only hydration-script generation statically scans the
+// template for component tags matched to a local import binding — it cannot
+// resolve a runtime variable (a live function reference passed through
+// getStaticPaths() props, or looked up from a Record) into that binding, and
+// fails at build time with NoMatchingImport if you try. So each registered
+// app gets one direct `{slug === "..." && <Component client:only="react" />}`
+// line below, referencing its import directly. Adding a new app to the
+// pipeline = one src/components/armory/*.tsx file + one armoryApps.ts entry
+// + one line here mirroring this one — still a fixed, mechanical, ~3-line
+// cost per app, not a full new route/page.
+import Layout from "../../layouts/Layout.astro";
+import { armoryApps } from "../../lib/armoryApps";
+import FateOfTheFellowship from "../../components/armory/FateOfTheFellowship";
+
+export function getStaticPaths() {
+  return armoryApps.map((app) => ({ params: { slug: app.slug }, props: app }));
+}
+
+const { slug, name, title, description } = Astro.props;
+---
+<Layout title={title} description={description} current="/tools">
+  <div class="container">
+    <section style="padding:56px 0 32px">
+      <p class="kicker">Darktier Studios · Armory companion</p>
+      <h1 style="font-size:clamp(32px,4.4vw,56px);line-height:1.08;letter-spacing:-0.02em;margin:0 0 0 -0.06em">{name}</h1>
+      <p style="font-size:16px;line-height:26px;color:color-mix(in srgb, var(--color-text) 78%, transparent);max-width:58ch;margin:18px 0 0">
+        {description}
+      </p>
+    </section>
+  </div>
+
+  <div class="armory-app-shell">
+    {slug === "fate-of-the-fellowship" && <FateOfTheFellowship client:only="react" />}
+  </div>
+</Layout>
