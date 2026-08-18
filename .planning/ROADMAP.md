@@ -85,10 +85,10 @@ Delivered: a fast, SEO/share-optimized public site (Home, The Vault, The Armory,
   4. Any bare-button chrome gap found in QA is either accepted as-is or fixed with a scoped fallback (e.g. `tailwindcss-scoped-preflight` or hand-written `.bb-app` overrides) — never a global preflight import.
   5. `npm run build` succeeds and `npm install` reports no `ERESOLVE` peer-dependency conflicts for lucide-react/tailwindcss against React 19.
 
-**Plans**: 1/3 plans executed
+**Plans**: 2/3 plans executed
 
 - [x] 10-01-PLAN.md
-- [ ] 10-02-PLAN.md
+- [x] 10-02-PLAN.md
 - [ ] 10-03-PLAN.md
 
 **UI hint**: yes

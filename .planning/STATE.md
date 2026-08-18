@@ -5,15 +5,15 @@ milestone_name: In-Site Companion Apps
 current_phase: 10
 current_phase_name: Burning Banners
 status: executing
-stopped_at: Completed 10-01-PLAN.md
-last_updated: "2026-08-18T16:51:46.223Z"
+stopped_at: Completed 10-02-PLAN.md
+last_updated: "2026-08-18T17:02:51.589Z"
 last_activity: 2026-08-18
 last_activity_desc: Phase 10 execution started
 progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 6
-  completed_plans: 4
+  completed_plans: 5
   percent: 50
 ---
 
@@ -29,11 +29,11 @@ See: .planning/PROJECT.md (updated 2026-08-18)
 ## Current Position
 
 Phase: 10 (Burning Banners) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 Status: Ready to execute
 Last activity: 2026-08-18 — Phase 10 execution started
 
-Progress: [███████░░░] 67%
+Progress: [████████░░] 83%
 
 ## Performance Metrics
 
@@ -63,6 +63,7 @@ Progress: [███████░░░] 67%
 | Phase 08 P01 | 6min | 3 tasks | 3 files |
 | Phase 09 P01 | 15min | 3 tasks | 5 files |
 | Phase 10 P01 | 14min | 3 tasks | 8 files |
+| Phase 10-burning-banners P02 | 12min | 2 tasks | 0 files |
 
 ## Accumulated Context
 
@@ -78,6 +79,7 @@ Recent decisions affecting current work:
 - [Phase ?]: Component dispatch in [slug].astro uses a direct per-slug conditional (not props-threading or a Record lookup) because Astro's client:only hydration requires a statically-analyzable local import binding in the JSX tag itself
 - [Phase ?]: Tailwind v4 skip-preflight (theme+utilities layers only, no bare tailwindcss import) scoped to BurningBanners.tsx via @tailwindcss/vite — preflight never exists in the build, making Nocturne reset-leakage structurally impossible
 - [Phase ?]: Retained .bb02-baseline/ tag-capture directory in git as auditable evidence for the BB-02 zero-marketing-regression proof
+- [Phase ?]: 10-02: Literal Task-1 verify one-liner has a ';' vs '&&' control-flow defect and a ::backdrop false-positive fingerprint (Tailwind's @property fallback layer, not preflight) — both investigated and confirmed harmless via substantive re-checks; BB-02 holds.
 
 ### Pending Todos
 
@@ -100,8 +102,8 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-08-18T16:51:31.578Z
-Stopped at: Completed 10-01-PLAN.md
+Last session: 2026-08-18T17:02:51.536Z
+Stopped at: Completed 10-02-PLAN.md
 Resume file: None
 
 ## Operator Next Steps
