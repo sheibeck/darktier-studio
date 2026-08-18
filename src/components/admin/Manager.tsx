@@ -65,6 +65,7 @@ export function Manager<T extends Row>(props: ManagerProps<T>) {
   const [editing, setEditing] = useState<string | null>(null);
   const [draft, setDraft] = useState<T | null>(null);
   const [status, setStatus] = useState("");
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   const setField = (key: string, value: unknown) =>
     setDraft((d) => (d ? ({ ...d, [key]: value } as T) : d));
@@ -73,15 +74,18 @@ export function Manager<T extends Row>(props: ManagerProps<T>) {
     setEditing("__new");
     setDraft(props.newItem());
     setStatus("");
+    setConfirmingDelete(false);
   };
   const startEdit = (item: T) => {
     setEditing(item.slug);
     setDraft({ ...item });
     setStatus("");
+    setConfirmingDelete(false);
   };
   const cancel = () => {
     setEditing(null);
     setDraft(null);
+    setConfirmingDelete(false);
   };
 
   // While the edit modal is open: close on Escape and lock background scroll.
@@ -265,23 +269,36 @@ export function Manager<T extends Row>(props: ManagerProps<T>) {
                 </div>
               ))}
             </div>
-            <div className="dialog-actions" style={{ display: "flex", gap: "var(--space-3)", marginTop: "var(--space-4)" }}>
+            <div className="dialog-actions" style={{ display: "flex", gap: "var(--space-3)", marginTop: "var(--space-4)", flexWrap: "wrap", alignItems: "center" }}>
             <button type="button" className="btn btn-primary" onClick={doSave}>
               Save
             </button>
             <button type="button" className="btn btn-ghost" onClick={cancel}>
               Cancel
             </button>
-            {editing !== "__new" && (
-              <button
-                type="button"
-                className="btn btn-ghost"
-                style={{ marginLeft: "auto", color: "var(--color-accent-300)" }}
-                onClick={doDelete}
-              >
-                Delete {props.singular}
-              </button>
-            )}
+            {editing !== "__new" &&
+              (confirmingDelete ? (
+                <span style={{ marginLeft: "auto", display: "inline-flex", gap: "var(--space-2)", alignItems: "center", flexWrap: "wrap" }}>
+                  <span style={{ fontSize: "13px", color: "color-mix(in srgb, var(--color-text) 70%, transparent)" }}>
+                    Delete this {props.singular}? This can't be undone.
+                  </span>
+                  <button type="button" className="btn btn-ghost" style={{ color: "var(--color-accent-300)" }} onClick={doDelete}>
+                    Yes, delete
+                  </button>
+                  <button type="button" className="btn btn-secondary" onClick={() => setConfirmingDelete(false)}>
+                    Keep
+                  </button>
+                </span>
+              ) : (
+                <button
+                  type="button"
+                  className="btn btn-ghost"
+                  style={{ marginLeft: "auto", color: "var(--color-accent-300)" }}
+                  onClick={() => setConfirmingDelete(true)}
+                >
+                  Delete {props.singular}
+                </button>
+              ))}
             </div>
           </div>
         </div>

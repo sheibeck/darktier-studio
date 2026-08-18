@@ -33,6 +33,7 @@ Progress: [██████████] 100% built · deployed to staging
 | Date | Task | Slug |
 |------|------|------|
 | 2026-08-17 | Admin edit forms → centered modals (click-outside/Escape/scroll-lock) | admin-edit-modals |
+| 2026-08-17 | Confirm step before deleting items in admin | delete-confirm |
 
 ## Performance Metrics
 
