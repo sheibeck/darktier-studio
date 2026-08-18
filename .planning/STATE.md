@@ -5,15 +5,15 @@ milestone_name: In-Site Companion Apps
 current_phase: 11
 current_phase_name: Go-Live & Pipeline Docs
 status: executing
-stopped_at: Completed 11-01-PLAN.md
-last_updated: "2026-08-18T18:10:04.978Z"
+stopped_at: Completed 11-02-PLAN.md
+last_updated: "2026-08-18T18:20:25.330Z"
 last_activity: 2026-08-18
 last_activity_desc: Phase 11 execution started
 progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 9
-  completed_plans: 6
+  completed_plans: 7
   percent: 50
 ---
 
@@ -29,11 +29,11 @@ See: .planning/PROJECT.md (updated 2026-08-18)
 ## Current Position
 
 Phase: 11 (Go-Live & Pipeline Docs) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 Status: Ready to execute
 Last activity: 2026-08-18 — Phase 11 execution started
 
-Progress: [███████░░░] 67%
+Progress: [████████░░] 78%
 
 ## Performance Metrics
 
@@ -66,6 +66,7 @@ Progress: [███████░░░] 67%
 | Phase 10 P01 | 14min | 3 tasks | 8 files |
 | Phase 10-burning-banners P02 | 12min | 2 tasks | 0 files |
 | Phase 11-go-live-pipeline-docs P01 | 12min | 2 tasks | 1 files |
+| Phase 11 P02 | 18min | 3 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -84,6 +85,9 @@ Recent decisions affecting current work:
 - [Phase ?]: 10-02: Literal Task-1 verify one-liner has a ';' vs '&&' control-flow defect and a ::backdrop false-positive fingerprint (Tailwind's @property fallback layer, not preflight) — both investigated and confirmed harmless via substantive re-checks; BB-02 holds.
 - [Phase ?]: Both new tool records use armoryApps.ts registry metadata for name/kicker/description copy consistency
 - [Phase ?]: Both new records use kicker "Companion app" matching charlie-mike-toc's existing live kicker style
+- [Phase ?]: Guide framed around the two existing worked examples (FOTF clean, Burning Banners deps/Tailwind) rather than a generic abstract template
+- [Phase ?]: CLAUDE.md edits kept surgical (2 table-row edits) rather than restructuring the doc
+- [Phase ?]: go-live-v1.1.md kept as a new focused doc with a short LAUNCH.md pointer, per Claude's-discretion guidance in 11-CONTEXT.md
 
 ### Pending Todos
 
@@ -106,8 +110,8 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-08-18T18:10:04.935Z
-Stopped at: Completed 11-01-PLAN.md
+Last session: 2026-08-18T18:20:25.234Z
+Stopped at: Completed 11-02-PLAN.md
 Resume file: None
 
 ## Operator Next Steps

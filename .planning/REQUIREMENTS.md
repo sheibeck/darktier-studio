@@ -15,7 +15,7 @@ Requirements for this milestone. Each maps to exactly one roadmap phase.
 - [x] **APP-02**: Each companion app runs full-screen inside the site's Nocturne nav/footer shell while keeping its own internal visual look (no restyle)
 - [x] **APP-03**: A visitor's in-app progress persists in their own browser across reloads via `localStorage`, with no login required (MVP scope)
 - [x] **APP-04**: Each app route is crawlable and share-optimized — it renders a real `<title>`/description and social-share preview in the initial HTML and is individually shareable, even though the app itself hydrates client-side
-- [ ] **APP-05**: Adding a new companion app is a documented drop-in — a new app requires only its component plus one registry entry plus one Armory tool record, with no per-app route hand-authoring; the pattern is captured as a short written guide
+- [x] **APP-05**: Adding a new companion app is a documented drop-in — a new app requires only its component plus one registry entry plus one Armory tool record, with no per-app route hand-authoring; the pattern is captured as a short written guide
 - [x] **APP-06**: Hosting the apps keeps the site fully static on the free Spark plan — no SSR adapter, no Cloud Functions, no new recurring cost — and the public marketing pages continue to ship ~0KB JS (app JS is code-split to its own route only)
 
 ### Armory Tool Integration (TOOL)
@@ -72,7 +72,7 @@ Which phases cover which requirements. Populated during roadmap creation.
 | BB-01 | Phase 10 | Complete |
 | BB-02 | Phase 10 | Complete |
 | APP-01 | Phase 11 | Complete |
-| APP-05 | Phase 11 | Pending |
+| APP-05 | Phase 11 | Complete |
 | APP-06 | Phase 11 | Complete |
 
 **Coverage:**
