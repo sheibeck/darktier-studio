@@ -1,3 +1,4 @@
+import "../../styles/armory-bb-tailwind.css";
 import React, { useState, useEffect, useMemo } from "react";
 import {
   Swords, Coins, Flame, Crown, Landmark, ChevronRight, ChevronDown,
@@ -2512,19 +2513,17 @@ export default function App() {
 
   useEffect(() => {
     let cancelled = false;
-    (async () => {
-      try {
-        const r = await window.storage.get("bb:campaign");
-        if (!cancelled && r && r.value) { setGame(JSON.parse(r.value)); setView("turn"); }
-      } catch (e) { /* nothing saved — start fresh */ }
-      if (!cancelled) setLoaded(true);
-    })();
+    try {
+      const raw = window.localStorage.getItem("bb:campaign");
+      if (!cancelled && raw) { setGame(JSON.parse(raw)); setView("turn"); }
+    } catch (e) { /* nothing saved — start fresh */ }
+    if (!cancelled) setLoaded(true);
     return () => { cancelled = true; };
   }, []);
 
   useEffect(() => {
     if (!loaded || !game) return;
-    (async () => { try { await window.storage.set("bb:campaign", JSON.stringify(game)); } catch (e) { } })();
+    try { window.localStorage.setItem("bb:campaign", JSON.stringify(game)); } catch (e) { }
   }, [game, loaded]);
 
   const toggleMode = () => {
@@ -2633,7 +2632,7 @@ export default function App() {
         <div className="max-w-3xl mx-auto px-5 pb-10">
           <button onClick={() => {
             setGame(null); setView("setup");
-            try { window.storage.delete("bb:campaign"); } catch (e) { }
+            try { window.localStorage.removeItem("bb:campaign"); } catch (e) { }
           }} style={{ color: "#4d566b", fontSize: 11.5 }}>
             Abandon this campaign and set up a new one
           </button>
