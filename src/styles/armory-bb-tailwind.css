@@ -1,0 +1,13 @@
+/* Burning Banners — SCOPED Tailwind v4 stylesheet.
+ *
+ * Imported ONLY from src/components/armory/BurningBanners.tsx — never from
+ * Layout.astro, site.css, or nocturne.css. Deliberately skips Tailwind's
+ * preflight/global-reset layer (the bundled `@import "tailwindcss"`
+ * entrypoint) so no document-wide CSS reset ever exists anywhere in the
+ * build. See .planning/research/STACK.md (Q2) for the full rationale.
+ */
+@layer theme, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+@source "../components/armory/BurningBanners.tsx";

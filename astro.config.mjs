@@ -3,6 +3,7 @@ import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 import icon from "astro-icon";
 import react from "@astrojs/react";
+import tailwindcss from "@tailwindcss/vite";
 
 // The canonical production origin. All absolute URLs (canonical, OG image,
 // sitemap) derive from this. Firebase Hosting serves the static `dist/` output.
@@ -12,6 +13,12 @@ export default defineConfig({
   build: {
     // Emit `about.html` rather than `about/index.html` — cleaner on Firebase Hosting.
     format: "file",
+  },
+  vite: {
+    // Tailwind v4 is compiled ONLY for the Burning Banners island's own
+    // scoped stylesheet (src/styles/armory-bb-tailwind.css). No global
+    // Tailwind entrypoint exists anywhere in the build.
+    plugins: [tailwindcss()],
   },
   integrations: [
     sitemap({
