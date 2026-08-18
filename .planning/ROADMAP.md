@@ -30,7 +30,7 @@ Delivered: a fast, SEO/share-optimized public site (Home, The Vault, The Armory,
 
 - [x] **Phase 8: Tool Data Model & Admin Wiring** - Additive `Tool.kind` field lets the admin CMS and Armory listing support internal in-site routes alongside external links, with zero regression to existing tools (completed 2026-08-18)
 - [x] **Phase 9: Fate of the Fellowship** - Establishes the reusable app-hosting pattern (dynamic route, registry, `client:only` island, per-app SEO, scoped localStorage) and ships the reference companion app live (completed 2026-08-18)
-- [ ] **Phase 10: Burning Banners** - Extends the pattern to a Tailwind v4 + lucide-react app, scoped so no Nocturne page is visually affected — the milestone's real risk
+- [x] **Phase 10: Burning Banners** - Extends the pattern to a Tailwind v4 + lucide-react app, scoped so no Nocturne page is visually affected — the milestone's real risk (completed 2026-08-18)
 - [ ] **Phase 11: Go-Live & Pipeline Docs** - Flips both apps live as discoverable Armory tools, documents the drop-in pipeline, verifies zero regression, and deploys
 
 ## Phase Details
@@ -121,7 +121,7 @@ Delivered: a fast, SEO/share-optimized public site (Home, The Vault, The Armory,
 | 7. Launch & Cutover                 | v1.0      | Complete    | 2026-08-17 |
 | 8. Tool Data Model & Admin Wiring   | v1.1      | Complete    | 2026-08-18 |
 | 9. Fate of the Fellowship           | v1.1      | Complete    | 2026-08-18 |
-| 10. Burning Banners                 | v1.1      | In Progress|  |
+| 10. Burning Banners                 | v1.1      | Complete    | 2026-08-18 |
 | 11. Go-Live & Pipeline Docs         | v1.1      | Not started | -          |
 
 ## Future Milestones
