@@ -66,3 +66,10 @@ Astro site + Nocturne design · all pages (Home / Vault / Armory / 404) from rea
 23 assets migrated (11 covers, 8 rulebooks, 4 character sheets) · SEO (meta/OG/Twitter/sitemap/robots/JSON-LD)
 + a 1200×630 share image · admin CMS (Google sign-in, owner-only CRUD) with **emulator-verified** Firestore
 rules (8/8) · GitHub Actions deploy + manual Publish · Cloudflare-analytics wiring. Build is green.
+
+## v1.1 companion apps — go-live
+
+The Armory companion apps (Fate of the Fellowship, Burning Banners) are built, wired in, and
+verified with a zero-regression build. The remaining steps — deploy, seeding the two live
+production Firestore tool docs, owner play-throughs, and post-deploy confirmation — are compiled
+in [`docs/go-live-v1.1.md`](./docs/go-live-v1.1.md).
