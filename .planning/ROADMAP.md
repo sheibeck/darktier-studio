@@ -106,9 +106,9 @@ Delivered: a fast, SEO/share-optimized public site (Home, The Vault, The Armory,
   4. Both new `tools` Firestore docs (`slug` matching the registry exactly, `status: "live"`, `kind: "internal"`) round-trip correctly through the admin CMS, and `dist/sitemap-0.xml` includes both new `/armory` routes.
   5. The site is deployed via the existing manual `npm run deploy`, and both companion apps are reachable live on darktierstudios.com.
 
-**Plans**: 3 plans
+**Plans**: 1/3 plans executed
 
-- [ ] 11-01-PLAN.md — Seed both apps as live internal Armory tools + zero-regression seed-fallback build gate (APP-01, APP-06)
+- [x] 11-01-PLAN.md — Seed both apps as live internal Armory tools + zero-regression seed-fallback build gate (APP-01, APP-06)
 - [ ] 11-02-PLAN.md — Drop-in pipeline guide + CLAUDE.md scoped-Tailwind exception + v1.1 go-live checklist (APP-05)
 - [ ] 11-03-PLAN.md — [owner checkpoint] deploy + live Firestore seed + play-through handoff (APP-01, deferred)
 
@@ -126,7 +126,7 @@ Delivered: a fast, SEO/share-optimized public site (Home, The Vault, The Armory,
 | 8. Tool Data Model & Admin Wiring   | v1.1      | Complete    | 2026-08-18 |
 | 9. Fate of the Fellowship           | v1.1      | Complete    | 2026-08-18 |
 | 10. Burning Banners                 | v1.1      | Complete    | 2026-08-18 |
-| 11. Go-Live & Pipeline Docs         | v1.1      | Not started | -          |
+| 11. Go-Live & Pipeline Docs         | v1.1      | In Progress|  |
 
 ## Future Milestones
 
