@@ -30,6 +30,10 @@ const STATUS_OPTS = [
   { value: "live", label: "Live (Launch button)" },
   { value: "soon", label: "Docking soon (slot reserved)" },
 ];
+const TOOL_KIND_OPTS = [
+  { value: "external", label: "External URL" },
+  { value: "internal", label: "Internal route (Armory app)" },
+];
 const TAG_OPTS = ["News", "Playtest call", "Release"].map((v) => ({ value: v, label: v }));
 
 const chk: CSSProperties = { display: "inline-flex", alignItems: "center", gap: "6px", cursor: "pointer", fontSize: "13px" };
@@ -102,7 +106,8 @@ const toolColumns: ColumnDef<Tool>[] = [
 const toolFields: FieldDef[] = [
   { key: "name", label: "Name", type: "text" },
   { key: "status", label: "Status", type: "select", options: STATUS_OPTS },
-  { key: "app", label: "App link", type: "url", placeholder: "https://…", full: true },
+  { key: "kind", label: "Link type", type: "select", options: TOOL_KIND_OPTS },
+  { key: "app", label: "App link (external only)", type: "url", placeholder: "https://…", full: true },
   { key: "description", label: "Description", type: "textarea", full: true },
 ];
 
@@ -293,7 +298,7 @@ export default function AdminApp() {
         fields={toolFields}
         requiredKey="name"
         slugFrom={(d) => d.name}
-        newItem={() => ({ slug: "", name: "", status: "soon", hidden: false, app: "", kicker: "", description: "", order: 0 }) as Tool}
+        newItem={() => ({ slug: "", name: "", status: "soon", hidden: false, kind: "external", app: "", kicker: "", description: "", order: 0 }) as Tool}
       />
 
       <Manager<NewsPost>
