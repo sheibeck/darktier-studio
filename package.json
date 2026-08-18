@@ -17,6 +17,7 @@
     "deploy": "npm run build && firebase deploy --only hosting",
     "deploy:rules": "firebase deploy --only firestore:rules",
     "seed": "node --experimental-strip-types scripts/seed-firestore.ts",
+    "seed:tools": "node --experimental-strip-types scripts/seed-tools.ts",
     "emulators": "firebase emulators:start",
     "test:rules": "firebase emulators:exec --only firestore --project demo-darktier-rules --config firebase.test.json \"node --experimental-strip-types --test scripts/rules.test.ts\""
   },
