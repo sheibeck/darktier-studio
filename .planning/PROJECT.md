@@ -19,24 +19,23 @@ A fast, great-looking, search- and share-optimized public site that becomes the 
 
 ### Validated
 
-(None yet — ship to validate)
+- ✓ Public marketing site: Home, Games ("The Vault"), Tools ("The Armory"), matching the Nocturne design — v1.0
+- ✓ Games catalog rendering all titles with cover art, type, publication status, synopsis, and NEW flag — v1.0
+- ✓ Downloadable rulebook PDFs for archive games (AIGE, Barony, Cardomancer, Impact, Amaranthine, Baneful, Dark, Mazeworld) — v1.0
+- ✓ "Shop at The Game Crafter" / print-and-play links for boxed games (EXFIL, Woe, Fate of Wæteria, Euangelion) — v1.0
+- ✓ Charlie Mike showcased as in-development TTRPG linking to its live TOC companion app — v1.0
+- ✓ Tools/Armory hub listing companion apps (Charlie Mike TOC live; "docking soon" slots) — v1.0
+- ✓ News/Dispatches feed on the homepage (newest first) — v1.0
+- ✓ Admin login (Google sign-in, single admin = owner) gating a private editor — v1.0
+- ✓ Admin can create/edit/reorder/show-hide games, tools, and news, persisted to Firestore — v1.0
+- ✓ Public pages read catalog data from Firestore — v1.0 (hybrid: SSR at build for SEO + live browser reads so edits show with no deploy)
+- ✓ SEO + social: per-page title/description, OG + Twitter cards, canonical URLs, sitemap, favicon, JSON-LD — v1.0
+- ✓ Deployed to Firebase Hosting on the custom domain darktierstudios.com over HTTPS — v1.0 (DNS cutover 2026-08-18)
+- ✓ Reuse the Nocturne design system stylesheet; dark, compact, accent-as-line aesthetic preserved — v1.0
 
 ### Active
 
-- [ ] Public marketing site: Home, Games ("The Vault"), Tools ("The Armory"), matching the existing Nocturne design
-- [ ] Games catalog page rendering all titles with cover art, type, publication status, synopsis, and NEW flag
-- [ ] Downloadable rulebook PDFs for archive games (AIGE, Barony, Cardomancer, Impact, Amaranthine, Baneful, Dark, Mazeworld) hosted on the site
-- [ ] "Shop at The Game Crafter" / print-and-play links for boxed games (EXFIL, Woe, Fate of Wæteria, Euangelion)
-- [ ] Charlie Mike showcased as in-development TTRPG with a link to its live TOC companion app
-- [ ] Tools/Armory hub listing companion apps (Charlie Mike TOC live; "docking soon" slots)
-- [ ] News/Dispatches feed on the homepage (newest first)
-- [ ] Admin login (Google sign-in, single admin = owner) gating a private editor
-- [ ] Admin can create/edit/reorder/show-hide games, tools, and news, persisted to a real datastore (Firestore)
-- [ ] Public pages read catalog data from the datastore (with seeded initial content)
-- [ ] SEO + social: per-page title/description, Open Graph + Twitter card tags, canonical URLs, sitemap, favicon
-- [ ] Privacy-friendly web analytics
-- [ ] Deployed to Firebase Hosting on the custom domain darktierstudios.com
-- [ ] Reuse the Nocturne design system stylesheet; dark, compact, accent-as-line aesthetic preserved
+- [ ] Privacy-friendly web analytics — code shipped (Cloudflare Web Analytics); awaits owner's `PUBLIC_CF_ANALYTICS_TOKEN` to activate
 
 ### Out of Scope
 
@@ -50,6 +49,7 @@ A fast, great-looking, search- and share-optimized public site that becomes the 
 
 ## Context
 
+- **v1.0 shipped and live (2026-08-18).** The full site is live at https://darktierstudios.com (Firebase project `darktierstudios-b846f`, free Spark plan) with a valid SSL cert, HSTS, and http→https redirect. Stack: Astro 7 SSG + Firebase Hosting/Firestore/Auth, React islands scoped to `/admin` and the live-catalog components only. Hybrid catalog: pages SSR from build-time Firestore reads (SEO/OG) and live-refresh from Firestore in the browser, so admin edits reach visitors with no deploy. Deploy is manual-only (`npm run deploy`); CI does not deploy on push. Remaining owner steps: add the Cloudflare analytics token (ANALYTICS-01). Known minor bug: home hero references `woe.png` (now `woe.jpg`) → 404, cosmetically harmless.
 - **Design is done.** A complete Claude Design project ("Darktier Studios website redesign", id `0053e32c-f354-49e3-a52c-d25ec4c88a98`) provides four page designs (Home, Games, Tools, Admin) built on the **Nocturne** design system (single `styles.css` of CSS variables + component classes; dark blue-grey ground, Inter, `#9184d9` accent used as line/glow, 8px radii, `.lighten` image wrapper). Design guidance: reuse `styles.css` verbatim, take all color/spacing/type from its tokens, Phosphor icons.
 - The design prototypes render via a custom client-side "DC" React runtime (`support.js`) with data modules `games-data.js` / `tools-data.js` / `news-data.js` (localStorage-backed). This is a prototyping format and must be converted to a real, SEO-friendly production site.
 - **Content & assets** come from the archived old site repo `github.com/sheibeck/darktierstudios` (read-only): 12 game cover PNGs (`darktierstudios/Content/images/projects/*_cover.png`), logo (`darktierstudios/images/logo.png`), favicon, and rulebook/character PDFs — `AIGE.pdf` (+`Aigechar.pdf`), `Barony.pdf`, `Cardomancer.pdf`, `Impact.pdf` (+`Impchar.pdf`), `amaranth.pdf` (Amaranthine), `banefulsigns_corerules.pdf` (+`banefulsigns_char.pdf`), `dark.pdf` (+`darkchar.pdf`), `mazeworld.pdf`.
@@ -72,7 +72,7 @@ A fast, great-looking, search- and share-optimized public site that becomes the 
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Firebase Hosting + custom domain darktierstudios.com | Matches owner's existing Charlie Mike app; owns the domain | ✓ Done |
+| Firebase Hosting + custom domain darktierstudios.com | Matches owner's existing Charlie Mike app; owns the domain | ✓ Good — live on darktierstudios.com over HTTPS (DNS cutover 2026-08-18; valid SSL, HSTS, http→https redirect verified) |
 | Firestore as the catalog datastore (games/tools/news) | Live admin edits without redeploys; low volume | ✓ Done |
 | Firebase Auth, Google sign-in, single admin (owner UID) | Simplest secure admin; no password management | ✓ Done |
 | Convert design prototypes off the DC/localStorage runtime to a real SEO-friendly stack | Prototype format isn't production/SEO-suitable | ✓ Done |
@@ -108,4 +108,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-08-17 after launch to staging (darktierstudios-b846f.web.app)*
+*Last updated: 2026-08-18 after v1.0 Public Launch milestone (live on darktierstudios.com)*

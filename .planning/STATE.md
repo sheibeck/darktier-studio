@@ -1,11 +1,17 @@
 ---
-gsd_state_version: '1.0'
-status: shipped-staging
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: Public Launch
+status: shipped
+stopped_at: v1.0 Public Launch archived; site live on darktierstudios.com
+last_updated: "2026-08-18T01:10:00.000Z"
+last_activity: 2026-08-18
+last_activity_desc: v1.0 Public Launch milestone completed and archived; custom domain live
 progress:
   total_phases: 7
   completed_phases: 7
-  total_plans: 7
-  completed_plans: 7
+  total_plans: 0
+  completed_plans: 0
   percent: 100
 ---
 
@@ -13,20 +19,17 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-08-17)
+See: .planning/PROJECT.md (updated 2026-08-18)
 
 **Core value:** A fast, great-looking, search- and share-optimized public site that becomes the studio's canonical home — so links shared anywhere drive traffic here and every game is discoverable with its cover, blurb, and download/buy link.
-**Current focus:** Live on staging URL — final launch steps (domain/analytics) pending, see LAUNCH.md
+**Current focus:** v1.0 shipped and live on darktierstudios.com. Awaiting next milestone. One owner step left: add the Cloudflare analytics token (ANALYTICS-01).
 
 ## Current Position
 
-Phase: 7 of 7 — **deployed & live on staging**
-Status: Site LIVE at https://darktierstudios-b846f.web.app (Firebase project darktierstudios-b846f, free Spark). Hosting + Firestore rules (owner-UID) deployed. Admin configured (config + owner UID inlined); "Load starter catalog" button added to seed Firestore client-side. Firestore rules emulator-tested 8/8 with the real UID.
-Last activity: 2026-08-17 — live catalog shipped (admin edits reach customers with no deploy; SEO preserved via SSR); deploy is manual-only
-
-Remaining (owner steps, LAUNCH.md): enable Google sign-in provider · sign in + click "Load starter catalog" · custom domain darktierstudios.com DNS · Cloudflare analytics token · service-account secret for CI build-time Firestore read (so admin edits publish live)
-
-Progress: [██████████] 100% built · deployed to staging
+Phase: Milestone v1.0 (Public Launch) complete — live on darktierstudios.com
+Plan: —
+Status: Shipped; awaiting next milestone
+Last activity: 2026-08-18 — v1.0 archived; custom domain cutover verified (valid SSL/HSTS, no mixed content)
 
 ## Quick Tasks Completed
 
@@ -39,6 +42,7 @@ Progress: [██████████] 100% built · deployed to staging
 ## Performance Metrics
 
 **Velocity:**
+
 - Total plans completed: 0
 - Average duration: - min
 - Total execution time: 0 hours
@@ -50,6 +54,7 @@ Progress: [██████████] 100% built · deployed to staging
 | - | - | - | - |
 
 **Recent Trend:**
+
 - Last 5 plans: -
 - Trend: -
 
@@ -73,8 +78,11 @@ None yet.
 ### Blockers/Concerns
 
 - [RESOLVED] Firestore rules: emulator rules-unit tests pass 8/8 (with the real owner UID); rules deployed to production.
-- [RESOLVED] Publish wiring: shipped as GitHub Actions + manual `npm run deploy` (no Cloud Functions, free tier). First deploy done manually to the staging URL.
-- [Phase 2 — Content & Data]: Archive-reconstructed game synopses and the PDF↔game filename mapping (e.g. `amaranth.pdf` → Amaranthine) need an explicit owner review pass before being presented as fact.
+- [RESOLVED] Publish wiring: shipped as manual `npm run deploy` (no Cloud Functions, free tier). CI deploy is manual-only (workflow_dispatch), not on push.
+- [RESOLVED] Custom domain cutover: darktierstudios.com is live over HTTPS (valid SSL cert, HSTS, http→https redirect verified). "Not Secure" reports after the cutover were stale browser cache, not mixed content — every subresource loads over HTTPS.
+- [OPEN — cosmetic] Home hero references `/assets/covers/woe.png` (renamed to `woe.jpg`) → 404 on live; fix on next deploy.
+- [OPEN — owner] ANALYTICS-01: add `PUBLIC_CF_ANALYTICS_TOKEN` to activate Cloudflare Web Analytics.
+- [Phase 2 — Content & Data]: Archive-reconstructed game synopses and the PDF↔game filename mapping (e.g. `amaranth.pdf` → Amaranthine) still warrant an owner review pass before being presented as fact.
 
 ## Deferred Items
 
@@ -86,6 +94,10 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-08-17
-Stopped at: ROADMAP.md and STATE.md created; REQUIREMENTS.md traceability update pending
+Last session: 2026-08-18
+Stopped at: v1.0 Public Launch milestone archived; site live on darktierstudios.com
 Resume file: None
+
+## Operator Next Steps
+
+- Start the next milestone with /gsd-new-milestone
