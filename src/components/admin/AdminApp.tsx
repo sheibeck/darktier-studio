@@ -102,6 +102,11 @@ const toolColumns: ColumnDef<Tool>[] = [
     header: "Status",
     render: (t) => <span className={t.status === "live" ? "tag tag-accent" : "tag tag-neutral"}>{t.status === "live" ? "Live" : "Docking soon"}</span>,
   },
+  {
+    header: "Link",
+    width: "90px",
+    render: (t) => <span className="tag tag-neutral">{t.kind === "internal" ? "Internal" : "External"}</span>,
+  },
 ];
 const toolFields: FieldDef[] = [
   { key: "name", label: "Name", type: "text" },
