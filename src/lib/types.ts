@@ -39,6 +39,13 @@ export interface Tool {
   name: string;
   status: ToolStatus;
   hidden?: boolean;
+  /**
+   * Link type. Absent or "external" = today's behavior (open the external
+   * `app` URL in a new tab). "internal" = launch the in-site route derived
+   * from `slug` (`/armory/<slug>`) in the same tab. Optional — no migration
+   * required; existing docs predate this field and behave as "external".
+   */
+  kind?: "external" | "internal";
   app?: string | null;
   kicker?: string;
   description: string;

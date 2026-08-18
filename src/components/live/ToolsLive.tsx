@@ -17,6 +17,10 @@ export default function ToolsLive({ initial }: { initial: Tool[] }) {
       {tools.map((t, i) => {
         const isLive = t.status === "live";
         const kickerLine = (isLive ? "Live now · " : "") + (t.kicker || (isLive ? "Companion app" : "Docking soon"));
+        // Strict equality is the backward-compat linchpin: undefined/absent/"external"
+        // all fall through to the external (new-tab) path unchanged.
+        const isInternal = t.kind === "internal";
+        const launchHref = isInternal ? `/armory/${t.slug}` : (t.app ?? undefined);
         return (
           <div className={`tool-card${isLive ? " tool-card-live" : ""}`} key={t.slug}>
             <p
@@ -27,11 +31,17 @@ export default function ToolsLive({ initial }: { initial: Tool[] }) {
             </p>
             <p className="tool-name">{t.name}</p>
             <p className="tool-desc">{t.description}</p>
-            {isLive && t.app && (
+            {isLive && (isInternal || t.app) && (
               <div style={{ display: "flex", gap: "var(--space-3)", marginTop: "21px" }}>
-                <a className="btn btn-primary" href={t.app} target="_blank" rel="noopener" style={{ textDecoration: "none" }}>
-                  Launch ▸
-                </a>
+                {isInternal ? (
+                  <a className="btn btn-primary" href={launchHref} style={{ textDecoration: "none" }}>
+                    Launch ▸
+                  </a>
+                ) : (
+                  <a className="btn btn-primary" href={launchHref} target="_blank" rel="noopener" style={{ textDecoration: "none" }}>
+                    Launch ▸
+                  </a>
+                )}
               </div>
             )}
             {!isLive && <p className="tool-reserved">Slot reserved</p>}
