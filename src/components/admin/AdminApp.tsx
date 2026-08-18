@@ -217,7 +217,7 @@ export default function AdminApp() {
       for (const g of seedGames) await setDoc(doc(db, "games", g.slug), strip(g));
       for (const t of seedTools) await setDoc(doc(db, "tools", t.slug), strip(t));
       for (const n of seedNews) await setDoc(doc(db, "news", n.slug), strip(n));
-      setSeedMsg(`Loaded ${seedGames.length} games, ${seedTools.length} tools, ${seedNews.length} posts. Remember to Publish.`);
+      setSeedMsg(`Loaded ${seedGames.length} games, ${seedTools.length} tools, ${seedNews.length} posts — live on the site now.`);
     } catch (e) {
       setSeedMsg(`Error: ${(e as Error).message}`);
     }
@@ -255,8 +255,8 @@ export default function AdminApp() {
         </button>
       </div>
       <p style={{ fontSize: "13px", lineHeight: "22px", color: "color-mix(in srgb, var(--color-text) 60%, transparent)", maxWidth: "62ch", marginTop: "12px" }}>
-        Edits save to Firestore immediately. They reach the public site on the next <strong>Publish</strong> — trigger a rebuild from
-        the repo's GitHub Actions ("Deploy" → "Run workflow"), or run <code>npm run deploy</code> locally.
+        Edits go live on the public site immediately — no deploy needed. A <code>npm run deploy</code> only refreshes the static
+        preview that search engines and social link-previews read.
       </p>
       {catalogEmpty === true && (
         <div style={{ display: "flex", gap: "var(--space-3)", alignItems: "center", flexWrap: "wrap", marginTop: "4px" }}>
@@ -275,7 +275,7 @@ export default function AdminApp() {
         kicker="Darktier Studios · catalog manager"
         title="Manage the games"
         singular="game"
-        description="Classify, reorder, showcase or hide any title — changes drive the public Vault after Publish."
+        description="Classify, reorder, showcase or hide any title — changes appear on the public Vault immediately."
         columns={gameColumns}
         fields={gameFields}
         requiredKey="name"

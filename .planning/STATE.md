@@ -38,6 +38,7 @@ Last activity: 2026-08-18 — v1.0 archived; custom domain cutover verified (val
 | 2026-08-17 | Admin edit forms → centered modals (click-outside/Escape/scroll-lock) | admin-edit-modals |
 | 2026-08-17 | Confirm step before deleting items in admin | delete-confirm |
 | 2026-08-17 | Hide "Load starter catalog" unless catalog is empty | load-starter-visibility |
+| 2026-08-18 | Update admin copy for the live catalog (drop "after Publish" messaging) | admin-live-copy |
 
 ## Performance Metrics
 

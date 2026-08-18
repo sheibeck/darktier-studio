@@ -117,7 +117,7 @@ export function Manager<T extends Row>(props: ManagerProps<T>) {
     }
     try {
       await save(toWrite);
-      setStatus("Saved — live on the site after Publish");
+      setStatus("Saved — live on the site now");
       cancel();
     } catch (e) {
       setStatus(`Error: ${(e as Error).message}`);
