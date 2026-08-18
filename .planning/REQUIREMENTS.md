@@ -30,8 +30,8 @@ Requirements for this milestone. Each maps to exactly one roadmap phase.
 
 ### Burning Banners (BB)
 
-- [ ] **BB-01**: The Burning Banners companion is playable live at `/armory/burning-banners`, preserving its existing behavior (basic/advanced modes switchable, trackers, and `localStorage` save + reset)
-- [ ] **BB-02**: Burning Banners' Tailwind + `lucide-react` styling is scoped to its own route so that no Nocturne marketing page is visually affected — Tailwind's global reset/preflight never reaches the shared nav, footer, or any other page
+- [x] **BB-01**: The Burning Banners companion is playable live at `/armory/burning-banners`, preserving its existing behavior (basic/advanced modes switchable, trackers, and `localStorage` save + reset)
+- [x] **BB-02**: Burning Banners' Tailwind + `lucide-react` styling is scoped to its own route so that no Nocturne marketing page is visually affected — Tailwind's global reset/preflight never reaches the shared nav, footer, or any other page
 
 ## Future Requirements
 
@@ -69,8 +69,8 @@ Which phases cover which requirements. Populated during roadmap creation.
 | APP-02 | Phase 9 | Complete |
 | APP-03 | Phase 9 | Complete |
 | APP-04 | Phase 9 | Complete |
-| BB-01 | Phase 10 | Pending |
-| BB-02 | Phase 10 | Pending |
+| BB-01 | Phase 10 | Complete |
+| BB-02 | Phase 10 | Complete |
 | APP-01 | Phase 11 | Pending |
 | APP-05 | Phase 11 | Pending |
 | APP-06 | Phase 11 | Pending |
