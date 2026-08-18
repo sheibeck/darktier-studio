@@ -28,7 +28,7 @@ Delivered: a fast, SEO/share-optimized public site (Home, The Vault, The Armory,
 
 **Milestone Goal:** Host self-contained React companion apps directly inside the existing Darktier Studios Firebase app — no separate domains or Firebase projects — and ship the first two (Fate of the Fellowship, Burning Banners) as live, admin-managed entries in The Armory, leaving behind a documented, reusable drop-in pattern. State is localStorage-only for MVP (no login, no Firestore for game state). All v1.0 constraints hold: free Spark plan, $0/month, no Cloud Functions, static output, manual `npm run deploy`.
 
-- [ ] **Phase 8: Tool Data Model & Admin Wiring** - Additive `Tool.kind` field lets the admin CMS and Armory listing support internal in-site routes alongside external links, with zero regression to existing tools
+- [x] **Phase 8: Tool Data Model & Admin Wiring** - Additive `Tool.kind` field lets the admin CMS and Armory listing support internal in-site routes alongside external links, with zero regression to existing tools (completed 2026-08-18)
 - [ ] **Phase 9: Fate of the Fellowship** - Establishes the reusable app-hosting pattern (dynamic route, registry, `client:only` island, per-app SEO, scoped localStorage) and ships the reference companion app live
 - [ ] **Phase 10: Burning Banners** - Extends the pattern to a Tailwind v4 + lucide-react app, scoped so no Nocturne page is visually affected — the milestone's real risk
 - [ ] **Phase 11: Go-Live & Pipeline Docs** - Flips both apps live as discoverable Armory tools, documents the drop-in pipeline, verifies zero regression, and deploys
@@ -110,7 +110,7 @@ Delivered: a fast, SEO/share-optimized public site (Home, The Vault, The Armory,
 | 5. Auth & Admin CMS                 | v1.0      | Complete    | 2026-08-17 |
 | 6. Publish Pipeline & Deploy        | v1.0      | Complete    | 2026-08-17 |
 | 7. Launch & Cutover                 | v1.0      | Complete    | 2026-08-17 |
-| 8. Tool Data Model & Admin Wiring   | v1.1      | In Progress|  |
+| 8. Tool Data Model & Admin Wiring   | v1.1      | Complete    | 2026-08-18 |
 | 9. Fate of the Fellowship           | v1.1      | Not started | -          |
 | 10. Burning Banners                 | v1.1      | Not started | -          |
 | 11. Go-Live & Pipeline Docs         | v1.1      | Not started | -          |
