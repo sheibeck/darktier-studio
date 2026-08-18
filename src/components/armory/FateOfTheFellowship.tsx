@@ -889,10 +889,9 @@ export default function FateOfTheFellowship() {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    let alive = true;
     try {
       const raw = window.localStorage.getItem(STORE_KEY);
-      if (alive && raw) {
+      if (raw) {
         const s = JSON.parse(raw);
         if (s.tab) setTab(s.tab);
         if (s.players) setPlayers(s.players);
@@ -907,9 +906,8 @@ export default function FateOfTheFellowship() {
     } catch (e) {
       /* nothing saved yet, or storage unavailable */
     } finally {
-      if (alive) setReady(true);
+      setReady(true);
     }
-    return () => { alive = false; };
   }, []);
 
   useEffect(() => {
