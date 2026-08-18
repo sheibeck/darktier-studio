@@ -12,6 +12,7 @@
 
 import type { ComponentType } from "react";
 import FateOfTheFellowship from "../components/armory/FateOfTheFellowship";
+import BurningBanners from "../components/armory/BurningBanners";
 
 export interface ArmoryApp {
   /** URL slug — matches tools/{slug} in Firestore by convention. */
@@ -34,5 +35,13 @@ export const armoryApps: ArmoryApp[] = [
     description:
       "A table companion for Fate of the Fellowship — guided setup, turn and step tracking, hope and army trackers, dice reference, and a searchable rules index.",
     Component: FateOfTheFellowship,
+  },
+  {
+    slug: "burning-banners",
+    name: "Burning Banners",
+    title: "Burning Banners — Table Companion",
+    description:
+      "A table companion for Burning Banners — basic and advanced game setup, turn/income/revolt/coven/collapse trackers, combat helper, and a rules reference.",
+    Component: BurningBanners,
   },
 ];

@@ -16,13 +16,14 @@
 import Layout from "../../layouts/Layout.astro";
 import { armoryApps, type ArmoryApp } from "../../lib/armoryApps";
 import FateOfTheFellowship from "../../components/armory/FateOfTheFellowship";
+import BurningBanners from "../../components/armory/BurningBanners";
 
 // Every armoryApps entry MUST have a matching dispatch line in the JSX
 // below. This build-time assertion catches a forgotten dispatch line
 // (a registry entry added without its `{slug === "..." && <Component
 // client:only="react" />}` line) before it ships — otherwise the page
 // would build with correct SEO but an empty app shell and no error.
-const DISPATCHED_SLUGS = new Set(["fate-of-the-fellowship"]); // keep in sync with the JSX dispatch below
+const DISPATCHED_SLUGS = new Set(["fate-of-the-fellowship", "burning-banners"]); // keep in sync with the JSX dispatch below
 
 const missingDispatch = armoryApps.filter((app) => !DISPATCHED_SLUGS.has(app.slug));
 if (missingDispatch.length) {
@@ -52,5 +53,6 @@ const { slug, name, title, description } = Astro.props;
 
   <div class="armory-app-shell">
     {slug === "fate-of-the-fellowship" && <FateOfTheFellowship client:only="react" />}
+    {slug === "burning-banners" && <BurningBanners client:only="react" />}
   </div>
 </Layout>
