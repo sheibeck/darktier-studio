@@ -31,7 +31,7 @@ See: .planning/PROJECT.md (updated 2026-08-18)
 Phase: Milestone v1.1 complete
 Plan: —
 Status: Awaiting next milestone
-Last activity: 2026-08-18 — Completed quick task 260818-nhc: mobile-friendly hamburger nav + admin modals
+Last activity: 2026-08-19 — Completed quick task 260819-qcw: wire up Google Analytics 4 (GA4) on public pages
 
 ## Performance Metrics
 
@@ -104,6 +104,7 @@ None yet.
 |---|-------------|------|--------|-----------|
 | 260818-l22 | FOTF main menu → sticky top bar (was fixed bottom over footer) | 2026-08-18 | 997986c | [260818-l22-make-fate-of-the-fellowship-main-menu-a-](./quick/260818-l22-make-fate-of-the-fellowship-main-menu-a-/) |
 | 260818-nhc | Mobile-friendly: hamburger nav + mobile-friendly admin modals | 2026-08-18 | 61caea7 | [260818-nhc-make-the-app-mobile-friendly-nav-becomes](./quick/260818-nhc-make-the-app-mobile-friendly-nav-becomes/) |
+| 260819-qcw | Wire up Google Analytics 4 (GA4) on public pages | 2026-08-19 | 7754b22 | [260819-qcw-wire-up-google-analytics-4-ga4-on-public](./quick/260819-qcw-wire-up-google-analytics-4-ga4-on-public/) |
 
 ## Deferred Items
 
