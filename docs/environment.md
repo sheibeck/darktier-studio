@@ -20,6 +20,18 @@ is Firestore rules + the owner-UID check. Get the values from
 | `PUBLIC_FIREBASE_APP_ID` | `1:123…:web:abc…` | |
 | `PUBLIC_ADMIN_UID` | `a1b2c3…` | **Your Google account UID.** Only this account may edit. Find it in Firebase Console → Authentication → Users after your first sign-in. Also paste it into `firestore.rules` (replace `OWNER_UID_PLACEHOLDER`). |
 
+## Analytics (optional — public pages only)
+
+Both are injected by `Layout.astro` only when set, and never on `noindex`/admin
+pages. Leave unset to ship no analytics. Set as GitHub Actions **vars** for
+production builds. Use `PUBLIC_` (Astro's client prefix) — a `VITE_` prefix is
+**not** exposed to the browser in Astro and will silently no-op.
+
+| Variable | Example | Notes |
+|----------|---------|-------|
+| `PUBLIC_FIREBASE_MEASUREMENT_ID` | `G-XXXXXXXXXX` | Google Analytics 4 measurement ID. From Firebase Console → Project settings → Your apps → Web app config (`measurementId`), or GA4 Admin → Data Streams. Loads the `gtag.js` snippet; **sets cookies** (unlike the cookie-free Cloudflare option below). |
+| `PUBLIC_CF_ANALYTICS_TOKEN` | `abc123…` | Cloudflare Web Analytics beacon token (cookie-free). From Cloudflare → Web Analytics. |
+
 ## Build-time Firestore read (production rebuild / CI only)
 
 The Astro build reads the live catalog from Firestore via the Admin SDK when a

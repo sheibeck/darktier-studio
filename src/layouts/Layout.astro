@@ -65,6 +65,12 @@ const websiteLd = {
 // configured and never on private/noindex pages (e.g. /admin).
 const cfToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
 const showAnalytics = Boolean(cfToken) && !noindex;
+
+// Google Analytics 4 (gtag). Same gating as Cloudflare: only injected when a
+// measurement id is configured and never on private/noindex pages. The id
+// (e.g. "G-XXXXXXXXXX") is a build-time PUBLIC_ env value, not user input.
+const gaId = import.meta.env.PUBLIC_FIREBASE_MEASUREMENT_ID;
+const showGa = Boolean(gaId) && !noindex;
 ---
 <!doctype html>
 <html lang="en">
@@ -119,6 +125,17 @@ const showAnalytics = Boolean(cfToken) && !noindex;
           src="https://static.cloudflareinsights.com/beacon.min.js"
           data-cf-beacon={`{"token": "${cfToken}"}`}
         />
+      )
+    }
+    {
+      showGa && (
+        <>
+          <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} />
+          <script
+            is:inline
+            set:html={`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${gaId}');`}
+          />
+        </>
       )
     }
   </body>
