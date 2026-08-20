@@ -21,7 +21,7 @@ npm run deploy:rules   # deploy firestore.rules only
 
 - **Single rules test:** the suite is Node's built-in test runner via `firebase emulators:exec`; filter with `node --test --test-name-pattern="<name>"` inside the exec command in `test:rules`, or run the emulator (`npm run emulators`) and invoke `node --experimental-strip-types --test scripts/rules.test.ts` directly.
 - **There is no unit/e2e test framework** beyond the rules tests — `check` (type-check) + `test:rules` are the CI gates.
-- **Publishing admin edits to the live site = a rebuild**, not a save. Trigger it via the GitHub Actions "Deploy" workflow (manual run is the "Publish" button) or `npm run deploy`. There are no Cloud Functions and no per-request server.
+- **Publishing admin edits to the live site = a rebuild**, not a save. Run `npm run deploy` locally — the build re-reads the live Firestore catalog, so the rebuild is the publish. This is the only deploy path (no GitHub Actions/CI deploy, no Cloud Functions, no per-request server).
 
 ## Architecture
 

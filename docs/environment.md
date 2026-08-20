@@ -2,7 +2,8 @@
 
 The site builds and runs from the committed seed catalog with **no configuration**.
 These variables activate the live Firestore admin and production builds. Set them
-in a local `.env` file for dev, and as GitHub Actions secrets/vars for deploys.
+in a local `.env` file — it's loaded by both `npm run dev` and `npm run deploy`
+(the deploy path).
 
 ## Admin (client — inlined into the `/admin` bundle at build)
 
@@ -23,9 +24,9 @@ is Firestore rules + the owner-UID check. Get the values from
 ## Analytics (optional — public pages only)
 
 Both are injected by `Layout.astro` only when set, and never on `noindex`/admin
-pages. Leave unset to ship no analytics. Set as GitHub Actions **vars** for
-production builds. Use `PUBLIC_` (Astro's client prefix) — a `VITE_` prefix is
-**not** exposed to the browser in Astro and will silently no-op.
+pages. Leave unset to ship no analytics. Set them in your local `.env` so
+`npm run deploy` bakes them into the build. Use `PUBLIC_` (Astro's client prefix)
+— a `VITE_` prefix is **not** exposed to the browser in Astro and will silently no-op.
 
 | Variable | Example | Notes |
 |----------|---------|-------|

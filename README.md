@@ -18,7 +18,7 @@ falls back to the committed seed (`src/data/catalog/*.ts`), so it always builds.
 
 The **admin** (`/admin`) is a client-rendered React app: sign in with Google (owner only),
 edit games/tools/news live in Firestore. Edits reach the public site on the next
-**Publish** (a rebuild) — via GitHub Actions or `npm run deploy`. No Cloud Functions.
+**Publish** (a rebuild) — run `npm run deploy`. No Cloud Functions.
 
 ## Quick start
 
@@ -50,14 +50,14 @@ npm run deploy         # build + firebase deploy --only hosting
 npm run deploy:rules   # deploy firestore.rules
 ```
 
-Automated deploys run via **GitHub Actions** (`.github/workflows/deploy.yml`) on push to
-`main`, or manually ("Actions → Deploy → Run workflow") — that manual run is the **Publish**
-button: it rebuilds so the latest admin edits go live.
+Deploys run locally: `npm run deploy` builds and ships `dist/` to Firebase Hosting.
+Because the build reads the live catalog from Firestore, running it is also how you
+**Publish** — the rebuild picks up the latest admin edits and pushes them live.
 
 ## Configuration
 
 Copy the variables in [`docs/environment.md`](./docs/environment.md) into a local `.env`
-(and into GitHub Actions secrets/vars for deploys): the `PUBLIC_FIREBASE_*` web config,
+(loaded by both `npm run dev` and `npm run deploy`): the `PUBLIC_FIREBASE_*` web config,
 `PUBLIC_ADMIN_UID` (your Google UID — the only account that can edit), an optional
 `PUBLIC_CF_ANALYTICS_TOKEN` (Cloudflare Web Analytics), and a `FIREBASE_SERVICE_ACCOUNT`
 for the build-time Firestore read. Also replace `OWNER_UID_PLACEHOLDER` in

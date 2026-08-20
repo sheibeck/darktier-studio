@@ -26,9 +26,8 @@ deploy/data and are outward-facing, owner-authorized actions (see
 
 Run the existing `npm run deploy` (build + `firebase deploy --only hosting`) when you're ready to
 publish. This is the owner-authorized, outward-facing step — see [`LAUNCH.md`](../LAUNCH.md) §4
-for the full deploy options (local `npm run deploy` or the GitHub Actions `Deploy` workflow). The
-code and seed side are already done and verified; this step just ships the built `dist/` to
-`darktierstudios.com`.
+for the deploy details. The code and seed side are already done and verified; this step just ships
+the built `dist/` to `darktierstudios.com`.
 
 ### 2. Seed the two live production Firestore `tools` docs
 
