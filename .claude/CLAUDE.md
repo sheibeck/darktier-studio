@@ -1,3 +1,49 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Commands
+
+```bash
+npm run dev            # astro dev → http://localhost:4321 (uses the seed catalog unless Firebase env is set)
+npm run build          # prebuild stamps build info, then astro build → dist/ (static)
+npm run check          # astro check (type-check .astro/.tsx templates — run before deploy)
+npm run preview        # serve the built dist/ locally
+
+npm run emulators      # Auth (9099) + Firestore (8080) + Hosting (5000) emulators (requires a local JDK)
+npm run seed           # seed games/news into Firestore (point at emulator via FIRESTORE_EMULATOR_HOST=localhost:8080)
+npm run seed:tools     # seed tools collection
+npm run test:rules     # run the Firestore security-rules unit tests against a throwaway emulator project
+
+npm run deploy         # build + firebase deploy --only hosting
+npm run deploy:rules   # deploy firestore.rules only
+```
+
+- **Single rules test:** the suite is Node's built-in test runner via `firebase emulators:exec`; filter with `node --test --test-name-pattern="<name>"` inside the exec command in `test:rules`, or run the emulator (`npm run emulators`) and invoke `node --experimental-strip-types --test scripts/rules.test.ts` directly.
+- **There is no unit/e2e test framework** beyond the rules tests — `check` (type-check) + `test:rules` are the CI gates.
+- **Publishing admin edits to the live site = a rebuild**, not a save. Trigger it via the GitHub Actions "Deploy" workflow (manual run is the "Publish" button) or `npm run deploy`. There are no Cloud Functions and no per-request server.
+
+## Architecture
+
+Three-audience site, each with a deliberately different data path (see `src/lib/`):
+
+1. **Public marketing pages** (`src/pages/*.astro`: index, games, tools, 404) — statically generated, **ship ~0KB app JS**. They call the **build-time loader** `src/lib/catalog.ts` (`getGames`/`getTools`/`getNews`), which reads Firestore via the **Admin SDK** when credentials exist (CI rebuild bakes in the owner's live edits) and otherwise **falls back to the committed seed** in `src/data/catalog/*.ts`. An empty collection also falls back to seed. This runs in Node at build time only — no client Firestore on public pages — which is what makes OG/SEO tags present in the raw HTML.
+2. **Live catalog islands** (`src/components/live/*.tsx`, React, mounted on public pages) — progressively upgrade the static content with a **public read-only client fetch** via `src/lib/firebase.read.ts` (`readVisible`), which queries **only `where("hidden","==",false)`** so drafts stay private and the query matches the security rules exactly. Returns `null` on any failure so the island keeps the static seed.
+3. **Admin editor** (`src/pages/admin.astro` → `src/components/admin/AdminApp.tsx`, React `client:only`) — the only code that imports `src/lib/firebase.client.ts` (Auth + Firestore CRUD). Google sign-in, gated to a single owner UID; edits write live to Firestore and reach the public site on the next Publish/rebuild.
+
+**Companion apps ("Armory")** — one-page React tools at `/armory/<slug>`. `src/pages/armory/[slug].astro` drives `getStaticPaths()` entirely from the registry `src/lib/armoryApps.ts` and contains **zero app-specific logic**; adding an app = drop a component under `src/components/armory/` + one registry entry. The `slug` must match the Firestore `tools/{slug}` doc by convention (a tool with `kind: "internal"` links to `/armory/<slug>` instead of an external URL). Full checklist: `docs/adding-a-companion-app.md`.
+
+**Data/visibility invariants:**
+- `hidden` gates public visibility everywhere (build loader `visible()`, live-read query, and Firestore rules `isPublic()` all key off `hidden === false`). `order` drives manual sort; `news` sorts by `date` desc.
+- **Security boundary** = `firestore.rules`: public may read only non-hidden docs; only the hardcoded **owner UID** may write or read hidden docs. The web API keys in `PUBLIC_*` env vars are public by design — the rules + owner-UID are the real gate. The owner UID appears in **two places that must agree**: `firestore.rules` (`isOwner()`) and the `PUBLIC_ADMIN_UID` build var (UI gate).
+- Build loader (Admin SDK) and the seed scripts **bypass** security rules by design.
+
+**Env vars use Astro's `PUBLIC_` prefix** (exposed to client), not Vite's `VITE_` prefix — an Astro gotcha. Anything a browser needs (`PUBLIC_FIREBASE_*`, `PUBLIC_ADMIN_UID`, `PUBLIC_CF_ANALYTICS_TOKEN`) must be `PUBLIC_`-prefixed or `import.meta.env` returns `undefined` in the browser. Build-time-only secrets (`FIREBASE_SERVICE_ACCOUNT`) are unprefixed. Full list: `docs/environment.md`.
+
+**Analytics:** the shipped analytics is **Cloudflare Web Analytics** (cookie-free), injected by `src/layouts/Layout.astro` only when `PUBLIC_CF_ANALYTICS_TOKEN` is set and never on `noindex`/admin pages. Google Analytics 4 is intentionally **not** wired (see "What NOT to Use" below).
+
+**Styling:** import `src/styles/nocturne.css` (approved design system) verbatim; no utility framework over it. The **one** sanctioned exception is scoped Tailwind for the Burning Banners armory island only (`src/styles/armory-bb-tailwind.css`, no preflight, imported only from that component).
+
 <!-- GSD:project-start source:PROJECT.md -->
 
 ## Project
