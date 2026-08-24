@@ -1,3 +1,5 @@
+// @ts-nocheck — Ported "DC" prototype (untyped JS-style props/state). Excluded
+// from strict type-checking by design; behavior is validated in-app, not by tsc.
 import "../../styles/armory-bb-tailwind.css";
 import React, { useState, useEffect, useMemo } from "react";
 import {

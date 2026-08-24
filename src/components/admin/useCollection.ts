@@ -14,7 +14,6 @@ export interface Row {
   slug: string;
   order?: number;
   hidden?: boolean;
-  [key: string]: unknown;
 }
 
 function stripUndefined<T extends object>(obj: T): T {

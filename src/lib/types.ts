@@ -63,6 +63,9 @@ export interface NewsPost {
   link?: string | null;
   hidden?: boolean;
   body: string;
+  /** Optional manual sort key; the Dispatches feed sorts by `date`, but the admin
+   *  Manager and the shared visible-read helper expect an optional `order`. */
+  order?: number;
 }
 
 export const COLLECTIONS = {
