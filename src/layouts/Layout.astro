@@ -77,6 +77,20 @@ const showGa = Boolean(gaId) && !noindex;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Canonical-host guard: bounce the Firebase default domains to the custom
+         domain so shared/indexed links converge on darktierstudios.com. Fires only
+         on the Firebase hostnames — never on the custom domain, so there is no
+         redirect loop. Runs before render; preserves path + query + hash. -->
+    <script is:inline>
+      (function () {
+        var h = location.hostname;
+        if (h === "darktierstudios-b846f.web.app" || h === "darktierstudios-b846f.firebaseapp.com") {
+          location.replace("https://darktierstudios.com" + location.pathname + location.search + location.hash);
+        }
+      })();
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
