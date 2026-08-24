@@ -4,15 +4,15 @@ milestone: v1.1
 milestone_name: In-Site Companion Apps
 status: Awaiting next milestone
 stopped_at: Completed 11-02-PLAN.md
-last_updated: "2026-08-18T19:23:12.909Z"
-last_activity: 2026-08-18
-last_activity_desc: Milestone v1.1 completed and archived
+last_updated: "2026-08-24T16:27:20.898Z"
+last_activity: 2026-08-19
+last_activity_desc: "Completed quick task 260819-uo5: remove the unused GitHub Actions deploy pipeline"
 progress:
   total_phases: 4
-  completed_phases: 2
-  total_plans: 9
-  completed_plans: 7
-  percent: 50
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 current_phase: 11
 current_phase_name: Go-Live & Pipeline Docs
 ---
@@ -106,6 +106,7 @@ None yet.
 | 260818-nhc | Mobile-friendly: hamburger nav + mobile-friendly admin modals | 2026-08-18 | 61caea7 | [260818-nhc-make-the-app-mobile-friendly-nav-becomes](./quick/260818-nhc-make-the-app-mobile-friendly-nav-becomes/) |
 | 260819-qcw | Wire up Google Analytics 4 (GA4) on public pages | 2026-08-19 | 7754b22 | [260819-qcw-wire-up-google-analytics-4-ga4-on-public](./quick/260819-qcw-wire-up-google-analytics-4-ga4-on-public/) |
 | 260819-uo5 | Remove the unused GitHub Actions deploy pipeline | 2026-08-19 | 3e02af8 | [260819-uo5-remove-unused-github-actions-deploy-pipe](./quick/260819-uo5-remove-unused-github-actions-deploy-pipe/) |
+| 5 | Redirect Firebase default domains to canonical darktierstudios.com; clear all astro check type errors | 2026-08-24 | f23587d | — |
 
 ## Deferred Items
 
