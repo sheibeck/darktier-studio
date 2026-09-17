@@ -4,15 +4,20 @@ import { site } from "../../data/site";
 
 // Stand-alone privacy policy for the mobile apps we publish on Google Play.
 // This is the URL entered in Play Console's store listing, so it must be a
-// complete policy on its own. The apps collect nothing; the page says so.
-// The website has its own policy at /privacy (it runs analytics; this doesn't).
+// complete policy on its own. The website has its own policy at /privacy
+// (it runs analytics; this doesn't). Describes the OPTIONAL Google Play Games
+// Services sign-in added by the Leaderboards & Share release of Delve, Die,
+// Repeat (mazeworld .planning/proposed-milestone-leaderboards.md). When that
+// build ships, update the Play Console Data safety form to match the "Data
+// safety summary" section below (User IDs + App activity, optional, shared
+// with Google, for app functionality).
 const effective = "September 17, 2026";
 // The address Google Play lists as the developer contact. Change here only.
 const contact = "sheibeck@gmail.com";
 ---
 <Layout
   title="Privacy Policy — Google Play apps"
-  description="Privacy policy for Darktier Studios apps on Google Play, including Delve, Die, Repeat. The apps collect no personal data; saves stay on your device."
+  description="Privacy policy for Darktier Studios apps on Google Play, including Delve, Die, Repeat. Saves stay on your device; optional Google Play Games sign-in powers leaderboards."
 >
   <div class="container">
     <section style="padding:84px 0 28px">
@@ -23,9 +28,11 @@ const contact = "sheibeck@gmail.com";
 
     <article class="privacy">
       <p class="privacy-lede">
-        The short version: <strong>our apps don't collect your data.</strong> Not your name, not your email,
-        not your location, not how you play. They run entirely on your device, and what happens in the
-        dungeon stays in the dungeon.
+        The short version: <strong>our apps don't collect your data, and we run no servers.</strong> Your runs,
+        your graveyard, and your settings live on your device. The one exception is entirely your call:
+        if you choose to sign in with <strong>Google Play Games</strong> to compete on leaderboards, your
+        scores and Play Games profile go to Google so other players can see where you placed. Skip it,
+        and what happens in the dungeon stays in the dungeon.
       </p>
 
       <h2>Who this covers</h2>
@@ -37,49 +44,118 @@ const contact = "sheibeck@gmail.com";
       </p>
 
       <h2>Data we collect</h2>
-      <p>None. Our apps do not collect, transmit, sell, or share any personal or device data. Specifically, they do not collect:</p>
+      <p>
+        We — {site.legalName} — collect nothing. We operate no servers, no accounts of our own, and no
+        analytics. Our apps do not collect, transmit, sell, or share:
+      </p>
       <ul>
-        <li>Personal information (name, email address, user IDs, phone number, address)</li>
+        <li>Personal information (name, email address, phone number, address)</li>
         <li>Location data, precise or approximate</li>
         <li>Financial or payment information</li>
         <li>Contacts, calendar, photos, videos, audio, or files</li>
-        <li>App activity, gameplay analytics, or crash and diagnostic reports</li>
+        <li>Gameplay analytics, or crash and diagnostic reports</li>
         <li>Device identifiers or the Android Advertising ID</li>
       </ul>
+      <p>
+        The only data that ever leaves your device is the leaderboard data described in the next section,
+        and only if you opt in.
+      </p>
+
+      <h2>Leaderboards and Google Play Games (optional)</h2>
+      <p>
+        Delve, Die, Repeat can post your results to <strong>leaderboards</strong> — deepest run, fewest
+        steps, most deaths, and the like — so you can compete with other players and with your friends.
+        This is powered by <strong>Google Play Games Services</strong>, a feature of Google Play, and it
+        works only if you sign in.
+      </p>
+      <ul>
+        <li>
+          <strong>Signing in is optional.</strong> The game is fully playable without it. Android may offer
+          to sign you in automatically with the Google account already on your phone; you can decline,
+          and you can sign out at any time from the account menu in the app. Signed out, no leaderboard
+          data is sent anywhere.
+        </li>
+        <li>
+          <strong>What is sent when you're signed in:</strong> your Google Play Games player ID and, for
+          each run that ends, the leaderboard score for that run — dungeon depth reached, steps taken,
+          your adventurer's race and class, your total death count, and the game version or season the run
+          was played under. Your adventurer's name and epitaph are <em>not</em> sent; they stay in your
+          local graveyard.
+        </li>
+        <li>
+          <strong>Where it goes:</strong> to Google, not to us. Google stores it and displays it on the
+          game's leaderboards under your Play Games profile name and avatar. It is visible to other players
+          of the game, and to your Play Games friends if you use that feature. We have no server of our own
+          and never receive a copy.
+        </li>
+        <li>
+          <strong>Google's rules apply.</strong> Play Games Services, your Play Games profile, and your
+          friends list are governed by
+          <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's privacy policy</a>
+          and your <a href="https://support.google.com/googleplay/answer/3129346" target="_blank" rel="noopener">Play Games profile settings</a>,
+          where you control who can see your profile and activity.
+        </li>
+        <li>
+          <strong>Deleting it:</strong> you can remove your Play Games data for this game at any time from the
+          Google Play Games app (Settings → "Delete Play Games account &amp; data" for the game). That erases
+          your scores from the leaderboards. Signing out in the app stops any further submissions.
+        </li>
+      </ul>
+
+      <h2>Sharing your results</h2>
+      <p>
+        The app can build a shareable card of a fallen adventurer (their epitaph, depth, and a link to the
+        game) and hand it to Android's share sheet. Nothing is sent until you pick an app to share it with,
+        and it goes only where you send it. We don't see what you share or whom you share it with.
+      </p>
 
       <h2>Data stored on your device</h2>
       <p>
         The game keeps a small amount of data on your phone so it works: your current run, the graveyard of
-        adventurers who came before it, and your settings. This data never leaves your device, is never
-        sent to us or to anyone else, and is removed when you uninstall the app.
+        adventurers who came before it, your personal best records, and your settings. This data is never
+        sent to us, is not part of what goes to Google Play Games (only the scores listed above are), and is
+        removed when you uninstall the app.
       </p>
 
-      <h2>No accounts, no network, no third parties</h2>
+      <h2>No servers, no ads, no third parties beyond Google</h2>
       <p>
-        Our apps require no account and work fully offline. They contain no advertising, analytics,
-        crash-reporting, or social SDKs, and make no network requests of their own. The only third party
-        involved is Google Play, which handles your purchase and installation under
-        <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's privacy policy</a>;
-        we receive no personal information from that transaction.
+        Our apps require no account of our own and work fully offline. They contain no advertising,
+        analytics, or crash-reporting SDKs. The only third party involved is Google: Google Play handles your
+        purchase and installation, and Google Play Games Services handles the optional leaderboards, both
+        under <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's privacy policy</a>.
+        We receive no personal information from either.
       </p>
 
       <h2>Permissions</h2>
       <p>
         Our apps do not request access to your location, contacts, camera, microphone, storage, or any other
-        permission-gated data.
+        permission-gated data. Leaderboards use the internet only to talk to Google Play Games when you are
+        signed in.
       </p>
 
       <h2>Children</h2>
       <p>
-        Our apps are suitable for general audiences and collect no data from anyone, including children
-        under 13. Because nothing is collected, there is nothing to review, correct, or delete.
+        Our apps are suitable for general audiences. We collect no data from anyone, including children
+        under 13. Signing in to Google Play Games requires a Google account, and Google's own age rules and
+        parental controls govern whether a child can create a Play Games profile or appear on leaderboards;
+        the game does not need a sign-in to be played.
       </p>
 
       <h2>Your rights</h2>
       <p>
-        Since we hold no personal data about you, there is nothing for us to export, correct, or erase.
-        Everything the app stores lives on your device under your control; uninstalling the app deletes it.
-        If a future app ever changes that, this policy will change first.
+        We hold no personal data about you, so there is nothing for us to export, correct, or erase.
+        Everything the app stores on its own lives on your device under your control; uninstalling the app
+        deletes it. Leaderboard data you chose to submit is held by Google and can be reviewed or deleted
+        through your Google Play Games settings as described above. If a future app ever changes any of
+        this, this policy will change first.
+      </p>
+
+      <h2>Data safety summary</h2>
+      <p>
+        For the Google Play Data safety section, our apps declare: <strong>User IDs</strong> (Play Games
+        player ID) and <strong>App activity</strong> (gameplay scores) — collected only if you opt in to
+        leaderboards, used for app functionality, shared with Google Play Games Services, encrypted in
+        transit, and deletable by you. Nothing else is collected. No data is sold.
       </p>
 
       <h2>Changes to this policy</h2>
