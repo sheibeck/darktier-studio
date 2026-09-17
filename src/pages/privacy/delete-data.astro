@@ -1,0 +1,71 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { site } from "../../data/site";
+
+// The "Delete data URL" entered in Play Console's Data safety form for our
+// Google Play apps. Play wants a page a user can reach to delete, or request
+// deletion of, the data the app collected. Ours is held by Google Play Games
+// Services (leaderboards), so this page walks the user through Google's own
+// per-game deletion and offers email as the request fallback. Companion to
+// /privacy/apps, which is the full policy.
+const contact = "sheibeck@gmail.com";
+const subject = encodeURIComponent("Delete my Delve, Die, Repeat leaderboard data");
+---
+<Layout
+  title="Delete your data — Google Play apps"
+  description="How to delete the leaderboard data collected by Darktier Studios apps on Google Play, or request that we help you delete it."
+>
+  <div class="container">
+    <section style="padding:84px 0 28px">
+      <p class="kicker">Darktier Studios · legal · Google Play apps</p>
+      <h1 style="font-size:clamp(40px,6vw,72px);line-height:1.04;letter-spacing:-0.02em;margin:0 0 0 -0.06em">Delete your data</h1>
+      <p class="privacy-meta">Applies to <strong>Delve, Die, Repeat</strong> (<code>com.darktierstudios.delvedierepeat</code>) · {site.legalName}</p>
+    </section>
+
+    <article class="privacy">
+      <p class="privacy-lede">
+        The only data our apps ever send anywhere is your <strong>leaderboard data</strong> — your Google Play
+        Games player ID and run scores — and only if you chose to sign in to Google Play Games. It is held by
+        Google, not by us, and you can delete it yourself in about a minute.
+      </p>
+
+      <h2>Delete your leaderboard data</h2>
+      <ol>
+        <li>Open the <strong>Google Play Games</strong> app on your Android device.</li>
+        <li>Tap your profile picture, then <strong>Settings</strong>.</li>
+        <li>Tap <strong>Delete Play Games account &amp; data</strong>.</li>
+        <li>Under <strong>Delete individual game data</strong>, find <strong>Delve, Die, Repeat</strong> and tap <strong>Delete</strong>.</li>
+      </ol>
+      <p>
+        That removes your player ID and scores for the game from Google Play Games, including every
+        leaderboard you appeared on. Google describes the same steps in its
+        <a href="https://support.google.com/googleplay/answer/3129346" target="_blank" rel="noopener">Play Games profile help</a>.
+      </p>
+
+      <h2>Stop sending new data</h2>
+      <p>
+        In the game, open the account menu (top-right) and choose <strong>Sign out</strong>. Signed out, the
+        app sends nothing to Google Play Games and stays fully playable.
+      </p>
+
+      <h2>Everything else is already yours</h2>
+      <p>
+        Your current run, graveyard, personal bests, and settings live only on your device. Uninstalling the
+        app deletes them. We hold no copy — we run no servers and collect nothing ourselves — so there is
+        nothing further for us to erase.
+      </p>
+
+      <h2>Need help?</h2>
+      <p>
+        If you can't complete the steps above, email
+        <a href={`mailto:${contact}?subject=${subject}`}>{contact}</a> from any address and tell us the
+        Play Games profile name you used. Since we don't hold the data, we'll work with Google Play Games
+        support on your behalf and confirm when it's done.
+      </p>
+
+      <p>
+        Full policy: <a href="/privacy/apps">privacy policy for our apps</a>.
+      </p>
+    </article>
+  </div>
+</Layout>

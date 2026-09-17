@@ -206,7 +206,7 @@ a:hover { color: var(--color-accent); }
   color: var(--color-accent);
 }
 .privacy p { margin: 0 0 16px; }
-.privacy ul { margin: 0 0 16px; padding-left: 22px; }
+.privacy ul, .privacy ol { margin: 0 0 16px; padding-left: 22px; }
 .privacy li { margin: 4px 0; }
 .privacy a { color: var(--color-text); text-decoration: underline; text-underline-offset: 3px; }
 .privacy a:hover { color: var(--color-accent); }
