@@ -5,7 +5,7 @@ import { site } from "../data/site";
 // Privacy policy for this website and the browser-based tools it hosts.
 // The public pages run Google Analytics 4 (Layout.astro, gated on
 // PUBLIC_FIREBASE_MEASUREMENT_ID) and load the catalog from Firestore, so
-// this page has to say so. The Google Play apps collect nothing and have
+// this page has to say so. The Google Play apps have
 // their own stand-alone policy at /privacy/apps (the Play listing URL).
 const effective = "September 17, 2026";
 // Contact for privacy questions. Change here only.
@@ -26,7 +26,7 @@ const contact = "sheibeck@gmail.com";
       <p class="privacy-lede">
         The short version: this website uses <strong>Google Analytics</strong> to count visits, and
         nothing else about you. Our browser-based tools keep their data in your own browser. We never sell
-        or share personal data. Our Google Play apps collect nothing at all and have
+        or share personal data. Our Google Play apps run on your device and have
         <a href="/privacy/apps">their own policy</a>.
       </p>
 
@@ -68,12 +68,6 @@ const contact = "sheibeck@gmail.com";
         Companion apps that run on this site, such as Burning Banners and Fate of the Fellowship, save
         their game state in your browser's local storage so you can pick up where you left off. That data
         stays in your browser: it is never sent to us, and clearing your browser's site data removes it.
-      </p>
-
-      <h3>The admin area</h3>
-      <p>
-        The site's private editor uses Google sign-in and is restricted to the studio owner. No visitor
-        accounts exist, and we do not collect passwords or profile information from the public.
       </p>
 
       <h3>What we don't do</h3>
