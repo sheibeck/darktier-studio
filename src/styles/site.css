@@ -164,3 +164,55 @@ a:hover { color: var(--color-accent); }
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
 }
+
+/* Privacy policy pages (/privacy, /privacy/apps) */
+.privacy-meta {
+  margin: 21px 0 0;
+  font-size: 13px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
+.privacy {
+  max-width: 66ch;
+  padding: 0 0 84px;
+  font-size: 16px;
+  line-height: 28px;
+  color: color-mix(in srgb, var(--color-text) 82%, transparent);
+}
+.privacy-lede {
+  font-size: 19px;
+  line-height: 32px;
+  color: var(--color-text);
+  margin: 0 0 42px;
+  padding: 24px 28px;
+  border: 1px solid var(--color-neutral-700);
+  border-left: 3px solid var(--color-accent);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--color-neutral-900) 45%, transparent);
+}
+.privacy h2 {
+  margin: 42px 0 14px;
+  font-size: 26px;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+}
+.privacy h3 {
+  margin: 28px 0 8px;
+  font-size: 13px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+.privacy p { margin: 0 0 16px; }
+.privacy ul { margin: 0 0 16px; padding-left: 22px; }
+.privacy li { margin: 4px 0; }
+.privacy a { color: var(--color-text); text-decoration: underline; text-underline-offset: 3px; }
+.privacy a:hover { color: var(--color-accent); }
+.privacy code {
+  font-size: 14px;
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--color-neutral-800) 80%, transparent);
+}
