@@ -7,7 +7,9 @@ import { site } from "../../data/site";
 // deletion of, the data the app collected. Ours is held by Google Play Games
 // Services (leaderboards), so this page walks the user through Google's own
 // per-game deletion and offers email as the request fallback. Companion to
-// /privacy/apps, which is the full policy.
+// /privacy/apps, which is the full policy. The deletion steps follow Google's
+// "Delete your Play Games data or Play Games profile" help article
+// (support.google.com/googleplay/answer/9130646, checked September 24, 2026).
 const contact = "sheibeck@gmail.com";
 const subject = encodeURIComponent("Delete my Delve, Die, Repeat leaderboard data");
 ---
@@ -24,28 +26,40 @@ const subject = encodeURIComponent("Delete my Delve, Die, Repeat leaderboard dat
 
     <article class="privacy">
       <p class="privacy-lede">
-        The only data our apps ever send anywhere is your <strong>leaderboard data</strong> — your Google Play
-        Games player ID and run scores — and only if you chose to sign in to Google Play Games. It is held by
-        Google, not by us, and you can delete it yourself in about a minute.
+        The only data our apps ever send anywhere is your <strong>leaderboard data</strong>, and only while
+        the in-game <strong>Compete</strong> setting is on: your Google Play Games player ID, the scores for
+        each finished run, and the short run summary listed in our
+        <a href="/privacy/apps">privacy policy</a>. It is held by Google, not by us, and you can delete it
+        yourself in about a minute.
       </p>
 
       <h2>Delete your leaderboard data</h2>
+      <p>On the web:</p>
       <ol>
-        <li>Open the <strong>Google Play Games</strong> app on your Android device.</li>
-        <li>Tap your profile picture, then <strong>Settings</strong>.</li>
-        <li>Tap <strong>Delete Play Games account &amp; data</strong>.</li>
+        <li>Go to <a href="https://play.google.com/games/profile" target="_blank" rel="noopener">play.google.com/games/profile</a>.</li>
+        <li>Under <strong>Your Data</strong>, click <strong>Delete Play Games Account &amp; Data</strong>.</li>
+        <li>Under <strong>Delete individual game data</strong>, find <strong>Delve, Die, Repeat</strong> and click <strong>Delete</strong>.</li>
+      </ol>
+      <p>Or in the Google Play Store app on your Android device:</p>
+      <ol>
+        <li>Tap your profile icon at the top right, then <strong>Settings</strong>.</li>
+        <li>Tap <strong>General</strong>, then <strong>Play Games Profile</strong>, then <strong>Privacy &amp; Settings</strong>.</li>
+        <li>Under <strong>Your Data</strong>, tap <strong>Delete profile &amp; game data</strong>.</li>
         <li>Under <strong>Delete individual game data</strong>, find <strong>Delve, Die, Repeat</strong> and tap <strong>Delete</strong>.</li>
       </ol>
       <p>
-        That removes your player ID and scores for the game from Google Play Games, including every
-        leaderboard you appeared on. Google describes the same steps in its
-        <a href="https://support.google.com/googleplay/answer/3129346" target="_blank" rel="noopener">Play Games profile help</a>.
+        That removes your Play Games data for the game, including your scores on every leaderboard you
+        appeared on. Google describes the same steps in its
+        <a href="https://support.google.com/googleplay/answer/9130646" target="_blank" rel="noopener">Play Games data help</a>.
       </p>
 
       <h2>Stop sending new data</h2>
       <p>
-        In the game, open the account menu (top-right) and choose <strong>Sign out</strong>. Signed out, the
-        app sends nothing to Google Play Games and stays fully playable.
+        In the game, open the account menu (the small face at the top right of the title screen, or beside
+        the ☰ menu in the dungeon) and choose <strong>STOP COMPETING</strong>, or set
+        <strong>COMPETE</strong> to <strong>OFF</strong>. With Compete off, the game sends nothing to Google
+        Play Games, discards any runs still waiting to be sent, and stays fully playable. To disconnect the
+        game from Play Games entirely, use the Play Games app.
       </p>
 
       <h2>Everything else is already yours</h2>
