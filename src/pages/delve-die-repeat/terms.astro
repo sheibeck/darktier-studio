@@ -1,0 +1,131 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { site } from "../../data/site";
+
+// Terms of Service for Delve, Die, Repeat. Linked from /delve-die-repeat and
+// used as the Terms URL on the Google Cloud OAuth consent screen. Privacy
+// matters are covered by /privacy/apps; keep the two consistent.
+const effective = "September 24, 2026";
+const contact = "sheibeck@gmail.com";
+---
+<Layout
+  title="Terms of Service — Delve, Die, Repeat"
+  description="Terms of Service for Delve, Die, Repeat (delve-die-repeat), the offline Android roguelike from Darktier Studios."
+  image="/assets/delve-die-repeat/og.jpg"
+>
+  <div class="container">
+    <section style="padding:84px 0 28px">
+      <p class="kicker">Delve, Die, Repeat · legal · terms</p>
+      <h1 style="font-size:clamp(40px,6vw,72px);line-height:1.04;letter-spacing:-0.02em;margin:0 0 0 -0.06em">Terms of Service</h1>
+      <p class="privacy-meta">Effective {effective} · {site.legalName}, {site.location}</p>
+    </section>
+
+    <article class="privacy">
+      <p class="privacy-lede">
+        The short version: <strong>you buy the game once, you play it as much as you like, and your
+        adventurers die a lot.</strong> That last part is a feature, not a defect, and it is not grounds for a
+        refund.
+      </p>
+
+      <h2>1. Agreement</h2>
+      <p>
+        These terms govern your use of <strong>Delve, Die, Repeat</strong> (package
+        <code>com.darktierstudios.delvedierepeat</code>, the “App”), published by {site.legalName} (“we”,
+        “us”). By installing or using the App you agree to these terms. If you do not agree, please do not
+        use the App. Google Play's own
+        <a href="https://play.google.com/about/play-terms/" target="_blank" rel="noopener">Terms of Service</a>
+        also apply to your purchase and download.
+      </p>
+
+      <h2>2. License</h2>
+      <p>
+        When you purchase the App through Google Play, we grant you a personal, non-exclusive,
+        non-transferable, revocable license to install and use it on Android devices you own or control, for
+        your own non-commercial entertainment. You may not copy, resell, redistribute, sublicense, decompile,
+        or reverse-engineer the App, except where the law says you may. The App, its rules, text, art, music,
+        and sounds, and the Mazeworld game it is based on, belong to {site.legalName} and remain ours.
+      </p>
+
+      <h2>3. Purchases and refunds</h2>
+      <p>
+        The App is a one-time paid purchase. It contains no ads and no in-app purchases. Payments, refunds,
+        and family sharing are handled by Google Play under its refund policy; we do not process payments
+        ourselves.
+      </p>
+
+      <h2>4. Gameplay, permadeath, and saves</h2>
+      <p>
+        Adventurers in the App die permanently, by design. Your runs, graveyard, records, and settings are
+        stored only on your device. We cannot see, restore, or transfer them, and they are removed when you
+        uninstall the App or clear its data. Lost progress, an unfair roll, or an especially rude epitaph are
+        part of the game and are not defects.
+      </p>
+
+      <h2>5. Google Play Games sign-in and leaderboards</h2>
+      <p>
+        The App offers optional Google Play Games leaderboards through the in-game <strong>Compete</strong>
+        setting. Signing in with Google Play Games is not required to play. When Compete is on, your Play
+        Games profile name, avatar, and scores may be visible to other players under Google's rules. Your use
+        of Google Play Games is governed by
+        <a href="https://policies.google.com/terms" target="_blank" rel="noopener">Google's Terms of Service</a>
+        and <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Privacy Policy</a>.
+        Please don't try to post scores by tampering with the App; we or Google may remove such scores.
+      </p>
+
+      <h2>6. Privacy</h2>
+      <p>
+        We collect no personal data and run no servers. What the App stores and what it sends to Google
+        Play Games is described in our <a href="/privacy/apps">privacy policy for apps</a>; you can
+        <a href="/privacy/delete-data">delete your leaderboard data</a> at any time.
+      </p>
+
+      <h2>7. Updates</h2>
+      <p>
+        We may release updates that fix bugs, rebalance rules, or change features. Some updates may be
+        needed for the App to keep working. We are not obligated to keep providing updates or support
+        forever, though we would like to.
+      </p>
+
+      <h2>8. Disclaimer</h2>
+      <p>
+        The App is provided “as is” and “as available,” without warranties of any kind, express or implied,
+        including merchantability, fitness for a particular purpose, and non-infringement, to the extent the
+        law allows. We do not promise the App will be uninterrupted or error-free, or that the dice will ever
+        be on your side.
+      </p>
+
+      <h2>9. Limitation of liability</h2>
+      <p>
+        To the fullest extent permitted by law, {site.legalName} is not liable for any indirect, incidental,
+        special, consequential, or punitive damages, or any loss of data or progress, arising from your use
+        of the App. Our total liability for any claim relating to the App will not exceed the amount you paid
+        for it. Some jurisdictions do not allow these limits, so they may not all apply to you; nothing here
+        limits rights you have under consumer protection law.
+      </p>
+
+      <h2>10. Termination</h2>
+      <p>
+        Your license ends automatically if you break these terms. You can end it at any time by uninstalling
+        the App.
+      </p>
+
+      <h2>11. Governing law</h2>
+      <p>
+        These terms are governed by the laws of the State of Michigan, USA, without regard to its conflict of
+        law rules, except where your local consumer law requires otherwise.
+      </p>
+
+      <h2>12. Changes to these terms</h2>
+      <p>
+        If we change these terms, the new version will be posted at this address with a new effective date.
+        Continuing to use the App after a change means you accept the updated terms.
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        Questions about these terms: <a href={`mailto:${contact}`}>{contact}</a><br />
+        {site.legalName} · {site.location} · <a href="/delve-die-repeat">Back to Delve, Die, Repeat</a>
+      </p>
+    </article>
+  </div>
+</Layout>

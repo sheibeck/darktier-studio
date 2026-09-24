@@ -1,0 +1,169 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { site } from "../../data/site";
+
+// Home page for Delve, Die, Repeat (the Android adaptation of Mazeworld).
+// This URL is the app's home page in the Google Cloud OAuth consent screen
+// (Play Games sign-in branding verification), so the app name, the
+// delve-die-repeat slug, and links to the privacy policy and terms must stay
+// visible here. Copy follows the Play listing in the game repo
+// (mazeworld: store-listing/LISTING.md).
+const pkg = "com.darktierstudios.delvedierepeat";
+const playUrl = `https://play.google.com/store/apps/details?id=${pkg}`;
+
+const features = [
+  { h: "You don't build a hero. One is dealt to you.", p: "The tables roll your race, class, sub-class, gear, phobia, and the reason you walked into a maze in the first place. Complaints may be filed with the dice." },
+  { h: "Every floor is new. Every death is permanent.", p: "A procedurally generated maze with fog, one-way doors, chasms to leap, and walls to climb. Or fall from." },
+  { h: "Every roll is shown.", p: "Strike, cast, flee, or talk your way out. You will always know exactly which number betrayed you." },
+  { h: "The Oracle narrates.", p: "With the warmth of a tax auditor. The graveyard remembers everyone, and the epitaphs are not kind." },
+  { h: "Five to ten minutes a run.", p: "Which is roughly how long most adventurers last. Put the phone down mid-fight and the monster will wait." },
+  { h: "Offline. Paid once. That's it.", p: "No ads, no in-app purchases. Optional Google Play Games leaderboards, if you want the whole world to see how you died." },
+];
+
+const shots = [
+  { src: "01-title", alt: "Title screen" },
+  { src: "02-combat", alt: "Round-by-round combat with every die roll shown" },
+  { src: "03-deep", alt: "Exploring a deep floor of the maze" },
+  { src: "04-death", alt: "An epitaph for a fallen adventurer" },
+];
+
+const appLd = {
+  "@context": "https://schema.org",
+  "@type": "MobileApplication",
+  name: "Delve, Die, Repeat",
+  alternateName: "delve-die-repeat",
+  operatingSystem: "Android",
+  applicationCategory: "GameApplication",
+  url: new URL("/delve-die-repeat", site.url).href,
+  image: new URL("/assets/delve-die-repeat/og.jpg", site.url).href,
+  publisher: { "@type": "Organization", name: site.legalName, url: site.url },
+  description: "An offline roguelike dungeon crawl based on Mazeworld, a tabletop RPG from 1994.",
+};
+---
+<Layout
+  title="Delve, Die, Repeat — a roguelike for Android"
+  description="Delve, Die, Repeat (delve-die-repeat): random hero, random dungeon, random death. An offline Android roguelike based on Mazeworld, the 1994 tabletop dungeon crawl, from Darktier Studios."
+  image="/assets/delve-die-repeat/og.jpg"
+  current="/games"
+>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(appLd)} />
+
+  <header class="ddr-hero" id="delve-die-repeat">
+    <img class="ddr-hero-art" src="/assets/delve-die-repeat/featured.webp" width="1794" height="876"
+      alt="Delve, Die, Repeat — four adventurers stand before a torch-lit maze gate. Random hero. Random dungeon. Random death." />
+    <div class="ddr-hero-fade" aria-hidden="true"></div>
+  </header>
+
+  <div class="container">
+    <section class="ddr-intro">
+      <img class="ddr-icon" src="/assets/delve-die-repeat/icon.webp" width="96" height="96" alt="Delve, Die, Repeat app icon" />
+      <div>
+        <p class="kicker">Darktier Studios · Android · /delve-die-repeat</p>
+        <h1 class="ddr-title">Delve, Die, Repeat</h1>
+        <p class="ddr-tag">Random hero. Random dungeon. Random death.</p>
+        <p class="ddr-lede">
+          An offline roguelike dungeon crawl based on <strong>Mazeworld</strong>, a tabletop RPG from 1994 —
+          kept as crunchy, unfair, and funny as the original binder. Roll an adventurer, descend the maze,
+          die, read the epitaph, try again.
+        </p>
+        <div class="ddr-cta">
+          <a class="btn btn-primary" href={playUrl} target="_blank" rel="noopener">Get it on Google Play</a>
+          <a class="btn btn-secondary" href="#features">Read the warning label</a>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-rule" />
+
+    <section class="ddr-features" id="features">
+      {features.map((f, i) => (
+        <article class="ddr-feature">
+          <span class="ddr-die" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+          <h2>{f.h}</h2>
+          <p>{f.p}</p>
+        </article>
+      ))}
+    </section>
+
+    <section class="ddr-shots" aria-label="Screenshots">
+      {shots.map((s) => (
+        <img src={`/assets/delve-die-repeat/shots/${s.src}.webp`} alt={s.alt} loading="lazy" width="540" />
+      ))}
+    </section>
+
+    <section class="ddr-binder">
+      <p class="kicker">The rules came from a binder</p>
+      <p>
+        Twenty-plus classes and sub-classes, five races, dozens of monsters with their own abilities, a full
+        spell list, traps, treasure tables, and a random encounter table that includes “nothing” and
+        “something worse.” The engine rolls real dice with real odds and tells you what it rolled.
+      </p>
+      <p class="ddr-close">You get the whole dungeon, and the dungeon gets the whole you.</p>
+    </section>
+
+    <nav class="ddr-legal" aria-label="Delve, Die, Repeat legal">
+      <a href="/delve-die-repeat/terms">Terms of Service</a>
+      <a href="/privacy/apps">Privacy Policy</a>
+      <a href="/privacy/delete-data">Delete your data</a>
+      <a href="mailto:sheibeck@gmail.com">Contact</a>
+      <span>Delve, Die, Repeat © 2026 {site.legalName}</span>
+    </nav>
+  </div>
+</Layout>
+
+<style>
+  .ddr-hero { position: relative; max-height: 72vh; overflow: hidden; }
+  .ddr-hero-art { display: block; width: 100%; height: auto; min-height: 280px; object-fit: cover; }
+  .ddr-hero-fade {
+    position: absolute; inset: auto 0 0 0; height: 45%;
+    background: linear-gradient(to bottom, transparent, var(--color-bg));
+  }
+  .ddr-intro {
+    display: grid; grid-template-columns: auto 1fr; gap: 28px; align-items: start;
+    margin-top: -64px; position: relative; padding-bottom: 56px;
+  }
+  .ddr-icon { border-radius: 22px; box-shadow: 0 12px 40px rgba(0,0,0,.6), 0 0 0 1px rgba(255,120,60,.25); }
+  .ddr-title {
+    font-size: clamp(40px, 6vw, 76px); line-height: 1.02; letter-spacing: -0.02em; margin: 0;
+  }
+  .ddr-tag {
+    margin: 12px 0 0; font-size: clamp(18px, 2.2vw, 24px); font-style: italic;
+    color: #e0a36a; text-shadow: 0 0 18px rgba(224, 100, 40, .35);
+  }
+  .ddr-lede { max-width: 62ch; font-size: 18px; line-height: 30px; margin: 20px 0 0; }
+  .ddr-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+
+  .ddr-features {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; padding: 56px 0;
+  }
+  .ddr-feature {
+    position: relative; padding: 24px; border: 1px solid var(--color-divider); border-radius: var(--radius-md, 10px);
+    background: color-mix(in srgb, var(--color-surface) 70%, transparent);
+    transition: transform .2s ease, border-color .2s ease;
+  }
+  .ddr-feature:hover { transform: translateY(-3px); border-color: color-mix(in srgb, #e0763a 55%, transparent); }
+  .ddr-die {
+    font-family: var(--font-heading); font-size: 13px; letter-spacing: .2em; color: #e0763a;
+  }
+  .ddr-feature h2 { font-size: 20px; line-height: 1.25; margin: 10px 0 8px; }
+  .ddr-feature p { margin: 0; color: color-mix(in srgb, var(--color-text) 78%, transparent); line-height: 1.6; }
+
+  .ddr-shots {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; padding-bottom: 56px;
+  }
+  .ddr-shots img { width: 100%; height: auto; border-radius: 14px; border: 1px solid var(--color-divider); }
+  @media (max-width: 720px) {
+    .ddr-shots { grid-template-columns: repeat(2, 1fr); }
+    .ddr-intro { grid-template-columns: 1fr; margin-top: -32px; }
+    .ddr-icon { width: 72px; height: 72px; }
+  }
+
+  .ddr-binder { max-width: 66ch; padding-bottom: 56px; font-size: 17px; line-height: 1.7; }
+  .ddr-close { font-style: italic; color: #e0a36a; }
+
+  .ddr-legal {
+    display: flex; flex-wrap: wrap; gap: 20px; padding: 24px 0; border-top: 1px solid var(--color-divider);
+    font-size: 14px;
+  }
+  .ddr-legal span { color: color-mix(in srgb, var(--color-text) 55%, transparent); }
+</style>
