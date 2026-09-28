@@ -1,0 +1,68 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import { site } from "../../../data/site";
+import { getPatchNotes } from "../../../lib/ddrPatchNotes";
+
+// Patch notes index for Delve, Die, Repeat: the newest version's notes in
+// full, then every version newest first, each linking to its own page at
+// /delve-die-repeat/patch-notes/<version>. Source files live in
+// src/data/ddr-patch-notes/ (see src/lib/ddrPatchNotes.ts).
+const all = await getPatchNotes();
+const newest = all[0];
+---
+<Layout
+  title="Patch notes — Delve, Die, Repeat"
+  description="Patch notes for Delve, Die, Repeat, the offline Android roguelike from Darktier Studios: what changed in each version, old rule to new."
+  image="/assets/delve-die-repeat/og.jpg"
+  current="/games"
+>
+  <div class="container">
+    <section style="padding:84px 0 28px">
+      <p class="kicker">Delve, Die, Repeat · patch notes</p>
+      <h1 style="font-size:clamp(40px,6vw,72px);line-height:1.04;letter-spacing:-0.02em;margin:0 0 0 -0.06em">Patch notes</h1>
+      <p class="privacy-meta">
+        {newest ? `Latest: version ${newest.version}` : "No releases yet"} · {site.legalName}
+      </p>
+    </section>
+
+    <article class="privacy ddr-notes">
+      <p class="privacy-lede">
+        What changed in each version of <strong>Delve, Die, Repeat</strong>, written old → new so you can
+        see exactly which rule turned on you. The same notes open in the game's ☰ menu under
+        <strong>PATCH NOTES</strong>.
+      </p>
+
+      {newest && (
+        <Fragment>
+          <p class="ddr-notes-version">
+            <a href={`/delve-die-repeat/patch-notes/${newest.version}`}>{newest.title}</a>
+          </p>
+          <Fragment set:html={newest.html} />
+        </Fragment>
+      )}
+
+      <h2>All versions</h2>
+      <ul>
+        {all.map((n, i) => (
+          <li>
+            <a href={`/delve-die-repeat/patch-notes/${n.version}`}>{n.title}</a>{i === 0 && " (latest)"}
+          </li>
+        ))}
+      </ul>
+
+      <p><a href="/delve-die-repeat">Back to Delve, Die, Repeat</a></p>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .ddr-notes { overflow-wrap: break-word; }
+  .ddr-notes-version {
+    margin: 0 0 -14px;
+    font-size: 13px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+  .ddr-notes-version a { color: var(--color-accent); text-decoration: none; }
+  .ddr-notes-version a:hover { text-decoration: underline; }
+</style>

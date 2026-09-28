@@ -1,0 +1,63 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import { site } from "../../../data/site";
+import { getPatchNotes, type PatchNotes } from "../../../lib/ddrPatchNotes";
+
+// One page per released version of Delve, Die, Repeat, from
+// src/data/ddr-patch-notes/<version>.md (see src/lib/ddrPatchNotes.ts).
+// The file's own "# Delve, Die, Repeat <version>" is the page's h1.
+export async function getStaticPaths() {
+  const all = await getPatchNotes();
+  return all.map((notes, i) => ({
+    params: { version: notes.version },
+    props: { notes, latest: i === 0, all: all.map((n) => n.version) },
+  }));
+}
+
+interface Props {
+  notes: PatchNotes;
+  latest: boolean;
+  all: string[];
+}
+
+const { notes, latest, all } = Astro.props;
+const others = all.filter((v) => v !== notes.version);
+---
+<Layout
+  title={`Patch notes ${notes.version} — Delve, Die, Repeat`}
+  description={`What changed in Delve, Die, Repeat ${notes.version}, the offline Android roguelike from Darktier Studios.`}
+  image="/assets/delve-die-repeat/og.jpg"
+  current="/games"
+>
+  <div class="container">
+    <section style="padding:84px 0 28px">
+      <p class="kicker">Delve, Die, Repeat · patch notes</p>
+      <h1 style="font-size:clamp(40px,6vw,72px);line-height:1.04;letter-spacing:-0.02em;margin:0 0 0 -0.06em">{notes.title}</h1>
+      <p class="privacy-meta">{latest ? "Latest version" : "Earlier version"} · {site.legalName}</p>
+    </section>
+
+    <article class="privacy ddr-notes">
+      <Fragment set:html={notes.html} />
+
+      <h2>More</h2>
+      <p>
+        <a href="/delve-die-repeat/patch-notes">All patch notes</a>
+        {others.length > 0 && (
+          <Fragment>
+            {" · Other versions: "}
+            {others.map((v, i) => (
+              <Fragment>{i > 0 && ", "}<a href={`/delve-die-repeat/patch-notes/${v}`}>{v}</a></Fragment>
+            ))}
+          </Fragment>
+        )}
+        <br />
+        <a href="/delve-die-repeat">Back to Delve, Die, Repeat</a>
+      </p>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  /* Notes lines are old → new pairs; let long ones wrap cleanly on a phone. */
+  .ddr-notes { overflow-wrap: break-word; }
+</style>
