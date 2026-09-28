@@ -7,16 +7,19 @@ import { site } from "../../data/site";
 // complete policy on its own. The website has its own policy at /privacy
 // (it runs analytics; this doesn't). Describes Delve, Die, Repeat 2.0
 // (Leaderboards): Google Play Games leaderboards through the in-game Compete
-// setting, on by default and switchable off at any time. The Play Console
-// Data safety record lives in the game repo at store-listing/LISTING.md
-// (mazeworld); the "Data safety summary" section below must match it.
-const effective = "September 24, 2026";
+// setting, on by default and switchable off at any time; and 2.1's in-app
+// bug reports (☰ REPORT A BUG), sent only when the player taps Send, stored
+// in the game's Firebase project and posted publicly on GitHub. The Play
+// Console Data safety record lives in the game repo at
+// store-listing/LISTING.md (mazeworld); the "Data safety summary" section
+// below must match it.
+const effective = "September 28, 2026";
 // The address Google Play lists as the developer contact. Change here only.
 const contact = "sheibeck@gmail.com";
 ---
 <Layout
   title="Privacy Policy — Google Play apps"
-  description="Privacy policy for Darktier Studios apps on Google Play, including Delve, Die, Repeat. Saves stay on your device; Google Play Games leaderboards run through the in-game Compete setting, which you can turn off at any time."
+  description="Privacy policy for Darktier Studios apps on Google Play, including Delve, Die, Repeat. Saves stay on your device; Google Play Games leaderboards run through the in-game Compete setting, which you can turn off at any time; a bug report is sent only when you tap Send."
 >
   <div class="container">
     <section style="padding:84px 0 28px">
@@ -27,11 +30,12 @@ const contact = "sheibeck@gmail.com";
 
     <article class="privacy">
       <p class="privacy-lede">
-        The short version: <strong>we collect nothing ourselves, and we run no servers.</strong> Your runs,
-        your graveyard, and your settings live on your device. The one exception is
-        <strong>Google Play Games leaderboards</strong>, controlled by the in-game <strong>Compete</strong>
-        setting. Compete is on by default, and you can turn it off at any time. With Compete off, the game
-        sends no leaderboard data.
+        The short version: <strong>we collect nothing automatically, and we run no servers of our
+        own.</strong> Your runs, your graveyard, and your settings live on your device. There are two
+        exceptions. <strong>Google Play Games leaderboards</strong> are controlled by the in-game
+        <strong>Compete</strong> setting, which is on by default and which you can turn off at any time.
+        With Compete off, the game sends no leaderboard data. And a <strong>bug report</strong> leaves your
+        phone only if you write one and tap <strong>Send</strong>.
       </p>
 
       <h2>Who this covers</h2>
@@ -44,27 +48,28 @@ const contact = "sheibeck@gmail.com";
 
       <h2>Data we collect</h2>
       <p>
-        We — {site.legalName} — collect nothing. We operate no servers, no accounts of our own, and no
-        analytics. Our apps do not collect, transmit, sell, or share:
+        We — {site.legalName} — collect nothing automatically. We operate no servers of our own, no
+        accounts, and no analytics. Our apps do not collect, transmit, sell, or share:
       </p>
       <ul>
         <li>Personal information (name, email address, phone number, address)</li>
         <li>Location data, precise or approximate</li>
         <li>Financial or payment information</li>
         <li>Contacts, calendar, photos, videos, audio, or files</li>
-        <li>Gameplay analytics, or crash and diagnostic reports</li>
+        <li>Gameplay analytics, or automatic crash and diagnostic reports</li>
         <li>Device identifiers or the Android Advertising ID</li>
       </ul>
       <p>
-        The only data the game sends anywhere is the leaderboard data described in the next section, and
-        only while Compete is on. Google's own Play Games software, which starts with the app, is covered
-        by Google's privacy policy, as described below.
+        The game sends data in only two cases: the leaderboard data described in the next section, only
+        while Compete is on; and a bug report you write yourself, only when you tap Send, described under
+        <a href="#bug-reports">Bug reports</a>. Google's own Play Games software, which starts with the
+        app, is covered by Google's privacy policy, as described below.
       </p>
 
       <h2>Leaderboards and Google Play Games (Compete)</h2>
       <p>
-        Delve, Die, Repeat posts your finished runs to five <strong>leaderboards</strong> — deepest descent,
-        leanest run, longest-lived, most kills, and fattest purse — so you can see where you placed against
+        Delve, Die, Repeat posts your finished runs to four <strong>leaderboards</strong> — deepest descent,
+        longest-lived, most kills, and fattest purse — so you can see where you placed against
         other players and your friends. This is powered by <strong>Google Play Games Services</strong>, a
         feature of Google Play, and it runs only while the in-game <strong>Compete</strong> setting is on.
       </p>
@@ -84,7 +89,7 @@ const contact = "sheibeck@gmail.com";
           <strong>What is sent while Compete is on:</strong>
           <ul>
             <li>your Google Play Games player ID;</li>
-            <li>for each run that ends, the five leaderboard scores for that run;</li>
+            <li>for each run that ends, the four leaderboard scores for that run;</li>
             <li>
               a short run summary: race, sub-class, level, cause of death, floor reached, days survived,
               steps walked, kills, wilmst carried, experience points, and your adventurer's name. The name
@@ -125,6 +130,24 @@ const contact = "sheibeck@gmail.com";
         </li>
       </ul>
 
+      <h2 id="bug-reports">Bug reports</h2>
+      <p>
+        Delve, Die, Repeat has a <strong>REPORT A BUG</strong> option in its ☰ menu. Nothing is sent unless
+        you type a report and tap <strong>Send</strong>. A report contains what you typed, the game's in-run
+        log (the Oracle, which may include your adventurer's randomly generated name), the app version, your
+        device model and Android version, and a summary of the current run (floor, class, race, level and
+        turn count). It contains no account, Google Play Games identity, email address or other contact
+        detail.
+      </p>
+      <p>
+        Reports are stored in the game's Google Firebase project and posted publicly as issues on the game's
+        GitHub repository
+        (<a href="https://github.com/sheibeck/ddr" target="_blank" rel="noopener">github.com/sheibeck/ddr</a>),
+        where anyone can read them, so please leave out anything private. To have a report deleted, follow
+        the steps on our <a href="/privacy/delete-data#bug-reports">delete your data</a> page or
+        <a href={`mailto:${contact}`}>contact us</a>, and we will delete it from Firebase and GitHub.
+      </p>
+
       <h2>Data stored on your device</h2>
       <p>
         The game keeps a small amount of data on your phone so it works: your current run, the graveyard of
@@ -133,38 +156,42 @@ const contact = "sheibeck@gmail.com";
         sent to us, and it is removed when you uninstall the app.
       </p>
 
-      <h2>No servers, no ads, no third parties beyond Google</h2>
+      <h2>No servers of our own, no ads, no analytics</h2>
       <p>
         Our apps require no account of our own and play fully offline. They contain no advertising,
-        analytics, or crash-reporting SDKs. The only third party involved is Google: Google Play handles your
-        purchase and installation, and Google Play Games Services handles the leaderboards, both under
+        analytics, or crash-reporting SDKs. Google Play handles your purchase and installation, and Google
+        Play Games Services handles the leaderboards, both under
         <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's privacy policy</a>.
         Google describes what its Play Games software collects on its own
         <a href="https://developer.android.com/games/pgs/data-collection" target="_blank" rel="noopener">Play Games data disclosure page</a>.
-        We receive no personal information from either.
+        We receive no personal information from either. A bug report you choose to send goes to the game's
+        Google Firebase project and is posted publicly on GitHub, as described under
+        <a href="#bug-reports">Bug reports</a>.
       </p>
 
       <h2>Permissions</h2>
       <p>
         Our apps do not request access to your location, contacts, camera, microphone, storage, or any other
         permission-gated data. The one permission is internet access, which is used only for Google Play
-        Games while Compete is on, plus Google's own start-up described above.
+        Games while Compete is on, for sending a bug report when you tap Send, and for Google's own
+        start-up described above.
       </p>
 
       <h2>Children</h2>
       <p>
-        Our apps are suitable for general audiences. We collect no data from anyone, including children
-        under 13. Leaderboards need a Google Play Games profile, and Google's own age rules and parental
+        Our apps are suitable for general audiences. We collect no data automatically from anyone,
+        including children under 13, and a bug report carries no account or contact detail. Leaderboards need a Google Play Games profile, and Google's own age rules and parental
         controls govern whether a child can create one or appear on leaderboards. The game needs no sign-in
         to be played, and Compete can be turned off at any time.
       </p>
 
       <h2>Your rights</h2>
       <p>
-        We hold no personal data about you, so there is nothing for us to export, correct, or erase.
-        Everything the app stores on its own lives on your device under your control; uninstalling the app
-        deletes it. Leaderboard data sent while Compete was on is held by Google and can be reviewed or
-        deleted through your Play Games profile as described above. If a future app ever changes any of
+        We hold no account or profile about you. Everything the app stores on its own lives on your device
+        under your control; uninstalling the app deletes it. Leaderboard data sent while Compete was on is
+        held by Google and can be reviewed or deleted through your Play Games profile as described above.
+        The only thing we hold is a bug report you chose to send; ask, and we will delete it from Firebase
+        and GitHub. If a future app ever changes any of
         this, this policy will change first.
       </p>
 
@@ -174,7 +201,11 @@ const contact = "sheibeck@gmail.com";
         Play Games player ID) and <strong>App activity</strong> (the run scores and the short run summary)
         are collected. They are optional (turn Compete off), used for <strong>App functionality</strong>,
         encrypted in transit, and deletable by you. They are not shared with third parties and not sold.
-        Nothing else is collected.
+        <strong>Other user-generated content</strong> (the bug
+        report you type) and <strong>Diagnostics</strong> (the Oracle log, app version, device model and
+        Android version, and run summary attached to it) are collected only when you tap Send, used for
+        <strong>App functionality</strong>, and deleted on request; a report is posted publicly on GitHub as
+        described above, and not sold. Nothing else is collected.
       </p>
 
       <h2>Changes to this policy</h2>

@@ -10,12 +10,17 @@ import { site } from "../../data/site";
 // /privacy/apps, which is the full policy. The deletion steps follow Google's
 // "Delete your Play Games data or Play Games profile" help article
 // (support.google.com/googleplay/answer/9130646, checked September 24, 2026).
+// Since Delve, Die, Repeat 2.1, a bug report the player chooses to send
+// (☰ REPORT A BUG) is the one thing we hold ourselves: it sits in the game's
+// Firebase project and is posted publicly on GitHub, so deletion is by
+// request to us.
 const contact = "sheibeck@gmail.com";
 const subject = encodeURIComponent("Delete my Delve, Die, Repeat leaderboard data");
+const bugSubject = encodeURIComponent("Delete my Delve, Die, Repeat bug report");
 ---
 <Layout
   title="Delete your data — Google Play apps"
-  description="How to delete the leaderboard data collected by Darktier Studios apps on Google Play, or request that we help you delete it."
+  description="How to delete the leaderboard data collected by Darktier Studios apps on Google Play, or a bug report you sent, or request that we help you delete it."
 >
   <div class="container">
     <section style="padding:84px 0 28px">
@@ -26,11 +31,12 @@ const subject = encodeURIComponent("Delete my Delve, Die, Repeat leaderboard dat
 
     <article class="privacy">
       <p class="privacy-lede">
-        The only data our apps ever send anywhere is your <strong>leaderboard data</strong>, and only while
-        the in-game <strong>Compete</strong> setting is on: your Google Play Games player ID, the scores for
-        each finished run, and the short run summary listed in our
+        Our apps send data anywhere in only two cases. Your <strong>leaderboard data</strong> is sent only
+        while the in-game <strong>Compete</strong> setting is on: your Google Play Games player ID, the
+        scores for each finished run, and the short run summary listed in our
         <a href="/privacy/apps">privacy policy</a>. It is held by Google, not by us, and you can delete it
-        yourself in about a minute.
+        yourself in about a minute. A <strong>bug report</strong> is sent only if you write one and tap
+        <strong>Send</strong>; we delete it on request, as described <a href="#bug-reports">below</a>.
       </p>
 
       <h2>Delete your leaderboard data</h2>
@@ -62,11 +68,23 @@ const subject = encodeURIComponent("Delete my Delve, Die, Repeat leaderboard dat
         game from Play Games entirely, use the Play Games app.
       </p>
 
+      <h2 id="bug-reports">Delete a bug report</h2>
+      <p>
+        A report sent from <strong>REPORT A BUG</strong> in the game's ☰ menu carries no account, Google
+        Play Games identity, or contact detail. It is stored in the game's Google Firebase project and posted
+        publicly as an issue on the game's GitHub repository
+        (<a href="https://github.com/sheibeck/ddr" target="_blank" rel="noopener">github.com/sheibeck/ddr</a>).
+        To have one deleted, email
+        <a href={`mailto:${contact}?subject=${bugSubject}`}>{contact}</a> with the link to its GitHub issue,
+        or roughly when you sent it and what it said. We will delete it from Firebase and GitHub and confirm
+        when it's done.
+      </p>
+
       <h2>Everything else is already yours</h2>
       <p>
         Your current run, graveyard, personal bests, and settings live only on your device. Uninstalling the
-        app deletes them. We hold no copy — we run no servers and collect nothing ourselves — so there is
-        nothing further for us to erase.
+        app deletes them. Apart from a bug report you chose to send, we hold no copy of anything — we run no
+        servers of our own and collect nothing automatically — so there is nothing further for us to erase.
       </p>
 
       <h2>Need help?</h2>
