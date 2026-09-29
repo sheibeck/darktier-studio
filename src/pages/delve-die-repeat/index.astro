@@ -3,11 +3,9 @@ import Layout from "../../layouts/Layout.astro";
 import { site } from "../../data/site";
 
 // Home page for Delve, Die, Repeat (the Android adaptation of Mazeworld).
-// This URL is the app's home page in the Google Cloud OAuth consent screen
-// (Play Games sign-in branding verification), so the app name, the
-// delve-die-repeat slug, and links to the privacy policy and terms must stay
-// visible here. Copy follows the Play listing in the game repo
-// (mazeworld: store-listing/LISTING.md).
+// Copy follows the Play listing in the game repo (mazeworld:
+// store-listing/LISTING.md). The app name, the delve-die-repeat slug, and
+// links to the privacy policy and terms must stay visible here.
 const pkg = "com.darktierstudios.delvedierepeat";
 const playUrl = `https://play.google.com/store/apps/details?id=${pkg}`;
 
@@ -17,7 +15,7 @@ const features = [
   { h: "Every roll is shown.", p: "Strike, cast, flee, or talk your way out. You will always know exactly which number betrayed you." },
   { h: "The Oracle narrates.", p: "With the warmth of a tax auditor. The graveyard remembers everyone, and the epitaphs are not kind." },
   { h: "Five to ten minutes a run.", p: "Which is roughly how long most adventurers last. Put the phone down mid-fight and the monster will wait." },
-  { h: "Offline. Paid once. That's it.", p: "No ads, no in-app purchases. Optional Google Play Games leaderboards, if you want the whole world to see how you died." },
+  { h: "Offline. Paid once. That's it.", p: "No ads, no in-app purchases. An optional public leaderboard, if you want the whole world to see how you died." },
 ];
 
 const shots = [

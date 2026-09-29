@@ -3,24 +3,17 @@ import Layout from "../../layouts/Layout.astro";
 import { site } from "../../data/site";
 
 // The "Delete data URL" entered in Play Console's Data safety form for our
-// Google Play apps. Play wants a page a user can reach to delete, or request
-// deletion of, the data the app collected. Ours is held by Google Play Games
-// Services (leaderboards), so this page walks the user through Google's own
-// per-game deletion and offers email as the request fallback. Companion to
-// /privacy/apps, which is the full policy. The deletion steps follow Google's
-// "Delete your Play Games data or Play Games profile" help article
-// (support.google.com/googleplay/answer/9130646, checked September 24, 2026).
-// Since Delve, Die, Repeat 2.1, a bug report the player chooses to send
-// (☰ REPORT A BUG) is the one thing we hold ourselves: it sits in the game's
-// Firebase project and is posted publicly on GitHub, so deletion is by
-// request to us.
+// Google Play apps. Our data sits in the game's own one small Firebase
+// database — leaderboard runs and bug reports — so deletion happens in the
+// game (ERASE MY RUNS) or by request to us. Companion to /privacy/apps,
+// which is the full policy.
 const contact = "sheibeck@gmail.com";
-const subject = encodeURIComponent("Delete my Delve, Die, Repeat leaderboard data");
+const subject = encodeURIComponent("Delete my Delve, Die, Repeat leaderboard runs");
 const bugSubject = encodeURIComponent("Delete my Delve, Die, Repeat bug report");
 ---
 <Layout
   title="Delete your data — Google Play apps"
-  description="How to delete the leaderboard data collected by Darktier Studios apps on Google Play, or a bug report you sent, or request that we help you delete it."
+  description="How to delete the leaderboard runs or bug report Darktier Studios apps on Google Play have sent to our one small Firebase database, or request that we delete them for you."
 >
   <div class="container">
     <section style="padding:84px 0 28px">
@@ -31,68 +24,57 @@ const bugSubject = encodeURIComponent("Delete my Delve, Die, Repeat bug report")
 
     <article class="privacy">
       <p class="privacy-lede">
-        Our apps send data anywhere in only two cases. Your <strong>leaderboard data</strong> is sent only
-        while the in-game <strong>Compete</strong> setting is on: your Google Play Games player ID, the
-        scores for each finished run, and the short run summary listed in our
-        <a href="/privacy/apps">privacy policy</a>. It is held by Google, not by us, and you can delete it
-        yourself in about a minute. A <strong>bug report</strong> is sent only if you write one and tap
-        <strong>Send</strong>; we delete it on request, as described <a href="#bug-reports">below</a>.
+        We keep one small database on Google Firebase for two things: your <strong>leaderboard runs</strong>,
+        sent only while the in-game <strong>Compete</strong> setting is on, and a <strong>bug report</strong>
+        you chose to send. Delete either one yourself in about a minute, right from the game.
       </p>
 
       <h2>Delete your leaderboard data</h2>
-      <p>On the web:</p>
       <ol>
-        <li>Go to <a href="https://play.google.com/games/profile" target="_blank" rel="noopener">play.google.com/games/profile</a>.</li>
-        <li>Under <strong>Your Data</strong>, click <strong>Delete Play Games Account &amp; Data</strong>.</li>
-        <li>Under <strong>Delete individual game data</strong>, find <strong>Delve, Die, Repeat</strong> and click <strong>Delete</strong>.</li>
-      </ol>
-      <p>Or in the Google Play Store app on your Android device:</p>
-      <ol>
-        <li>Tap your profile icon at the top right, then <strong>Settings</strong>.</li>
-        <li>Tap <strong>General</strong>, then <strong>Play Games Profile</strong>, then <strong>Privacy &amp; Settings</strong>.</li>
-        <li>Under <strong>Your Data</strong>, tap <strong>Delete profile &amp; game data</strong>.</li>
-        <li>Under <strong>Delete individual game data</strong>, find <strong>Delve, Die, Repeat</strong> and tap <strong>Delete</strong>.</li>
+        <li>In the game, open the account block — the ☰ menu in the dungeon, or the corner chip on the
+          title screen.</li>
+        <li>Tap <strong>ERASE MY RUNS</strong>.</li>
+        <li>Tap it again to confirm.</li>
       </ol>
       <p>
-        That removes your Play Games data for the game, including your scores on every leaderboard you
-        appeared on. Google describes the same steps in its
-        <a href="https://support.google.com/googleplay/answer/9130646" target="_blank" rel="noopener">Play Games data help</a>.
+        That deletes every run of yours on the leaderboard, in every season, and deletes your anonymous
+        game account. Your local run history (YOUR DEAD) stays on your phone. A later run you send starts a
+        new game account under the same handle.
       </p>
 
       <h2>Stop sending new data</h2>
       <p>
-        In the game, open the account menu (the small face at the top right of the title screen, or beside
-        the ☰ menu in the dungeon) and choose <strong>STOP COMPETING</strong>, or set
-        <strong>COMPETE</strong> to <strong>OFF</strong>. With Compete off, the game sends nothing to Google
-        Play Games, discards any runs still waiting to be sent, and stays fully playable. To disconnect the
-        game from Play Games entirely, use the Play Games app.
+        In the same account block, set <strong>COMPETE</strong> to <strong>OFF</strong>. With Compete off,
+        nothing is sent, any runs still waiting to be sent are thrown away, runs you finish from then on
+        are never uploaded later — even if you turn Compete back on — and the game stays fully playable.
       </p>
 
       <h2 id="bug-reports">Delete a bug report</h2>
       <p>
-        A report sent from <strong>REPORT A BUG</strong> in the game's ☰ menu carries no account, Google
-        Play Games identity, or contact detail. It is stored in the game's Google Firebase project and posted
+        A report sent from <strong>REPORT A BUG</strong> in the game's ☰ menu carries no account, email
+        address, or other contact detail. It is stored in the game's Google Firebase project and posted
         publicly as an issue on the game's GitHub repository
         (<a href="https://github.com/sheibeck/ddr" target="_blank" rel="noopener">github.com/sheibeck/ddr</a>).
-        To have one deleted, email
-        <a href={`mailto:${contact}?subject=${bugSubject}`}>{contact}</a> with the link to its GitHub issue,
-        or roughly when you sent it and what it said. We will delete it from Firebase and GitHub and confirm
-        when it's done.
+        A small limit record behind the cooldown and daily cap on reports is deleted automatically about 2
+        days after your last report. To have a report itself deleted, email
+        <a href={`mailto:${contact}?subject=${bugSubject}`}>{contact}</a> with the link to its GitHub
+        issue, or roughly when you sent it and what it said. We will delete it from Firebase and GitHub and
+        confirm when it's done.
       </p>
 
       <h2>Everything else is already yours</h2>
       <p>
-        Your current run, graveyard, personal bests, and settings live only on your device. Uninstalling the
-        app deletes them. Apart from a bug report you chose to send, we hold no copy of anything — we run no
-        servers of our own and collect nothing automatically — so there is nothing further for us to erase.
+        Your current run, local run history, personal bests, and settings live only on your device.
+        Uninstalling the app deletes them. We keep one small database on Google Firebase for the public
+        leaderboard and bug reports, nothing else — so apart from runs you sent to the leaderboard and a
+        bug report you chose to send, there is nothing further for us to erase.
       </p>
 
       <h2>Need help?</h2>
       <p>
-        If you can't complete the steps above, email
-        <a href={`mailto:${contact}?subject=${subject}`}>{contact}</a> from any address and tell us the
-        Play Games profile name you used. Since we don't hold the data, we'll work with Google Play Games
-        support on your behalf and confirm when it's done.
+        If you can't use ERASE MY RUNS — for example, you've already uninstalled the game — email
+        <a href={`mailto:${contact}?subject=${subject}`}>{contact}</a> with your @handle, and roughly when
+        you last played, and we'll delete your leaderboard runs and confirm when it's done.
       </p>
 
       <p>
