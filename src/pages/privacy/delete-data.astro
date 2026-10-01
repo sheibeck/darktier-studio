@@ -24,9 +24,10 @@ const bugSubject = encodeURIComponent("Delete my Delve, Die, Repeat bug report")
 
     <article class="privacy">
       <p class="privacy-lede">
-        We keep one small database on Google Firebase for two things: your <strong>leaderboard runs</strong>,
-        sent only while the in-game <strong>Compete</strong> setting is on, and a <strong>bug report</strong>
-        you chose to send. Delete either one yourself in about a minute, right from the game.
+        We keep one small database on Google Firebase for two things: your <strong>leaderboard runs</strong>
+        and the <strong>Google Play Games name</strong> shown beside them, both sent only while the in-game
+        <strong>Compete</strong> setting is on, and a <strong>bug report</strong> you chose to send. Delete
+        either one yourself in about a minute, right from the game.
       </p>
 
       <h2>Delete your leaderboard data</h2>
@@ -37,16 +38,24 @@ const bugSubject = encodeURIComponent("Delete my Delve, Die, Repeat bug report")
         <li>Tap it again to confirm.</li>
       </ol>
       <p>
-        That deletes every run of yours on the leaderboard, in every season, and deletes your anonymous
-        game account. Your local run history (YOUR DEAD) stays on your phone. A later run you send starts a
-        new game account under the same handle.
+        That deletes every run of yours on the leaderboard, in every season, the board name we recorded for
+        you, and your game account together with its Google Play Games link. Your local run history (YOUR
+        DEAD) stays on your phone. A later run you send, after signing in again, starts a new game account
+        under your Google Play Games name.
+      </p>
+      <p>
+        <strong>Google's side:</strong> to disconnect the game from your Google Play Games account, use the
+        game's entry in Google Play Games settings. You can also delete your Play Games account and its
+        data in your Play Games profile or Google MyAccount; that is Google's data, which we cannot delete
+        for you.
       </p>
 
       <h2>Stop sending new data</h2>
       <p>
         In the same account block, set <strong>COMPETE</strong> to <strong>OFF</strong>. With Compete off,
-        nothing is sent, any runs still waiting to be sent are thrown away, runs you finish from then on
-        are never uploaded later — even if you turn Compete back on — and the game stays fully playable.
+        nothing is sent and you are not signed in to Google Play Games, any runs still waiting to be sent
+        are thrown away, runs you finish from then on are never uploaded later — even if you turn Compete
+        back on — and the game stays fully playable.
       </p>
 
       <h2 id="bug-reports">Delete a bug report</h2>
@@ -66,15 +75,17 @@ const bugSubject = encodeURIComponent("Delete my Delve, Die, Repeat bug report")
       <p>
         Your current run, local run history, personal bests, and settings live only on your device.
         Uninstalling the app deletes them. We keep one small database on Google Firebase for the public
-        leaderboard and bug reports, nothing else — so apart from runs you sent to the leaderboard and a
-        bug report you chose to send, there is nothing further for us to erase.
+        leaderboard and bug reports, nothing else — so apart from runs you sent to the leaderboard, the
+        board name beside them, and a bug report you chose to send, there is nothing further for us to
+        erase.
       </p>
 
       <h2>Need help?</h2>
       <p>
         If you can't use ERASE MY RUNS — for example, you've already uninstalled the game — email
-        <a href={`mailto:${contact}?subject=${subject}`}>{contact}</a> with your @handle, and roughly when
-        you last played, and we'll delete your leaderboard runs and confirm when it's done.
+        <a href={`mailto:${contact}?subject=${subject}`}>{contact}</a> with your Google Play Games name,
+        and roughly when you last played, and we'll delete your leaderboard runs and board name and confirm
+        when it's done.
       </p>
 
       <p>
