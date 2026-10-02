@@ -13,4 +13,6 @@ export const competeOff = {
     "Any runs still waiting to be sent are thrown away, and runs you finish while Compete is off are never uploaded later, even if you turn Compete back on.",
   midSession:
     "If you turn Compete off while the game is open, it takes full effect the next time you open the game: Play Games stays signed in until the app closes, and nothing reaches the board.",
+  erase:
+    "Compete must be on to reach the board, and so to erase anything already sitting there.",
 };
