@@ -1,6 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import { site } from "../../data/site";
+import CompeteOff from "../../components/CompeteOff.astro";
 
 // Stand-alone privacy policy for the mobile apps we publish on Google Play.
 // This is the URL entered in Play Console's store listing, so it must be a
@@ -31,8 +32,7 @@ const contact = "sheibeck@gmail.com";
       <p class="privacy-lede">
         <strong>We keep one small database on Google Firebase for the public leaderboard and bug reports, nothing else.</strong> Your saves, your run history, and your settings live on your device. The
         leaderboard runs through the in-game <strong>Compete</strong> setting, which is on by default and
-        which you can turn off at any time — with Compete off, nothing is sent and you are not signed in to
-        Google Play Games. A <strong>bug report</strong>
+        which you can turn off at any time (<a href="#compete-off">what Compete off does</a>). A <strong>bug report</strong>
         leaves your phone only if you write one and tap <strong>Send</strong>.
       </p>
 
@@ -126,11 +126,8 @@ const contact = "sheibeck@gmail.com";
           <strong>Where it goes:</strong> our one small database on Google Firebase, which stores it for us
           as our service provider. We never sell it.
         </li>
-        <li>
-          <strong>With Compete off:</strong> nothing is sent. No Google Play Games sign-in is asked for and
-          the Play Games software is not started, no game ID is created, and any runs still waiting to be
-          sent are thrown away. Runs you finish while Compete is off are never uploaded later, even if you
-          turn Compete back on.
+        <li id="compete-off">
+          <strong>With Compete off:</strong> <CompeteOff />
         </li>
         <li>
           <strong>Erasing your runs:</strong> <strong>ERASE MY RUNS</strong>, in the account block, deletes
@@ -169,7 +166,8 @@ const contact = "sheibeck@gmail.com";
         its software stable. That data goes to Google, not to us, under Google's own terms and privacy
         policy; Google describes it at
         <a href="https://developer.android.com/games/pgs/data-collection" target="_blank" rel="noopener">developer.android.com/games/pgs/data-collection</a>.
-        With Compete off, the Play Games software is not started, so it collects nothing. You can delete
+        With Compete off, the Play Games software does not start, so it collects nothing
+        (<a href="#compete-off">details</a>). You can delete
         your Play Games account and its data in your Play Games profile or Google MyAccount.
       </p>
 
@@ -257,8 +255,8 @@ const contact = "sheibeck@gmail.com";
         functionality, encrypted in transit, deletable, and public on the leaderboard.
         <strong>Diagnostics</strong> and <strong>Photos</strong> collected by Google's own Play Games
         software while Compete is on (the data Google's page lists: analytics, diagnostics, and the avatar
-        half of your gamer identity; our game never reads the avatar) — optional, because with Compete off
-        the software never starts. <strong>Other user-generated content</strong> (the bug report you type, sent only when
+        half of your gamer identity; our game never reads the avatar) — optional, because Compete can be
+        turned off (<a href="#compete-off">what that does</a>). <strong>Other user-generated content</strong> (the bug report you type, sent only when
         you tap Send) — collected, not shared, posted publicly on GitHub, deleted from our database once
         filed. <strong>Diagnostics</strong> (the Oracle log, app version and build, device model and
         Android version, and a summary of the run, attached to a bug report only) — collected, not shared,

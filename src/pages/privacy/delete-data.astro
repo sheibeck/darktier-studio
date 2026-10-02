@@ -1,6 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import { site } from "../../data/site";
+import CompeteOff from "../../components/CompeteOff.astro";
 
 // The "Delete data URL" entered in Play Console's Data safety form for our
 // Google Play apps. Our data sits in the game's own one small Firebase
@@ -52,10 +53,7 @@ const bugSubject = encodeURIComponent("Delete my Delve, Die, Repeat bug report")
 
       <h2>Stop sending new data</h2>
       <p>
-        In the same account block, set <strong>COMPETE</strong> to <strong>OFF</strong>. With Compete off,
-        nothing is sent and you are not signed in to Google Play Games, any runs still waiting to be sent
-        are thrown away, runs you finish from then on are never uploaded later — even if you turn Compete
-        back on — and the game stays fully playable.
+        In the same account block, set <strong>COMPETE</strong> to <strong>OFF</strong>. With Compete off: <CompeteOff /> The game stays fully playable.
       </p>
 
       <h2 id="bug-reports">Delete a bug report</h2>

@@ -1,6 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import { site } from "../../data/site";
+import { COMPETE_OFF_URL } from "../../data/ddr-compete";
 
 // Terms of Service for Delve, Die, Repeat. Linked from /delve-die-repeat.
 // Privacy matters are covered by /privacy/apps; keep the two consistent.
@@ -69,8 +70,8 @@ const contact = "sheibeck@gmail.com";
         and your epitaph — are visible to other players. You change your name in Google Play Games, and the
         board follows. If a name contains a word from our safety list, the board shows a neutral
         placeholder instead. Please don't tamper with the App to post a run or a name; we remove runs that
-        look forged or tampered with, we can hide a run, and we can stop a game ID from posting again. With
-        Compete off, nothing is sent and you are not signed in to Google Play Games.
+        look forged or tampered with, we can hide a run, and we can stop a game ID from posting again. Compete
+        can be turned off at any time; <a href={COMPETE_OFF_URL}>what that does</a> is set out in the privacy policy.
         <strong>ERASE MY RUNS</strong>, in the game's account block, removes your runs and your board name
         from the leaderboard at any time.
       </p>
