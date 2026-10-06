@@ -6,20 +6,21 @@ import CompeteOff from "../../components/CompeteOff.astro";
 // Stand-alone privacy policy for the mobile apps we publish on Google Play.
 // This is the URL entered in Play Console's store listing, so it must be a
 // complete policy on its own. The website has its own policy at /privacy
-// (it runs analytics; this doesn't). Describes Delve, Die, Repeat 2.3: our
+// (it runs analytics; this doesn't). Describes Delve, Die, Repeat 2.5: our
 // own leaderboard on Google Firebase through the in-game Compete setting,
 // shown under your Google Play Games name (Compete signs in with Google Play
-// Games), ERASE MY RUNS, and in-app bug reports (☰ REPORT A BUG), sent only
+// Games), achievements sent to Google Play Games (Google's service) while
+// Compete is on, ERASE MY RUNS, and in-app bug reports (☰ REPORT A BUG), sent only
 // when the player taps Send, with a per-player cooldown and daily cap. The Play Console Data safety record lives in the game repo at
 // store-listing/LISTING.md (mazeworld); the "Data safety summary" section
 // below must match it.
-const effective = "October 2, 2026";
+const effective = "October 5, 2026";
 // The address Google Play lists as the developer contact. Change here only.
 const contact = "sheibeck@gmail.com";
 ---
 <Layout
   title="Privacy Policy — Google Play apps"
-  description="Privacy policy for Darktier Studios apps on Google Play, including Delve, Die, Repeat. Saves stay on your device; one small database on Google Firebase holds the public leaderboard and bug reports; the leaderboard shows your Google Play Games name; Compete can be turned off at any time; a bug report is sent only when you tap Send."
+  description="Privacy policy for Darktier Studios apps on Google Play, including Delve, Die, Repeat. Saves stay on your device; one small database on Google Firebase holds the public leaderboard and bug reports; the leaderboard shows your Google Play Games name; with Compete on, achievements go to Google Play Games; Compete can be turned off at any time; a bug report is sent only when you tap Send."
 >
   <div class="container">
     <section style="padding:84px 0 28px">
@@ -62,9 +63,10 @@ const contact = "sheibeck@gmail.com";
       <p>
         The game sends data in only two cases: the leaderboard data described in the next section, only
         while Compete is on; and a bug report you write yourself, only when you tap Send, described under
-        <a href="#bug-reports">Bug reports</a>. Google's own Play Games software, which runs while Compete
-        is on, collects a little data of its own, described under
-        <a href="#play-games">Google Play Games</a>.
+        <a href="#bug-reports">Bug reports</a>. Achievements, with Compete on and you signed in, go to
+        Google Play Games, which is Google's service and not ours, under your own Play Games account.
+        Google's own Play Games software, which runs while Compete is on, also collects a little data of
+        its own. Both are described under <a href="#play-games">Google Play Games</a>.
       </p>
 
       <h2>Our leaderboard (Compete)</h2>
@@ -159,16 +161,21 @@ const contact = "sheibeck@gmail.com";
 
       <h2 id="play-games">Google Play Games</h2>
       <p>
-        With Compete on, the game signs you in with Google Play Games. We use it for sign-in only: no
-        Google leaderboards, achievements, or saved games. Google's own Play Games software runs inside the
+        With Compete on, the game signs you in with Google Play Games. From version 2.5, with Compete on and
+        you signed in, the game also sends your achievement unlocks, reveals, and progress counts (for
+        example, 37 of 50) to Google Play Games, which shows them in your Play Games profile under your
+        own Play Games account. Achievements you earn while Compete is off, while you are signed out, or
+        while you are offline wait on your phone and are sent the next time Compete is on and you are
+        signed in. We do not use Google leaderboards or saved games. Google's own Play Games software runs inside the
         app while Compete is on and collects data automatically: your gamer identity (gamertag and avatar,
         which our game never reads or shows), plus analytics and diagnostics data that Google uses to keep
         its software stable. That data goes to Google, not to us, under Google's own terms and privacy
         policy; Google describes it at
         <a href="https://developer.android.com/games/pgs/data-collection" target="_blank" rel="noopener">developer.android.com/games/pgs/data-collection</a>.
         With Compete off, the Play Games software does not start, so it collects nothing
-        (<a href="#compete-off">details</a>). You can delete
-        your Play Games account and its data in your Play Games profile or Google MyAccount.
+        (<a href="#compete-off">details</a>). <strong>ERASE MY RUNS</strong> does not
+        remove achievements held in Google Play Games, which are Google's data: you can delete your Play
+        Games account and its data, achievements included, in your Play Games profile or Google MyAccount.
       </p>
 
       <h2 id="bug-reports">Bug reports</h2>
@@ -199,7 +206,8 @@ const contact = "sheibeck@gmail.com";
       <p>
         The game keeps a small amount of data on your phone so it works: your current run, your local run
         history (YOUR DEAD), your personal best records, your settings (including Compete), your game ID
-        and Google Play Games name, and, while you are offline, the short list of runs waiting to be sent to the
+        and Google Play Games name, your achievements record with the short list of what has already
+        reached Google Play Games, and, while you are offline, the short list of runs waiting to be sent to the
         leaderboard. None of it is sent to us except as described above, and it is removed when you
         uninstall the app — except runs already on the leaderboard, which stay there until you erase them
         (see <a href="/privacy/delete-data">delete your data</a>).
@@ -210,8 +218,8 @@ const contact = "sheibeck@gmail.com";
         Our apps require no account of our own and play fully offline. They contain no advertising,
         analytics, or crash-reporting SDKs of our own. The only network calls our code makes reach Google
         Firebase over plain HTTPS — with no Firebase SDK bundled in the app — for the leaderboard, your
-        board name, and bug reports, all described above; Google's Play Games software makes its own, as
-        described above, only while Compete is on. Google Play handles your purchase and installation under
+        board name, and bug reports, all described above; Google's Play Games software makes its own,
+        including the achievement updates described above, only while Compete is on. Google Play handles your purchase and installation under
         <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's privacy policy</a>.
       </p>
 
@@ -219,7 +227,7 @@ const contact = "sheibeck@gmail.com";
       <p>
         Our apps do not request access to your location, contacts, camera, microphone, storage, or any
         other permission-gated data. The one permission is internet access, used only for the leaderboard
-        while Compete is on (sign-in and the board), and for sending a bug report when you tap Send.
+        and achievements while Compete is on (Play Games sign-in, the board, and achievement updates), and for sending a bug report when you tap Send.
       </p>
 
       <h2>Children</h2>
@@ -228,15 +236,16 @@ const contact = "sheibeck@gmail.com";
         details from anyone, including children under 13. The only name the board shows is the gamer name
         a player chose in Google Play Games, which Google governs, including its supervised accounts, whose
         names Google generates; there is no chat or messaging of any kind. The game needs no sign-in to be
-        played, and Compete, which is the only thing that uses Google Play Games, can be turned off at any
-        time.
+        played, and Compete, which is the only thing that uses Google Play Games (sign-in, the board, and
+        achievements), can be turned off at any time.
       </p>
 
       <h2>Your rights</h2>
       <p>
         We hold the runs you sent to the leaderboard while Compete was on, and any bug report you chose to
         send. <strong>ERASE MY RUNS</strong>, in the game, removes your leaderboard runs, your board name,
-        and your game account yourself. Or email us with your Google Play Games name and we will delete them
+        and your game account yourself. It does not remove achievements held in Google Play Games; those
+        are Google's data, deleted in your Play Games profile. Or email us with your Google Play Games name and we will delete them
         and confirm. Uninstalling the app deletes everything
         stored on your device. If a future app ever changes any of this, this policy will change first.
       </p>
@@ -251,7 +260,8 @@ const contact = "sheibeck@gmail.com";
         shared, optional (created only when Compete is on and a run is sent, or when you send a bug
         report), App functionality, encrypted in transit, and deletable with ERASE MY RUNS.
         <strong>App activity</strong> (your Google Play Games name and the run details listed above, sent
-        for each run while Compete is on) — collected, not shared, optional (turn Compete off), App
+        for each run while Compete is on, plus achievement unlocks, reveals, and progress counts sent to
+        Google Play Games while Compete is on and you are signed in) — collected, not shared, optional (turn Compete off), App
         functionality, encrypted in transit, deletable, and public on the leaderboard.
         <strong>Diagnostics</strong> and <strong>Photos</strong> collected by Google's own Play Games
         software while Compete is on (the data Google's page lists: analytics, diagnostics, and the avatar
