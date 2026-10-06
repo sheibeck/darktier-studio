@@ -19,10 +19,10 @@ const features = [
 ];
 
 const shots = [
-  { src: "01-title", alt: "Title screen" },
-  { src: "02-combat", alt: "Round-by-round combat with every die roll shown" },
-  { src: "03-deep", alt: "Exploring a deep floor of the maze" },
-  { src: "04-death", alt: "An epitaph for a fallen adventurer" },
+  { src: "01-title", alt: "The title screen: key art of adventurers at a torch-lit gate, with ENTER and VIEW THE DEAD" },
+  { src: "02-combat", alt: "Combat against two Gremlins: a hit for 3, two misses against you, and two abilities listed" },
+  { src: "03-deep", alt: "A deep floor on the map, depth 9, with explored corridors, the party and the arrow pad" },
+  { src: "04-achievements", alt: "The achievements list: 16 of 77 earned, four secrets still hiding, and the Downward Mobility tiers" },
 ];
 
 const appLd = {
@@ -86,7 +86,7 @@ const appLd = {
 
     <section class="ddr-shots" aria-label="Screenshots">
       {shots.map((s) => (
-        <img src={`/assets/delve-die-repeat/shots/${s.src}.webp`} alt={s.alt} loading="lazy" width="540" />
+        <img src={`/assets/delve-die-repeat/shots/${s.src}.webp`} alt={s.alt} loading="lazy" width="540" height="960" />
       ))}
     </section>
 
