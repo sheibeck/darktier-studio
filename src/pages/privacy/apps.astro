@@ -6,7 +6,8 @@ import CompeteOff from "../../components/CompeteOff.astro";
 // Stand-alone privacy policy for the mobile apps we publish on Google Play.
 // This is the URL entered in Play Console's store listing, so it must be a
 // complete policy on its own. The website has its own policy at /privacy
-// (it runs analytics; this doesn't). Describes Delve, Die, Repeat 2.5: our
+// (it runs analytics; this doesn't). Describes Delve, Die, Repeat 2.6 (checked
+// against mazeworld commit 50f083e4, Phase 106 plan 02): our
 // own leaderboard on Google Firebase through the in-game Compete setting,
 // shown under your Google Play Games name (Compete signs in with Google Play
 // Games), achievements sent to Google Play Games (Google's service) while
@@ -14,7 +15,7 @@ import CompeteOff from "../../components/CompeteOff.astro";
 // when the player taps Send, with a per-player cooldown and daily cap. The Play Console Data safety record lives in the game repo at
 // store-listing/LISTING.md (mazeworld); the "Data safety summary" section
 // below must match it.
-const effective = "October 5, 2026";
+const effective = "October 10, 2026";
 // The address Google Play lists as the developer contact. Change here only.
 const contact = "sheibeck@gmail.com";
 ---
@@ -149,7 +150,7 @@ const contact = "sheibeck@gmail.com";
         </li>
         <li>
           <strong>Finding the account block:</strong> in the dungeon, open the ☰ menu; on the title screen,
-          tap the corner chip. From there: <strong>COMPETE</strong>, <strong>SIGN IN</strong> (when you are
+          tap the corner chip. From there: <strong>COMPETE</strong>, <strong>SIGN IN WITH PLAY GAMES</strong> (when you are
           not signed in to Google Play Games), and <strong>ERASE MY RUNS</strong>.
         </li>
       </ul>
@@ -183,8 +184,11 @@ const contact = "sheibeck@gmail.com";
         Delve, Die, Repeat has a <strong>REPORT A BUG</strong> option in its ☰ menu. Nothing is sent unless
         you type a report and tap <strong>Send</strong>. A report contains what you typed, the game's
         in-run log (the Oracle, which may include your adventurer's randomly generated name), the app
-        version and build, your device model and Android version, and a summary of the current run (floor,
-        class, race, level and turn count). It carries no account, email address, or other contact detail.
+        version and build, your device model and Android version (as your phone's built-in web view
+        reports them, which also names its browser-engine version), the platform name (android), the time
+        on your device's clock when you tapped Send, and a summary of the current run (floor, class,
+        sub-class, race, level, day, squares walked, and whether your adventurer is alive). It carries no
+        account, email address, or other contact detail.
       </p>
       <p>
         Sending a report uses your anonymous game ID only as the key of a small limit record — the time of
@@ -226,14 +230,17 @@ const contact = "sheibeck@gmail.com";
       <h2>Permissions</h2>
       <p>
         Our apps do not request access to your location, contacts, camera, microphone, storage, or any
-        other permission-gated data. The one permission is internet access, used only for the leaderboard
-        and achievements while Compete is on (Play Games sign-in, the board, and achievement updates), and for sending a bug report when you tap Send.
+        other permission-gated data. The app asks for two permissions. Internet access is used only for the
+        leaderboard and achievements while Compete is on (Play Games sign-in, the board, and achievement
+        updates), and for sending a bug report when you tap Send. Vibration is for the small haptic taps
+        in the game, and gives the app no access to any of your data.
       </p>
 
       <h2>Children</h2>
       <p>
-        Our apps are suitable for general audiences. We collect no email addresses or other contact
-        details from anyone, including children under 13. The only name the board shows is the gamer name
+        Our apps are not directed to children under 13: the game is listed for ages 13 and over, and its
+        humour is family-friendly but it is not designed for children. We collect no email addresses or
+        other contact details from anyone, including children under 13. The only name the board shows is the gamer name
         a player chose in Google Play Games, which Google governs, including its supervised accounts, whose
         names Google generates; there is no chat or messaging of any kind. The game needs no sign-in to be
         played, and Compete, which is the only thing that uses Google Play Games (sign-in, the board, and
@@ -269,7 +276,8 @@ const contact = "sheibeck@gmail.com";
         turned off (<a href="#compete-off">what that does</a>). <strong>Other user-generated content</strong> (the bug report you type, sent only when
         you tap Send) — collected, not shared, posted publicly on GitHub, deleted from our database once
         filed. <strong>Diagnostics</strong> (the Oracle log, app version and build, device model and
-        Android version, and a summary of the run, attached to a bug report only) — collected, not shared,
+        Android version, the platform name and your device's clock time, and a summary of the run,
+        attached to a bug report only) — collected, not shared,
         deleted on request. None of it is sold.
       </p>
 
