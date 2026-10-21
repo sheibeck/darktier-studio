@@ -12,7 +12,7 @@ import type { Game } from "../../lib/types";
 export const games: Game[] = [
   {
     slug: "delve-die-repeat", name: "Delve, Die, Repeat", type: "Mobile game", pub: "play",
-    page: "/delve-die-repeat", isNew: true, showcase: true, img: "/assets/delve-die-repeat/featured.webp",
+    page: "/delve-die-repeat", isNew: true, showcase: true, img: "/assets/delve-die-repeat/featured-card.webp",
     synopsis:
       "Roll an adventurer, descend the maze, die, read the epitaph, try again. An offline roguelike dungeon crawl based on Mazeworld, a tabletop RPG from 1994, kept as crunchy, unfair and funny as it was then. Paid once, no ads, and the Oracle narrates with the warmth of a tax auditor.",
     order: -1,
