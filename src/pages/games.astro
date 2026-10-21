@@ -17,7 +17,7 @@ const gamesLd = {
       "@type": "Game",
       name: g.name,
       genre: g.type,
-      url: new URL(`/games#${g.slug}`, site.url).href,
+      url: new URL(g.page || `/games#${g.slug}`, site.url).href,
       ...(g.img ? { image: new URL(g.img, site.url).href } : {}),
       description: g.synopsis,
       publisher: { "@type": "Organization", name: site.name },

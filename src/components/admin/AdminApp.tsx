@@ -17,14 +17,15 @@ import { news as seedNews } from "../../data/catalog/news";
 
 connectEmulatorsOnce();
 
-const PUB_SHORT: Record<string, string> = { tgc: "The Game Crafter", pdf: "PDF archive", dev: "In development" };
-const PUB_TAG: Record<string, string> = { tgc: "tag tag-accent", pdf: "tag tag-neutral", dev: "tag tag-outline" };
+const PUB_SHORT: Record<string, string> = { tgc: "The Game Crafter", pdf: "PDF archive", dev: "In development", play: "Google Play" };
+const PUB_TAG: Record<string, string> = { tgc: "tag tag-accent", pdf: "tag tag-neutral", dev: "tag tag-outline", play: "tag tag-accent" };
 
-const TYPE_OPTS = ["Board game", "Card game", "TTRPG", "Game system", "Game engine"].map((v) => ({ value: v, label: v }));
+const TYPE_OPTS = ["Board game", "Card game", "TTRPG", "Game system", "Game engine", "Mobile game"].map((v) => ({ value: v, label: v }));
 const PUB_OPTS = [
   { value: "tgc", label: "The Game Crafter (print & play)" },
   { value: "pdf", label: "PDF archive" },
   { value: "dev", label: "In development" },
+  { value: "play", label: "Google Play (Android app)" },
 ];
 const STATUS_OPTS = [
   { value: "live", label: "Live (Launch button)" },
@@ -89,6 +90,7 @@ const gameFields: FieldDef[] = [
   { key: "pdf", label: 'PDF link ("Download PDF")', type: "text", placeholder: "/pdfs/name.pdf" },
   { key: "charSheet", label: "Character sheet PDF (optional)", type: "text", placeholder: "/pdfs/name-character-sheet.pdf" },
   { key: "app", label: 'App link ("Launch the app")', type: "url", placeholder: "https://…" },
+  { key: "page", label: 'Own page on this site (card links here)', type: "text", placeholder: "/delve-die-repeat" },
   { key: "site", label: 'Website link ("Visit the website")', type: "url", placeholder: "https://…" },
   { key: "isNew", label: "Flag as NEW — highlights across the site", type: "checkbox" },
   { key: "ai", label: "AI-assisted generation — shows an 'AI-assisted' tag", type: "checkbox", full: true },

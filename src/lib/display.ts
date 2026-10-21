@@ -13,6 +13,7 @@ export function pubVaultLabel(pub: Pub): string {
   switch (pub) {
     case "tgc": return "Print & play · The Game Crafter";
     case "dev": return "In development";
+    case "play": return "Android · Google Play";
     default: return "PDF archive";
   }
 }

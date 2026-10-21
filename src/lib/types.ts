@@ -1,13 +1,13 @@
 // Shared catalog types — the shape of the Firestore documents and the local
 // seed. `order` drives manual sorting; `hidden` gates public visibility.
 
-/** Publication status. tgc = print-and-play at The Game Crafter; pdf = downloadable archive; dev = in development. */
-export type Pub = "tgc" | "pdf" | "dev";
+/** Publication status. tgc = print-and-play at The Game Crafter; pdf = downloadable archive; dev = in development; play = released app on Google Play. */
+export type Pub = "tgc" | "pdf" | "dev" | "play";
 
 export interface Game {
   slug: string;
   name: string;
-  type: string; // "TTRPG" | "Board game" | "Card game" | "Game system" | "Game engine"
+  type: string; // "TTRPG" | "Board game" | "Card game" | "Game system" | "Game engine" | "Mobile game"
   pub: Pub;
   /** ISO month "YYYY-MM" or full date; shown as a released label. */
   released?: string | null;
@@ -17,6 +17,8 @@ export interface Game {
   charSheet?: string | null;
   /** External companion-app URL ("Launch the app"). */
   app?: string | null;
+  /** Site path of the game's own page, e.g. "/delve-die-repeat". When set, the home card, the Vault and the JSON-LD link there instead of /games#slug. */
+  page?: string | null;
   /** External website URL ("Visit the website"). */
   site?: string | null;
   isNew?: boolean;

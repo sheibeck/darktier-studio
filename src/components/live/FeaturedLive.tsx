@@ -17,7 +17,7 @@ export default function FeaturedLive({ initial }: { initial: Game[] }) {
   return (
     <div className="feat-grid">
       {featured.map((g) => (
-        <a href={`/games#${g.slug}`} className="feat-card" key={g.slug}>
+        <a href={g.page || `/games#${g.slug}`} className="feat-card" key={g.slug}>
           <div className="feat-cover">
             {g.img ? (
               <img src={g.img} alt={`${g.name} cover art`} loading="lazy" decoding="async" />

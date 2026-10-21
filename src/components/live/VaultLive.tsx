@@ -5,7 +5,12 @@ import { pubTagClass, pubVaultLabel, releasedLabel } from "../../lib/display";
 import { readVisible } from "../../lib/firebase.read";
 
 function primaryHref(g: Game): string | undefined {
-  return g.pdf || g.app || (g.pub === "tgc" ? site.gameCrafter : g.site) || undefined;
+  return g.page || g.pdf || g.app || (g.pub === "tgc" ? site.gameCrafter : g.site) || undefined;
+}
+
+// Games with their own page open it in the same tab; everything else opens externally.
+function ext(g: Game) {
+  return g.page ? {} : { target: "_blank", rel: "noopener" };
 }
 
 // Renders the full Vault. SSR'd from `initial` (build-time data → SEO), then
@@ -25,7 +30,7 @@ export default function VaultLive({ initial }: { initial: Game[] }) {
         const href = primaryHref(g);
         return (
           <article id={g.slug} className="vault-row" key={g.slug}>
-            <a className="vault-cover-link" href={href} target="_blank" rel="noopener" aria-label={`Open ${g.name}`}>
+            <a className="vault-cover-link" href={href} {...ext(g)} aria-label={`Open ${g.name}`}>
               <div className="vault-cover">
                 {g.img ? (
                   <img src={g.img} alt={`${g.name} cover art`} loading="lazy" decoding="async" />
@@ -38,7 +43,7 @@ export default function VaultLive({ initial }: { initial: Game[] }) {
               <p className="vault-type">{g.type}</p>
               <div className="vault-title-row">
                 <h2 className="vault-name">
-                  <a className="vault-name-link" href={href} target="_blank" rel="noopener">
+                  <a className="vault-name-link" href={href} {...ext(g)}>
                     {g.name}
                   </a>
                 </h2>
@@ -53,6 +58,11 @@ export default function VaultLive({ initial }: { initial: Game[] }) {
               </div>
               <p className="vault-synopsis">{g.synopsis}</p>
               <div className="vault-actions">
+                {g.page && (
+                  <a className="btn btn-primary" href={g.page}>
+                    Open the game page ▸
+                  </a>
+                )}
                 {g.app && (
                   <a className="btn btn-primary" href={g.app} target="_blank" rel="noopener">
                     Launch the app ▸

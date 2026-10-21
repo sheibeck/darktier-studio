@@ -11,6 +11,13 @@ import type { Game } from "../../lib/types";
 
 export const games: Game[] = [
   {
+    slug: "delve-die-repeat", name: "Delve, Die, Repeat", type: "Mobile game", pub: "play",
+    page: "/delve-die-repeat", isNew: true, showcase: true, img: "/assets/delve-die-repeat/featured.webp",
+    synopsis:
+      "Roll an adventurer, descend the maze, die, read the epitaph, try again. An offline roguelike dungeon crawl based on Mazeworld, a tabletop RPG from 1994, kept as crunchy, unfair and funny as it was then. Paid once, no ads, and the Oracle narrates with the warmth of a tax auditor.",
+    order: -1,
+  },
+  {
     slug: "charlie-mike", name: "Charlie Mike", type: "TTRPG", pub: "dev",
     app: "https://charlie-mike-428f0.web.app/", isNew: true, showcase: true, img: "/assets/covers/charlie-mike.jpg",
     synopsis:
@@ -31,7 +38,7 @@ export const games: Game[] = [
     order: 2,
   },
   {
-    slug: "fow", name: "Fate of Wæteria", type: "Board game", pub: "tgc", img: "/assets/covers/fow.png", showcase: true,
+    slug: "fow", name: "Fate of Wæteria", type: "Board game", pub: "tgc", img: "/assets/covers/fow.png", showcase: false,
     synopsis:
       "The tide already won. Scavenge, bargain and sail the drowned world of Wæteria before the rising water takes what's left.",
     order: 3,
