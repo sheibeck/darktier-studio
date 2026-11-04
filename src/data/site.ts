@@ -13,7 +13,7 @@ export const site = {
   founder: "Sterling Heibeck",
   // External destinations
   gameCrafter: "https://www.thegamecrafter.com/designers/sterling-heibeck",
-  charlieMike: "https://charlie-mike-428f0.web.app/",
+  ddrPlay: "https://play.google.com/store/apps/details?id=com.darktierstudiosllc.delvedierepeat",
   // Default social share image (1200x630), added in the SEO phase.
   ogImage: "/assets/og-default.png",
 } as const;
